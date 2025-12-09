@@ -8,7 +8,7 @@
 
 **The Ultimate Study Companion for Computer Science Students** *Computer Architecture • Theory of Computing • Data Structures • Discrete Mathematics*
 
-[**🚀 Live Demo**](https://YOUR-USERNAME.github.io/YOUR-REPO-NAME/)
+[**🚀 Live Demo**](https://libbard.github.io/SEU-CS-lvl4/index.html)
 *(Click to view the website)*
 
 </div>
@@ -66,7 +66,7 @@ The platform is designed with a modern **Glassmorphism** UI and includes a **Sma
 ```text
 /
 ├── index.html                  # Main Hub Landing Page
-├── /Computer-Architecture/     # Module 1 Files
-├── /Theory-of-Computing/       # Module 2 Files
-├── /Data-Structures/           # Module 3 Files
-└── /Discrete-Mathematics/      # Module 4 Files
+├── /Computer-Architecture/     # CS241 1 Files
+├── /Theory-of-Computing/       # CS242 2 Files
+├── /Data-Structures/           # CS240 3 Files
+└── /Discrete-Mathematics/      # CS243 4 Files
