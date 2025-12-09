@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Review - ArchMaster</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .golden-gradient { background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); }
+        .review-card { border-right: 4px solid #d97706; }
+        details > summary { list-style: none; cursor: pointer; transition: all 0.3s; }
+        details > summary::-webkit-details-marker { display: none; }
+        details[open] > summary { background-color: #fffbeb; color: #b45309; }
+        .cheat-sheet-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-slate-900 shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-2xl font-black text-yellow-400 ml-2">ArchMaster</span>
+                    <span class="text-sm bg-yellow-900 text-yellow-200 py-1 px-2 rounded-full">المراجعة النهائية</span>
+                </div>
+                <div class="flex items-center">
+                    <a href="index.html" class="text-slate-300 hover:text-white px-3 py-2 rounded-md font-medium transition">العودة للفهرس</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="golden-gradient text-white py-16 text-center shadow-lg">
+        <h1 class="text-5xl font-black mb-4 drop-shadow-md">The Grand Finale</h1>
+        <p class="text-xl font-medium opacity-90">ملخص "الزبدة" لما بعد المنتصف (Mod 6 - Mod 13)</p>
+        <div class="mt-6 flex justify-center space-x-4 space-x-reverse text-sm font-bold text-yellow-900">
+            <span class="bg-white/30 px-3 py-1 rounded-full">ISA & Memory</span>
+            <span class="bg-white/30 px-3 py-1 rounded-full">Virtual Mem</span>
+            <span class="bg-white/30 px-3 py-1 rounded-full">I/O & RAID</span>
+            <span class="bg-white/30 px-3 py-1 rounded-full">Performance</span>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-10 space-y-10">
+
+        <section>
+            <div class="flex items-center mb-6">
+                <span class="text-3xl mr-2">📐</span>
+                <h2 class="text-3xl font-bold text-slate-800">The Formula Sheet (ورقة القوانين)</h2>
+            </div>
+            
+            <div class="cheat-sheet-grid">
+                <div class="bg-white p-5 rounded-xl shadow border border-slate-200">
+                    <h3 class="font-bold text-indigo-600 mb-2">Amdahl's Law (تحسين الأداء)</h3>
+                    <div class="text-center bg-slate-100 p-2 rounded mb-2 font-mono text-sm" dir="ltr">
+                        $$ S = \frac{1}{(1-f) + \frac{f}{k}} $$
+                    </div>
+                    <ul class="text-xs text-slate-600 space-y-1">
+                        <li><strong>S:</strong> Speedup (التسريع الكلي).</li>
+                        <li><strong>f:</strong> Fraction (نسبة الجزء المحسن).</li>
+                        <li><strong>k:</strong> Speedup (معامل تسريع الجزء).</li>
+                        <li class="text-red-500 font-bold">تلميح: إذا كانت f صغيرة، التحسن سيكون ضئيلاً!</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl shadow border border-slate-200">
+                    <h3 class="font-bold text-green-600 mb-2">EAT (Memory Performance)</h3>
+                    <div class="text-center bg-slate-100 p-2 rounded mb-2 font-mono text-sm" dir="ltr">
+                        $EAT = H \times T_C + (1-H) \times T_{MM}$
+                    </div>
+                    <ul class="text-xs text-slate-600 space-y-1">
+                        <li><strong>H:</strong> Hit Rate (نسبة الإصابة).</li>
+                        <li><strong>Tc:</strong> زمن الكاش.</li>
+                        <li><strong>Tmm:</strong> زمن الذاكرة (يشمل الـ Penalty).</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl shadow border border-slate-200">
+                    <h3 class="font-bold text-pink-600 mb-2">Disk Access Time</h3>
+                    <div class="text-center bg-slate-100 p-2 rounded mb-2 font-mono text-sm" dir="ltr">
+                        Access = Seek + Rotational + Transfer
+                    </div>
+                    <ul class="text-xs text-slate-600 space-y-1">
+                        <li><strong>Seek:</strong> حركة الذراع (الأطول وقتاً).</li>
+                        <li><strong>Rotational:</strong> دوران القرص (نصف دورة كمتوسط).</li>
+                        <li class="text-red-500 font-bold">تلميح: لا تدع الـ Utilization يتجاوز 80%.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <span class="text-3xl mr-2">⚔️</span>
+                <h2 class="text-3xl font-bold text-slate-800">The Great Battles (مقارنات هامة)</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-xl shadow overflow-hidden">
+                    <div class="bg-slate-800 text-white p-3 font-bold text-center">RISC vs CISC</div>
+                    <div class="p-4 text-sm">
+                        <div class="flex justify-between border-b pb-2 mb-2">
+                            <div class="w-1/2 text-center text-blue-600 font-bold">RISC</div>
+                            <div class="w-1/2 text-center text-red-600 font-bold">CISC</div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between"><span class="text-slate-500">التعليمات</span> <span>بسيطة وقليلة</span> <span>معقدة وكثيرة</span></div>
+                            <div class="flex justify-between bg-slate-50 p-1"><span class="text-slate-500">الطول</span> <span>Fixed (ثابت)</span> <span>Variable (متغير)</span></div>
+                            <div class="flex justify-between"><span class="text-slate-500">التحكم</span> <span>Hardwired</span> <span>Microprogrammed</span></div>
+                            <div class="flex justify-between bg-slate-50 p-1"><span class="text-slate-500">المسجلات</span> <span>كثيرة (Registers)</span> <span>قليلة</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow overflow-hidden">
+                    <div class="bg-slate-800 text-white p-3 font-bold text-center">Paging vs Segmentation</div>
+                    <div class="p-4 text-sm">
+                        <div class="flex justify-between border-b pb-2 mb-2">
+                            <div class="w-1/2 text-center text-teal-600 font-bold">Paging</div>
+                            <div class="w-1/2 text-center text-orange-600 font-bold">Segmentation</div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between"><span class="text-slate-500">التقسيم</span> <span>متساوي (Fixed)</span> <span>متغير (Variable)</span></div>
+                            <div class="flex justify-between bg-slate-50 p-1"><span class="text-slate-500">المشكلة</span> <span>Internal Frag.</span> <span>External Frag.</span></div>
+                            <div class="flex justify-between"><span class="text-slate-500">منظور</span> <span>النظام (Physical)</span> <span>المبرمج (Logical)</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <span class="text-3xl mr-2">🧠</span>
+                <h2 class="text-3xl font-bold text-slate-800">Quick Recaps (المفاهيم الجوهرية)</h2>
+            </div>
+
+            <div class="space-y-4">
+                <details class="bg-white rounded-lg shadow group">
+                    <summary class="p-4 font-bold text-slate-700 flex justify-between items-center bg-slate-50 hover:bg-yellow-50 rounded-lg">
+                        <span>1. Endianness (Big vs Little)</span>
+                        <span class="text-xl group-open:rotate-180 transition">▼</span>
+                    </summary>
+                    <div class="p-4 border-t border-slate-100 text-sm">
+                        <p>كيف نخزن <code>0x12345678</code>؟</p>
+                        <ul class="list-disc list-inside mt-2 text-slate-600">
+                            <li><strong>Big Endian:</strong> يخزن الـ MSB (12) في العنوان الأصغر. (مثل القراءة الطبيعية).</li>
+                            <li><strong>Little Endian:</strong> يخزن الـ LSB (78) في العنوان الأصغر. (معكوسة).</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details class="bg-white rounded-lg shadow group">
+                    <summary class="p-4 font-bold text-slate-700 flex justify-between items-center bg-slate-50 hover:bg-yellow-50 rounded-lg">
+                        <span>2. Cache Mapping (Direct vs Associative)</span>
+                        <span class="text-xl group-open:rotate-180 transition">▼</span>
+                    </summary>
+                    <div class="p-4 border-t border-slate-100 text-sm">
+                        <ul class="list-disc list-inside mt-2 text-slate-600">
+                            <li><strong>Direct Mapped:</strong> البلوك له مكان واحد فقط ($Block \pmod N$). بسيط لكن كثير التصادم.</li>
+                            <li><strong>Fully Associative:</strong> البلوك يذهب لأي مكان. مرن لكن البحث مكلف.</li>
+                            <li><strong>Set Associative:</strong> حل وسط (مجموعات).</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details class="bg-white rounded-lg shadow group">
+                    <summary class="p-4 font-bold text-slate-700 flex justify-between items-center bg-slate-50 hover:bg-yellow-50 rounded-lg">
+                        <span>3. RAID Levels (الحفظ)</span>
+                        <span class="text-xl group-open:rotate-180 transition">▼</span>
+                    </summary>
+                    <div class="p-4 border-t border-slate-100 text-sm">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div><strong class="text-red-600">RAID 0:</strong> سرعة فقط (Striping). لا حماية.</div>
+                            <div><strong class="text-blue-600">RAID 1:</strong> حماية كاملة (Mirroring). مكلف.</div>
+                            <div><strong class="text-green-600">RAID 5:</strong> توازن (Parity). يتحمل فشل قرص واحد.</div>
+                            <div><strong class="text-purple-600">RAID 6:</strong> حماية مضاعفة. يتحمل فشل قرصين.</div>
+                        </div>
+                    </div>
+                </details>
+
+                <details class="bg-white rounded-lg shadow group">
+                    <summary class="p-4 font-bold text-slate-700 flex justify-between items-center bg-slate-50 hover:bg-yellow-50 rounded-lg">
+                        <span>4. Flynn's Taxonomy (التوازي)</span>
+                        <span class="text-xl group-open:rotate-180 transition">▼</span>
+                    </summary>
+                    <div class="p-4 border-t border-slate-100 text-sm">
+                        <ul class="list-disc list-inside mt-2 text-slate-600">
+                            <li><strong>SISD:</strong> كمبيوتر عادي (Uniprocessor).</li>
+                            <li><strong>SIMD:</strong> تعليمة واحدة لبيانات متعددة (GPUs / Vector).</li>
+                            <li><strong>MIMD:</strong> تعليمات متعددة لبيانات متعددة (Clusters / Multi-core).</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details class="bg-white rounded-lg shadow group">
+                    <summary class="p-4 font-bold text-slate-700 flex justify-between items-center bg-slate-50 hover:bg-yellow-50 rounded-lg">
+                        <span>5. Embedded Systems (الأنظمة المدمجة)</span>
+                        <span class="text-xl group-open:rotate-180 transition">▼</span>
+                    </summary>
+                    <div class="p-4 border-t border-slate-100 text-sm">
+                        <ul class="list-disc list-inside mt-2 text-slate-600">
+                            <li>محدودة الموارد (طاقة، ذاكرة).</li>
+                            <li>تعمل في <strong>Real-time</strong> (الوقت حرج).</li>
+                            <li>تستخدم <strong>Watchdog Timer</strong> لإعادة التشغيل عند التجمد.</li>
+                            <li>أشهر الهاردوير: Microcontrollers و FPGAs.</li>
+                        </ul>
+                    </div>
+                </details>
+            </div>
+        </section>
+
+        <div class="text-center mt-12 mb-8">
+            <a href="index.html" class="inline-flex items-center justify-center bg-slate-800 text-white px-8 py-4 rounded-full font-bold shadow-2xl hover:bg-slate-900 transition transform hover:scale-105">
+                <span class="ml-2">🏠</span> العودة للفهرس الرئيسي
+            </a>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center border-t border-slate-800">
+        <p>🎉 Good Luck on Your Exam! You Got This!</p>
+    </footer>
+
+</body>
+</html>

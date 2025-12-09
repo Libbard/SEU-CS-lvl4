@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArchMaster - Comprehensive Study Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .chapter-card { transition: all 0.3s ease; border: 1px solid #e2e8f0; }
+        .chapter-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); border-color: #3b82f6; }
+        .hero-bg { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <header class="hero-bg text-white py-20 px-4 text-center">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-5xl md:text-6xl font-black mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">ArchMaster</h1>
+            <p class="text-xl md:text-2xl text-slate-300 font-light mb-8">
+                الدليل الشامل والمرجع النهائي لمادة تنظيم وعمارة الحاسب.
+                <br>
+                <span class="text-sm font-bold text-blue-400 mt-2 block">13 فصلاً | شرح تفاعلي | خزنة اختبارات</span>
+            </p>
+            <a href="chapter1.html" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition transform hover:scale-105">
+                ابدأ المذاكرة من الفصل الأول
+            </a>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-16">
+        <h2 class="text-3xl font-bold text-center mb-12 text-slate-800">فهرس المحتويات</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <a href="chapter1.html" class="chapter-card bg-white p-6 rounded-xl block">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded">CH 1</span>
+                    <span class="text-slate-400 text-sm">Introduction</span>
+                </div>
+                <h3 class="text-xl font-bold text-slate-800 mb-2">Introduction & History</h3>
+                <p class="text-sm text-slate-500">مقدمة في المعمارية، تاريخ الحاسب، ومعمارية فون نيومان.</p>
+            </a>
+
+            <a href="chapter2.html" class="chapter-card bg-white p-6 rounded-xl block">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded">CH 2</span>
+                    <span class="text-slate-400 text-sm">Data Rep</span>
+                </div>
+                <h3 class="text-xl font-bold text-slate-800 mb-2">Data Representation</h3>
+                <p class="text-sm text-slate-500">التحويلات بين الأنظمة، المتممات، والفاصلة العائمة (IEEE 754).</p>
+            </a>
+
+            <a href="chapter3.html" class="chapter-card bg-white p-6 rounded-xl block">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded">CH 3</span>
+                    <span class="text-slate-400 text-sm">Logic</span>
+                </div>
+                <h3 class="text-xl font-bold text-slate-800 mb-2">Boolean Algebra</h3>
+                <p class="text-sm text-slate-500">البوابات المنطقية، الجبر البولي، وخرائط كارنوف (K-Maps).</p>
+            </a>
+
+            <a href="chapter4.html" class="chapter-card bg-white p-6 rounded-xl block">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded">CH 4</span>
+                    <span class="text-slate-400 text-sm">Circuits</span>
+                </div>
+                <h3 class="text-xl font-bold text-slate-800 mb-2">Digital Circuits</h3>
+                <p class="text-sm text-slate-500">الدوائر التوافقية (Adders) والتسلسلية (Flip-Flops).</p>
+            </a>
+
+            <a href="chapter5.html" class="chapter-card bg-white p-6 rounded-xl block">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="bg-green-100 text-green-800 text-xs font-bold px-2 py-1 rounded">CH 5</span>
+                    <span class="text-slate-400 text-sm">MARIE Intro</span>
+                </div>
+                <h3 class="text-xl font-bold text-slate-800 mb-2">MARIE Architecture</h3>
+                <p class="text-sm text-slate-500">مقدمة في الحاسب البسيط، المسجلات، ودورة التعليمات.</p>
+            </a>
+
+            <a href="chapter6.html" class="chapter-card bg-white p-6 rounded-xl block">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="bg-green-100 text-green-800 text-xs font-bold px-2 py-1 rounded">CH 6</span>
+                    <span class="text-slate-400 text-sm">ISA</span>
+                </div>
+                <h3 class="text-xl font-bold text-slate-800 mb-2">Instruction Set Arch</h3>
+                <p class="text-sm text-slate-500">أنماط العنونة (Addressing Modes)، وترتيب البايتات (Endianness).</p>
+            </a>
+
+            <a href="chapter7.html" class="chapter-card bg-white p-6 rounded-xl block">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="bg-orange-100 text-orange-800 text-xs font-bold px-2 py-1 rounded">CH 7</span>
+                    <span class="text-slate-400 text-sm">Memory</span>
+                </div>
+                <h3 class="text-xl font-bold text-slate-800 mb-2">Memory & Cache</h3>
+                <p class="text-sm text-slate-500">هرمية الذاكرة، وأنظمة الكاش (Direct/Associative) وحسابات الأداء.</p>
+            </a>
+
+            <a href="chapter8.html" class="chapter-card bg-white p-6 rounded-xl block">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="bg-orange-100 text-orange-800 text-xs font-bold px-2 py-1 rounded">CH 8</span>
+                    <span class="text-slate-400 text-sm">Virtual Mem</span>
+                </div>
+                <h3 class="text-xl font-bold text-slate-800 mb-2">Virtual Memory</h3>
+                <p class="text-sm text-slate-500">الذاكرة الظاهرية، الترحيل (Paging)، والتجزئة (Segmentation).</p>
+            </a>
+
+            <a href="chapter9.html" class="chapter-card bg-white p-6 rounded-xl block">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="bg-purple-100 text-purple-800 text-xs font-bold px-2 py-1 rounded">CH 9</span>
+                    <span class="text-slate-400 text-sm">I/O</span>
+                </div>
+                <h3 class="text-xl font-bold text-slate-800 mb-2">Input/Output Systems</h3>
+                <p class="text-sm text-slate-500">قانون أمدال، الـ DMA، ومستويات الـ RAID.</p>
+            </a>
+
+            <a href="chapter10.html" class="chapter-card bg-white p-6 rounded-xl block">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="bg-teal-100 text-teal-800 text-xs font-bold px-2 py-1 rounded">CH 10</span>
+                    <span class="text-slate-400 text-sm">Software</span>
+                </div>
+                <h3 class="text-xl font-bold text-slate-800 mb-2">System Software</h3>
+                <p class="text-sm text-slate-500">أنظمة التشغيل، الجدولة، ومراحل المترجمات (Compilers).</p>
+            </a>
+
+            <a href="chapter11.html" class="chapter-card bg-white p-6 rounded-xl block">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="bg-pink-100 text-pink-800 text-xs font-bold px-2 py-1 rounded">CH 11</span>
+                    <span class="text-slate-400 text-sm">Advanced</span>
+                </div>
+                <h3 class="text-xl font-bold text-slate-800 mb-2">Alternative Arch</h3>
+                <p class="text-sm text-slate-500">مقارنة RISC/CISC، الحوسبة المتوازية، وتصنيف Flynn.</p>
+            </a>
+
+            <a href="chapter12.html" class="chapter-card bg-white p-6 rounded-xl block">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="bg-gray-100 text-gray-800 text-xs font-bold px-2 py-1 rounded">CH 12</span>
+                    <span class="text-slate-400 text-sm">Embedded</span>
+                </div>
+                <h3 class="text-xl font-bold text-slate-800 mb-2">Embedded Systems</h3>
+                <p class="text-sm text-slate-500">الأنظمة المدمجة، المتحكمات الدقيقة، وتحديات الوقت الحقيقي.</p>
+            </a>
+
+            <a href="chapter13.html" class="chapter-card bg-white p-6 rounded-xl block border-2 border-yellow-400">
+                <div class="flex justify-between items-start mb-4">
+                    <span class="bg-yellow-100 text-yellow-800 text-xs font-bold px-2 py-1 rounded">CH 13</span>
+                    <span class="text-slate-400 text-sm">Performance</span>
+                </div>
+                <h3 class="text-xl font-bold text-slate-800 mb-2">Performance Analysis</h3>
+                <p class="text-sm text-slate-500">قياس الأداء، المعايير (Benchmarks)، وتحسين الكود.</p>
+            </a>
+			
+			<a href="final-review.html" class="chapter-card bg-gradient-to-br from-yellow-50 to-orange-50 p-6 rounded-xl block border-2 border-yellow-400 transform hover:scale-105 shadow-xl md:col-span-2 lg:col-span-3 text-center group">
+                <div class="flex justify-center mb-4">
+                    <span class="bg-yellow-500 text-white text-sm font-black px-4 py-1 rounded-full shadow animate-pulse">👑 FINAL BOSS</span>
+                </div>
+                <h3 class="text-3xl font-black text-slate-800 mb-2 group-hover:text-yellow-700 transition">The Grand Finale Review</h3>
+                <p class="text-lg text-slate-600">
+                    مراجعة شاملة وسريعة لأهم ما بعد المنتصف (شيتات القوانين، المقارنات، والتعاريف).
+                    <br>
+                    <span class="text-sm font-bold text-yellow-600">Modules 6 - 13 Condensed</span>
+                </p>
+            </a>
+
+        </div>
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-12 text-center border-t border-slate-800 mt-12">
+        <p class="mb-2">© 2024 ArchMaster Study Guide. Created with AI Collaboration.</p>
+        <p class="text-xs text-slate-600">All content extracted and summarized for educational purposes.</p>
+    </footer>
+
+</body>
+</html>

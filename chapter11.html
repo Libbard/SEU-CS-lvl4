@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch9: Alternative Architectures - Computer Architecture</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .comparison-table th, .comparison-table td { border: 1px solid #e2e8f0; padding: 10px; }
+        .taxonomy-box { border-radius: 8px; padding: 15px; color: white; text-align: center; transition: transform 0.3s; }
+        .taxonomy-box:hover { transform: scale(1.05); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-white shadow-lg sticky top-0 z-50 border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-black text-blue-600 ml-2">ArchMaster</a>
+                    <span class="text-sm bg-blue-100 text-blue-800 py-1 px-2 rounded-full">المشروع الشامل</span>
+                </div>
+                <div class="flex items-center space-x-2 space-x-reverse">
+                    <a href="chapter10.html" class="text-slate-600 hover:text-blue-600 px-3 py-2 rounded-md font-medium transition">→ السابق</a>
+                    <a href="index.html" class="text-slate-600 hover:text-blue-600 px-3 py-2 rounded-md font-medium transition">الرئيسية</a>
+                    <a href="chapter12.html" class="bg-blue-600 text-white px-3 py-2 rounded-md font-medium hover:bg-blue-700 transition">التالي ←</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-white py-12 border-b border-slate-200">
+        <div class="max-w-5xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-slate-900">Alternative Architectures</h1>
+            <p class="text-xl text-slate-600 mb-6">الفصل الحادي عشر: المعماريات البديلة والمتقدمة</p>
+            <div class="inline-flex items-center bg-pink-50 text-pink-700 px-4 py-2 rounded-lg border border-pink-200">
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                <span>الهدف: التمييز بين RISC/CISC، فهم تصنيف Flynn (SISD, MIMD)، والحوسبة الكمومية.</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3">1</div>
+                <h2 class="text-3xl font-bold text-slate-800">RISC vs. CISC Architectures</h2>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-lg border border-slate-200">
+                <table class="w-full text-sm text-center comparison-table">
+                    <thead class="bg-slate-800 text-white">
+                        <tr>
+                            <th class="w-1/2">RISC (Reduced Instruction Set)</th>
+                            <th class="w-1/2">CISC (Complex Instruction Set)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-slate-700">
+                        <tr>
+                            <td>تعليمات بسيطة وقليلة (Simple & Few).</td>
+                            <td>تعليمات معقدة وكثيرة (Complex & Many).</td>
+                        </tr>
+                        <tr>
+                            <td>طول التعليمة <strong>ثابت (Fixed Length)</strong>.</td>
+                            <td>طول التعليمة <strong>متغير (Variable Length)</strong>.</td>
+                        </tr>
+                        <tr>
+                            <td class="bg-blue-50 text-blue-700 font-bold">Hardwired Control (سريع جداً).</td>
+                            <td class="bg-red-50 text-red-700 font-bold">Microprogrammed Control (يحتاج ترجمة).</td>
+                        </tr>
+                        <tr>
+                            <td>يعتمد على <strong>Registers</strong> (Load/Store فقط للذاكرة).</td>
+                            <td>يمكن لأي تعليمة الوصول للذاكرة (Memory Access).</td>
+                        </tr>
+                        <tr>
+                            <td>التعقيد يقع على عاتق <strong>المترجم (Compiler)</strong>.</td>
+                            <td>التعقيد يقع على عاتق <strong>الهاردوير (Hardware)</strong>.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3">2</div>
+                <h2 class="text-3xl font-bold text-slate-800">Flynn's Taxonomy (تصنيف فلين)</h2>
+            </div>
+                        <p class="text-slate-600 mb-6">تصنيف الأنظمة بناءً على عدد تدفقات التعليمات (Instruction Streams) وتدفقات البيانات (Data Streams).</p>
+
+            <div class="grid grid-cols-2 gap-4 text-sm font-bold">
+                <div class="taxonomy-box bg-gray-500">
+                    <div class="text-2xl mb-1">SISD</div>
+                    <div class="text-xs font-light">Single Instruction, Single Data</div>
+                    <div class="mt-2 bg-white text-gray-800 p-1 rounded text-xs">PC التقليدي (Uniprocessor)</div>
+                </div>
+
+                <div class="taxonomy-box bg-blue-500">
+                    <div class="text-2xl mb-1">SIMD</div>
+                    <div class="text-xs font-light">Single Instruction, Multiple Data</div>
+                    <div class="mt-2 bg-white text-blue-800 p-1 rounded text-xs">Vector Processors / GPUs</div>
+                </div>
+
+                <div class="taxonomy-box bg-purple-500">
+                    <div class="text-2xl mb-1">MISD</div>
+                    <div class="text-xs font-light">Multiple Instruction, Single Data</div>
+                    <div class="mt-2 bg-white text-purple-800 p-1 rounded text-xs">نادر جداً (غير مستخدم عملياً)</div>
+                </div>
+
+                <div class="taxonomy-box bg-green-500">
+                    <div class="text-2xl mb-1">MIMD</div>
+                    <div class="text-xs font-light">Multiple Instruction, Multiple Data</div>
+                    <div class="mt-2 bg-white text-green-800 p-1 rounded text-xs">Supercomputers / Clusters</div>
+                </div>
+            </div>
+            
+            <div class="mt-4 bg-yellow-50 p-3 rounded border border-yellow-200 text-sm text-center">
+                <span class="font-bold text-yellow-700">SPMD (New):</span> Single Program Multiple Data.<br>
+                هو النوع الأكثر شيوعاً حالياً: نفس البرنامج يعمل على عقد مختلفة، لكن كل عقدة تعالج بيانات مختلفة بمسارات مختلفة.
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3">3</div>
+                <h2 class="text-3xl font-bold text-slate-800">Parallel Architectures</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white p-5 rounded-xl shadow border-t-4 border-indigo-500 card-hover">
+                    <h3 class="font-bold text-lg text-indigo-700 mb-2">SMP (Symmetric Multiprocessors)</h3>
+                    <ul class="text-sm text-slate-600 space-y-2">
+                        <li>• معالجات قليلة.</li>
+                        <li>• <strong>Shared Memory:</strong> ذاكرة مشتركة واحدة.</li>
+                        <li>• <strong>Tightly Coupled:</strong> اتصال وثيق جداً.</li>
+                        <li>• مثال: معالجات الـ Multi-core في أجهزتنا.</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl shadow border-t-4 border-pink-500 card-hover">
+                    <h3 class="font-bold text-lg text-pink-700 mb-2">MPP (Massively Parallel)</h3>
+                    <ul class="text-sm text-slate-600 space-y-2">
+                        <li>• آلاف المعالجات.</li>
+                        <li>• <strong>Distributed Memory:</strong> كل معالج له ذاكرته.</li>
+                        <li>• <strong>Loosely Coupled:</strong> الاتصال عبر الشبكة.</li>
+                        <li>• مثال: أجهزة الكمبيوتر العملاقة (Supercomputers).</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3">4</div>
+                <h2 class="text-3xl font-bold text-slate-800">Alternative & Future Computing</h2>
+            </div>
+
+            <div class="space-y-4">
+                <div class="bg-white p-4 rounded-lg border-r-4 border-cyan-500 shadow-sm">
+                    <h4 class="font-bold text-cyan-700">1. Dataflow Computing</h4>
+                    <p class="text-sm text-slate-600">لا يوجد عداد برنامج (PC). التعليمة تنفذ بمجرد توفر البيانات (Data Driven). رائع للتوازي.</p>
+                </div>
+                
+                <div class="bg-white p-4 rounded-lg border-r-4 border-orange-500 shadow-sm">
+                    <h4 class="font-bold text-orange-700">2. Neural Networks (Perceptrons)</h4>
+                    <p class="text-sm text-slate-600">محاكاة للدماغ البشري. تعتمد على عناصر معالجة بسيطة وكثيرة وتعديل الأوزان (Weights) للتعلم.</p>
+                </div>
+
+                <div class="bg-slate-900 text-white p-6 rounded-xl relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-purple-500"></div>
+                    <h4 class="font-bold text-xl mb-2">3. Quantum Computing (الحوسبة الكمومية)</h4>
+                    <ul class="text-sm space-y-2 text-slate-300">
+                        <li><strong class="text-white">Qubit:</strong> يمكن أن يكون 0 و 1 في نفس الوقت.</li>
+                        <li><strong class="text-white">Superposition (التراكب):</strong> وجود الكيوبت في عدة حالات معاً.</li>
+                        <li><strong class="text-white">Entanglement (التشابك):</strong> ارتباط فوري بين الكيوبتات مهما بعدت المسافة.</li>
+                        <li><strong class="text-white">Power:</strong> قدرة هائلة لفك التشفير وحل المسائل المعقدة.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-16 mb-10">
+            <div class="bg-red-600 text-white py-3 px-6 rounded-t-xl font-bold text-xl flex items-center">
+                <svg class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                EXAM VAULT (خزنة الاختبار)
+            </div>
+            <div class="bg-white border-2 border-red-600 rounded-b-xl p-6 shadow-xl">
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-red-50 p-4 rounded-lg">
+                        <span class="bg-red-200 text-red-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">TRAP / فخ شائع</span>
+                        <p class="font-bold text-slate-800 mb-1">RISC vs CISC Philosophy</p>
+                        <p class="text-sm text-slate-600">
+                            <strong>RISC:</strong> يركز على تقليل الدورات لكل تعليمة (Cycles per Instruction).
+                            <br><strong>CISC:</strong> يركز على تقليل عدد التعليمات للبرنامج الواحد (Instructions per Program).
+                            <br>لا تخلط بين الهدفين!
+                        </p>
+                    </div>
+
+                    <div class="bg-indigo-50 p-4 rounded-lg">
+                        <span class="bg-indigo-200 text-indigo-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">ANALOGY / تشبيه</span>
+                        <p class="font-bold text-slate-800 mb-1">Systolic Arrays</p>
+                        <p class="text-sm text-slate-600">
+                            سميت "الانقباضية" تشبيهاً بضخ الدم في القلب.
+                            <br>البيانات تتدفق عبر مصفوفة من المعالجات، وكل معالج يمرر النتيجة لجاره.
+                            <br><strong>الاستخدام:</strong> معالجة الصور والمصفوفات (Matrix Operations).
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="flex justify-between mt-12 mb-8">
+            <a href="chapter10.html" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-lg font-bold shadow-sm transition transform hover:scale-105">→ السابق (Ch 10)</a>
+            <a href="chapter12.html" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-bold shadow-lg transition transform hover:scale-105">الفصل التالي (Ch 12) ←</a>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center border-t border-slate-800">
+        <p>© 2024 ArchMaster Study Guide. All chapters curated for excellence.</p>
+    </footer>
+
+</body>
+</html>
