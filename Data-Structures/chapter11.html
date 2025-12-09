@@ -62,14 +62,14 @@
                     <div>
                         <h3 class="font-bold text-xl text-emerald-800 mb-3">المكونات الأساسية</h3>
                         <p class="text-slate-600 mb-4 text-sm">
-                            [cite_start]الرسم البياني $G = (V, E)$ يتكون من رؤوس (Vertices) وحواف (Edges) تربط بينها[cite: 8].
+                            الرسم البياني $G = (V, E)$ يتكون من رؤوس (Vertices) وحواف (Edges) تربط بينها.
                         </p>
                         <ul class="text-sm space-y-2 list-disc list-inside text-slate-700">
                             <li><strong>Directed (Digraph):</strong> الحافة لها اتجاه (سهم).</li>
                             <li><strong>Weighted:</strong> الحافة لها تكلفة (Cost/Weight).</li>
                             <li><strong>Path:</strong> تسلسل من الرؤوس المتصلة.</li>
                             <li><strong>Cycle:</strong> مسار يبدأ وينتهي بنفس الرأس.</li>
-                            [cite_start]<li><strong>Acyclic (DAG):</strong> رسم موجه بدون دورات (مهم للـ Topological Sort)[cite: 16].</li>
+                            <li><strong>Acyclic (DAG):</strong> رسم موجه بدون دورات (مهم للـ Topological Sort).</li>
                         </ul>
                     </div>
                     
@@ -97,7 +97,7 @@
             <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-hover">
                 <h3 class="font-bold text-lg text-slate-700 mb-2">ترتيب المهام (Prerequisites)</h3>
                 <p class="text-sm text-slate-600 mb-4">
-                    [cite_start]ترتيب خطي للرؤوس بحيث إذا كان هناك سهم من $u$ إلى $v$، فإن $u$ يظهر قبل $v$ في الترتيب[cite: 19].
+                    ترتيب خطي للرؤوس بحيث إذا كان هناك سهم من $u$ إلى $v$، فإن $u$ يظهر قبل $v$ في الترتيب.
                 </p>
                 
                 <div class="bg-emerald-50 p-4 rounded-lg border-l-4 border-emerald-500">
@@ -109,7 +109,7 @@
                             <ul class="list-disc list-inside ml-4 text-xs text-slate-600">
                                 <li>احذف الرأس واطبعه.</li>
                                 <li>أنقص الـ Indegree لكل جيرانه.</li>
-                                [cite_start]<li>إذا أصبح Indegree لجار يساوي 0، أضفه للطابور[cite: 23].</li>
+                                <li>إذا أصبح Indegree لجار يساوي 0، أضفه للطابور.</li>
                             </ul>
                         </li>
                     </ol>
@@ -133,7 +133,7 @@
                         استخدم Breadth-First Search (BFS).
                         <br>ابدأ من المصدر، زر الجيران (مسافة 1)، ثم جيران الجيران (مسافة 2)...
                     </div>
-                    [cite_start]<p class="text-xs text-slate-400 mt-2 text-right">[cite: 33]</p>
+                    <p class="text-xs text-slate-400 mt-2 text-right"></p>
                 </div>
 
                 <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 card-hover border-t-4 border-emerald-500">
@@ -149,7 +149,7 @@
                             <li>اعتبرها "معلومة" (Known). كرر.</li>
                         </ol>
                     </div>
-                    [cite_start]<p class="text-xs text-slate-400 mt-2 text-right">[cite: 38-40]</p>
+                    <p class="text-xs text-slate-400 mt-2 text-right"></p>
                 </div>
             </div>
         </section>
@@ -165,13 +165,13 @@
                     <div>
                         <h4 class="text-yellow-400 font-bold mb-4">ما هي شجرة الامتداد؟</h4>
                         <p class="text-sm text-slate-300 mb-4">
-                            [cite_start]هي شجرة تربط <strong>جميع</strong> رؤوس الرسم البياني بأقل تكلفة إجمالية للحواف، وبدون أي دورات (Cycles)[cite: 52].
+                            هي شجرة تربط <strong>جميع</strong> رؤوس الرسم البياني بأقل تكلفة إجمالية للحواف، وبدون أي دورات (Cycles).
                         </p>
                         <div class="bg-slate-800 p-3 rounded border border-slate-600">
                             <strong class="text-emerald-400 block mb-1">Prim's Algorithm</strong>
                             <p class="text-xs text-gray-400">
                                 تشبه Dijkstra جداً.
-                                [cite_start]<br>نبدأ من أي عقدة، وفي كل خطوة نضيف أرخص حافة تربط "ما لدينا" بـ "عقدة جديدة"[cite: 56].
+                                <br>نبدأ من أي عقدة، وفي كل خطوة نضيف أرخص حافة تربط "ما لدينا" بـ "عقدة جديدة".
                             </p>
                         </div>
                     </div>
@@ -196,7 +196,7 @@
                         <p class="font-bold text-slate-800 mb-1">Dijkstra & Negative Edges</p>
                         <p class="text-sm text-slate-600">
                             خوارزمية Dijkstra <strong>لا تعمل</strong> إذا كان الرسم البياني يحتوي على حواف سالبة (Negative Edges).
-                            [cite_start]<br>السبب: الخوارزمية "جشعة" وتفترض أن المسافة لا يمكن أن تقل بعد إضافة حافة جديدة، والسالب يكسر هذه القاعدة[cite: 38].
+                            <br>السبب: الخوارزمية "جشعة" وتفترض أن المسافة لا يمكن أن تقل بعد إضافة حافة جديدة، والسالب يكسر هذه القاعدة.
                         </p>
                     </div>
 
