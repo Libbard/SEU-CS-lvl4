@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch8: Hashing & Heaps - Data Structures</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .emerald-gradient { background: linear-gradient(135deg, #059669 0%, #10b981 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.15); border-color: #10b981; }
+        .heap-array { display: flex; border: 2px solid #065f46; border-radius: 8px; overflow: hidden; margin-top: 10px; }
+        .heap-cell { flex: 1; text-align: center; padding: 5px; border-left: 1px solid #065f46; background: #d1fae5; font-family: monospace; }
+        .heap-cell:last-child { border-left: none; }
+        .heap-index { font-size: 0.7rem; color: #065f46; border-bottom: 1px solid #065f46; background: #a7f3d0; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-white shadow-lg sticky top-0 z-50 border-b border-emerald-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-black text-emerald-700 ml-2">DataMaster</a>
+                    <span class="text-sm bg-emerald-100 text-emerald-800 py-1 px-2 rounded-full">Ch 8: Hashing & Heaps</span>
+                </div>
+                <div class="flex items-center space-x-2 space-x-reverse">
+                    <a href="chapter7.html" class="text-slate-600 hover:text-emerald-600 px-3 py-2 rounded-md font-medium transition">→ السابق</a>
+                    <a href="index.html" class="text-slate-600 hover:text-emerald-600 px-3 py-2 rounded-md font-medium transition">الرئيسية</a>
+                    <a href="chapter9.html" class="bg-emerald-600 text-white px-3 py-2 rounded-md font-medium hover:bg-emerald-700 transition shadow-md">التالي (ف9) ←</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-white py-12 border-b border-emerald-100">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-slate-900">Hashing & Priority Queues</h1>
+            <p class="text-xl text-slate-600 mb-6">الفصل الثامن: جداول التجزئة وأكوام البيانات</p>
+            <div class="inline-flex items-center bg-green-50 text-green-700 px-4 py-2 rounded-lg border border-green-200 shadow-sm">
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                <span>الهدف: الوصول للبيانات في $O(1)$ باستخدام Hashing، وإدارة الأولويات باستخدام Heaps.</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">1</div>
+                <h2 class="text-3xl font-bold text-slate-800">Hash Tables Basics</h2>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-hover">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="font-bold text-xl text-emerald-800 mb-3">الفكرة الجوهرية</h3>
+                        <p class="text-slate-600 mb-4 text-sm">
+                            نريد الوصول لأي عنصر فوراً، مثل المصفوفة، لكن المفاتيح قد تكون نصوصاً (Strings) وليست أرقاماً متسلسلة.
+                            <br><strong>الحل:</strong> دالة (Hash Function) تحول المفتاح إلى رقم (Index).
+                        </p>
+                        <div class="bg-emerald-50 p-3 rounded border border-emerald-100 text-sm font-mono ltr text-center">
+                            Index = hash(Key) % TableSize
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                        <strong class="text-blue-700 block mb-2">شروط الـ Hash Function الجيدة:</strong>
+                        <ul class="text-sm text-slate-700 space-y-2 list-disc list-inside">
+                            <li>سريعة الحساب.</li>
+                            <li>توزع المفاتيح بالتساوي (Distribute Evenly) لتجنب التكتل.</li>
+                            [cite_start]<li><strong>TableSize</strong> يفضل أن يكون عدداً أولياً (Prime) [cite: 17-18].</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">2</div>
+                <h2 class="text-3xl font-bold text-slate-800">Collision Resolution Strategies</h2>
+            </div>
+            
+            <p class="text-slate-600 mb-6">ماذا لو نتج نفس الـ Index لمفتاحين مختلفين؟ (تصادم!)</p>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 card-hover">
+                    <h3 class="font-bold text-emerald-700 mb-2">1. Separate Chaining</h3>
+                    <p class="text-sm text-slate-600 mb-3">
+                        اجعل كل خانة في الجدول تحتوي على <strong>قائمة متصلة (Linked List)</strong>.
+                        <br>عند التصادم، أضف العنصر الجديد للقائمة.
+                    </p>
+                    <div class="text-center bg-gray-100 p-2 rounded text-xs font-mono">
+                        [0] -> null<br>
+                        [1] -> Data1 -> Data2<br>
+                        [2] -> Data3
+                    </div>
+                    [cite_start]<p class="text-xs text-emerald-600 mt-2 font-bold text-right">الأكثر أماناً وسهولة [cite: 19-20].</p>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 card-hover border-t-4 border-blue-500">
+                    <h3 class="font-bold text-blue-700 mb-2">2. Open Addressing</h3>
+                    <p class="text-sm text-slate-600 mb-3">
+                        إذا كانت الخانة مشغولة، ابحث عن خانة أخرى فارغة في الجدول نفسه.
+                    </p>
+                    <ul class="text-xs text-slate-700 space-y-1 bg-blue-50 p-2 rounded">
+                        [cite_start]<li><strong>Linear Probing:</strong> جرب الخانة التالية (+1, +2, ...). [cite: 23-24].</li>
+                        [cite_start]<li><strong>Quadratic Probing:</strong> جرب بتربيع المسافة ($+1^2, +2^2, ...$) لتجنب التكتل [cite: 25-26].</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">3</div>
+                <h2 class="text-3xl font-bold text-slate-800">Binary Heap (Priority Queue)</h2>
+            </div>
+            
+            <div class="bg-slate-900 text-white p-6 rounded-xl shadow-lg">
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <h4 class="text-yellow-400 font-bold mb-4 text-lg">Heap Structure & Order</h4>
+                        <ul class="space-y-3 text-sm text-slate-300">
+                            <li><strong class="text-white">Structure Property:</strong> شجرة ثنائية مكتملة (Complete Binary Tree). تملأ من اليسار لليمين.</li>
+                            <li><strong class="text-white">Order Property (Min-Heap):</strong> كل أب يجب أن يكون <strong>أصغر</strong> من أو يساوي أبناءه. (الجذر هو الأصغر دائماً) [cite_start][cite: 31-33].</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-slate-800 p-4 rounded-lg border border-slate-600 text-center">
+                        <p class="text-xs text-gray-400 mb-2">تمثيل الشجرة في مصفوفة (Array Implementation)</p>
+                        <div class="heap-array text-slate-800">
+                            <div class="heap-cell"><div class="heap-index">0</div>-</div>
+                            <div class="heap-cell"><div class="heap-index">1</div>13</div>
+                            <div class="heap-cell"><div class="heap-index">2</div>21</div>
+                            <div class="heap-cell"><div class="heap-index">3</div>16</div>
+                            <div class="heap-cell"><div class="heap-index">4</div>24</div>
+                            <div class="heap-cell"><div class="heap-index">5</div>31</div>
+                        </div>
+                        <p class="mt-2 text-xs text-emerald-400 font-mono">Root at index 1</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">4</div>
+                <h2 class="text-3xl font-bold text-slate-800">Heap Operations</h2>
+            </div>
+
+            <div class="space-y-4">
+                <div class="bg-white p-4 rounded-lg shadow-sm border-r-4 border-emerald-500">
+                    <h4 class="font-bold text-slate-700">1. Insert (Percolate Up)</h4>
+                    <p class="text-sm text-slate-600">
+                        لإضافة عنصر $X$:
+                        <br>1. ضعه في أول خانة فارغة في نهاية المصفوفة (للحفاظ على الهيكل).
+                        <br>2. قارنه بأبيه. إذا كان $X$ أصغر، بَدّل بينهما.
+                        <br>3. [cite_start]كرر الصعود حتى يستقر في مكانه الصحيح [cite: 35-36].
+                    </p>
+                </div>
+
+                <div class="bg-white p-4 rounded-lg shadow-sm border-r-4 border-red-500">
+                    <h4 class="font-bold text-slate-700">2. DeleteMin (Percolate Down)</h4>
+                    <p class="text-sm text-slate-600">
+                        لحذف أصغر عنصر (الجذر):
+                        <br>1. احذف الجذر (الفراغ يصبح في القمة).
+                        <br>2. خذ <strong>آخر عنصر</strong> في المصفوفة وضعه في الجذر.
+                        <br>3. قارنه بأبناءه. بَدّل مع الابن <strong>الأصغر</strong>.
+                        <br>4. [cite_start]كرر النزول حتى يستقر [cite: 37-39].
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-16 mb-10">
+            <div class="bg-emerald-700 text-white py-3 px-6 rounded-t-xl font-bold text-xl flex items-center shadow-lg">
+                <span class="mr-2">🛡️</span> EXAM VAULT (خزنة الاختبار)
+            </div>
+            <div class="bg-white border-2 border-emerald-700 rounded-b-xl p-6 shadow-xl">
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-100">
+                        <span class="bg-indigo-200 text-indigo-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">FORMULA / معادلة</span>
+                        <p class="font-bold text-slate-800 mb-1">Heap Array Indices</p>
+                        <p class="text-sm text-slate-600">
+                            إذا بدأت المصفوفة من Index 1:
+                            <br>عقدة عند $i$:
+                            <br>• الابن الأيسر: $2i$
+                            <br>• الابن الأيمن: $2i + 1$
+                            <br>• الأب: $\lfloor i/2 \rfloor$
+                            <br><span class="text-xs text-red-500 font-bold">تنبيه: إذا بدأت من 0، المعادلات تتغير!</span>
+                        </p>
+                    </div>
+
+                    <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-100">
+                        <span class="bg-yellow-200 text-yellow-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">TRAP / فخ</span>
+                        <p class="font-bold text-slate-800 mb-1">Is Heap or Hash Table Sorted?</p>
+                        <p class="text-sm text-slate-600">
+                            <strong>Hash Table:</strong> غير مرتبة تماماً (عشوائية).
+                            <br><strong>Heap:</strong> مرتبة جزئياً (الأب أصغر من الأبناء)، لكن الأخوة ليس بينهم ترتيب، ولا يمكنك طباعتها مرتبة بسهولة (إلا بـ HeapSort).
+                            <br>للبحث المرتب، استخدم BST.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="flex justify-between mt-12 mb-8">
+            <a href="chapter7.html" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-lg font-bold shadow-sm transition transform hover:scale-105">→ السابق (Ch 7)</a>
+            <a href="chapter9.html" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg font-bold shadow-lg transition transform hover:scale-105">الفصل التالي (Ch 9) ←</a>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center border-t border-slate-800">
+        <p>© 2024 DataMaster Study Guide. Crafted for Excellence.</p>
+    </footer>
+
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. تحديد مفتاح التخزين بناءً على اسم المجلد
+            const path = window.location.pathname;
+            let courseKey = null;
+
+            // التحقق من اسم المجلد لتحديد المادة
+            if (path.includes('Computer-Architecture')) courseKey = 'arch_progress';
+            else if (path.includes('Theory-of-Computing')) courseKey = 'theory_progress';
+            else if (path.includes('Data-Structures')) courseKey = 'data_struct_progress';
+            else if (path.includes('Discrete-Mathematics')) courseKey = 'discrete_progress';
+
+            // 2. إذا تم التعرف على المادة، سجل الصفحة الحالية
+            if (courseKey) {
+                // استخراج اسم الملف فقط (مثلاً chapter5.html)
+                const pageName = path.split('/').pop();
+
+                // جلب البيانات القديمة
+                let visited = JSON.parse(localStorage.getItem(courseKey)) || [];
+
+                // إذا لم تكن الصفحة مسجلة مسبقاً، أضفها
+                if (!visited.includes(pageName)) {
+                    visited.push(pageName);
+                    localStorage.setItem(courseKey, JSON.stringify(visited));
+                    console.log(`✅ Progress Saved: ${pageName} in ${courseKey}`);
+                }
+            }
+        });
+    </script>
+	
+
+</body>
+</html>

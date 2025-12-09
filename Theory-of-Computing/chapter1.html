@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch1: Math Preliminaries - Theory of Computing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .gradient-text { background-clip: text; -webkit-background-clip: text; color: transparent; background-image: linear-gradient(to right, #9333ea, #db2777); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(147, 51, 234, 0.15); border-color: #9333ea; }
+        .math-box { background-color: #faf5ff; border-left: 4px solid #9333ea; padding: 1rem; margin-bottom: 1rem; border-radius: 0 0.5rem 0.5rem 0; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-white shadow-lg sticky top-0 z-50 border-b border-purple-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-black text-purple-700 ml-2">TheoryMaster</a>
+                    <span class="text-sm bg-purple-100 text-purple-800 py-1 px-2 rounded-full">Ch 1: Math Preliminaries</span>
+                </div>
+                <div class="flex items-center space-x-2 space-x-reverse">
+                    <a href="index.html" class="text-slate-600 hover:text-purple-600 px-3 py-2 rounded-md font-medium transition">الرئيسية</a>
+                    <a href="chapter2.html" class="bg-purple-600 text-white px-3 py-2 rounded-md font-medium hover:bg-purple-700 transition shadow-md">التالي (ف2) ←</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-white py-12 border-b border-purple-100">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-slate-900">Mathematical Preliminaries</h1>
+            <p class="text-xl text-slate-600 mb-6">الفصل الأول: الأساسيات الرياضية (مجموعات، علاقات، ورسوم بيانية)</p>
+            <div class="inline-flex items-center bg-pink-50 text-pink-700 px-4 py-2 rounded-lg border border-pink-200 shadow-sm">
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                <span>الهدف: بناء الأساس المنطقي لفهم لغات الآلة والأوتوماتا لاحقاً.</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">1</div>
+                <h2 class="text-3xl font-bold text-slate-800">Sets (المجموعات)</h2>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-hover">
+                    <h3 class="font-bold text-purple-700 mb-3 text-lg">الخصائص الأساسية</h3>
+                    <ul class="space-y-2 text-sm text-slate-600 list-disc list-inside">
+                        <li><strong>بدون ترتيب (Unordered):</strong> الترتيب لا يهم $\{1, 2\} = \{2, 1\}$.</li>
+                        <li><strong>بدون تكرار (Unique):</strong> العناصر لا تتكرر $\{1, 1, 2\} = \{1, 2\}$.</li>
+                        <li><strong>المجموعة الخالية (Empty Set):</strong> يرمز لها بـ $\emptyset$ أو $\{\}$.</li>
+                        <li><strong>Universal Set (U):</strong> المجموعة الشاملة لكل العناصر المحتملة.</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-hover">
+                    <h3 class="font-bold text-pink-700 mb-3 text-lg">Power Set (مجموعة القوى)</h3>
+                    <p class="text-sm text-slate-600 mb-2">هي مجموعة كل المجموعات الجزئية (Subsets) الممكنة.</p>
+                    <div class="math-box text-sm">
+                        إذا كانت $|S| = n$، فإن عدد عناصر $P(S) = 2^n$.
+                        <br>مثال: $S=\{0, 1\}$
+                        <br>$P(S) = \{ \emptyset, \{0\}, \{1\}, \{0, 1\} \}$ (4 عناصر).
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 bg-slate-50 p-6 rounded-xl border border-slate-200">
+                <h3 class="font-bold text-slate-700 mb-4 text-center">العمليات على المجموعات (Set Operations)</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-sm">
+                    <div class="p-3 bg-white rounded shadow-sm border-t-4 border-purple-500">
+                        <strong class="block text-purple-700 mb-1">Union ($\cup$)</strong>
+                        $A \cup B$<br>العناصر في A أو B.
+                    </div>
+                    <div class="p-3 bg-white rounded shadow-sm border-t-4 border-pink-500">
+                        <strong class="block text-pink-700 mb-1">Intersection ($\cap$)</strong>
+                        $A \cap B$<br>العناصر المشتركة فقط.
+                    </div>
+                    <div class="p-3 bg-white rounded shadow-sm border-t-4 border-indigo-500">
+                        <strong class="block text-indigo-700 mb-1">Difference ($-$)</strong>
+                        $A - B$<br>في A وليست في B.
+                    </div>
+                    <div class="p-3 bg-white rounded shadow-sm border-t-4 border-teal-500">
+                        <strong class="block text-teal-700 mb-1">Cartesian ($\times$)</strong>
+                        $A \times B$<br>أزواج مرتبة $\{(a,b)\}$.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">2</div>
+                <h2 class="text-3xl font-bold text-slate-800">Relations & Functions</h2>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-lg border-r-4 border-pink-500">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h4 class="font-bold text-lg text-slate-800 mb-2">Equivalence Relation (علاقة التكافؤ)</h4>
+                        <p class="text-sm text-slate-600 mb-2">يجب أن تحقق 3 شروط:</p>
+                        <ol class="list-decimal list-inside text-sm space-y-1 text-purple-700 font-bold">
+                            <li>Reflexive (انعكاسية): $xRx$.</li>
+                            <li>Symmetric (تناظرية): $xRy \iff yRx$.</li>
+                            <li>Transitive (متعدية): $xRy \land yRz \implies xRz$.</li>
+                        </ol>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-lg text-slate-800 mb-2">Function (الدالة)</h4>
+                        <p class="text-sm text-slate-600">
+                            هي علاقة خاصة حيث كل مدخل (Input) له مخرج (Output) <strong>واحد فقط</strong>.
+                        </p>
+                        <div class="mt-2 bg-pink-50 p-2 rounded text-xs text-pink-800 border border-pink-200">
+                            <strong>Vertical Line Test:</strong> إذا قطع الخط الرأسي الرسم البياني في أكثر من نقطة، فهي <em>ليست</em> دالة.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">3</div>
+                <h2 class="text-3xl font-bold text-slate-800">Graphs & Trees</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-purple-700 mb-3">Graph Terminology</h3>
+                    <ul class="text-sm space-y-2 text-slate-700">
+                        <li><strong>Node (Vertex):</strong> العنصر (الدائرة).</li>
+                        <li><strong>Edge:</strong> الرابط بين عنصرين.</li>
+                        <li><strong>Path:</strong> تسلسل من العقد المتصلة.</li>
+                        <li><strong>Cycle:</strong> مسار يبدأ وينتهي بنفس العقدة.</li>
+                        <li><strong>Connected:</strong> يوجد مسار بين أي زوج من العقد.</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-purple-700 mb-3">Trees (الأشجار)</h3>
+                    <p class="text-sm text-slate-600 mb-2">هي Graph متصل (Connected) ولا يحتوي على دوائر (Acyclic).</p>
+                    <div class="bg-purple-50 p-3 rounded text-sm border border-purple-100">
+                        <strong class="text-purple-800">Binary Tree Height:</strong>
+                        <br>عدد العقد الأقصى لشجرة ارتفاعها $h$:
+                        <br>$$ Nodes = 2^{h+1} - 1 $$
+                        <br><span class="text-xs text-slate-500">(ملاحظة: أحياناً يحسب الارتفاع بعدد الحواف أو عدد المستويات، تأكد من تعريف كتابك).</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">4</div>
+                <h2 class="text-3xl font-bold text-slate-800">Strings & Languages</h2>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-center bg-white rounded-lg shadow-sm border border-slate-200">
+                    <thead class="bg-slate-800 text-white">
+                        <tr>
+                            <th class="p-3">المصطلح</th>
+                            <th class="p-3">الرمز</th>
+                            <th class="p-3">الشرح</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 text-slate-700">
+                        <tr>
+                            <td class="p-3 font-bold">Alphabet</td>
+                            <td class="p-3">$\Sigma$</td>
+                            <td class="p-3">مجموعة محدودة من الرموز (مثل $\{0, 1\}$).</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold">String</td>
+                            <td class="p-3">$w$</td>
+                            <td class="p-3">سلسلة من الرموز (مثل $101$).</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold">Empty String</td>
+                            <td class="p-3">$\epsilon$</td>
+                            <td class="p-3">السلسلة الفارغة (طولها 0).</td>
+                        </tr>
+                        <tr class="bg-pink-50">
+                            <td class="p-3 font-bold text-pink-700">Kleene Star</td>
+                            <td class="p-3">$\Sigma^*$</td>
+                            <td class="p-3">كل السلاسل الممكنة (بما فيها الفارغة).</td>
+                        </tr>
+                        <tr class="bg-purple-50">
+                            <td class="p-3 font-bold text-purple-700">Positive Closure</td>
+                            <td class="p-3">$\Sigma^+$</td>
+                            <td class="p-3">كل السلاسل الممكنة (بدون الفارغة).</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">5</div>
+                <h2 class="text-3xl font-bold text-slate-800">Proof Techniques (البراهين)</h2>
+            </div>
+
+            <div class="space-y-4">
+                <div class="bg-white p-5 rounded-xl border-l-4 border-green-500 shadow-sm">
+                    <h3 class="font-bold text-lg text-green-700 mb-2">1. Proof by Induction (الاستقراء الرياضي)</h3>
+                    <p class="text-sm text-slate-600 mb-3">تستخدم لإثبات صحة عبارة لجميع الأعداد الطبيعية.</p>
+                    <ul class="list-decimal list-inside text-sm space-y-1 bg-slate-50 p-3 rounded">
+                        <li><strong>Basis Step:</strong> أثبت صحة العبارة عند $n=0$ أو $n=1$.</li>
+                        <li><strong>Inductive Hypothesis:</strong> افترض أن العبارة صحيحة عند $n=k$.</li>
+                        <li><strong>Inductive Step:</strong> أثبت صحة العبارة عند $n=k+1$.</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl border-l-4 border-red-500 shadow-sm">
+                    <h3 class="font-bold text-lg text-red-700 mb-2">2. Proof by Contradiction (التناقض)</h3>
+                    <p class="text-sm text-slate-600">
+                        لإثبات $P$:
+                        <br>1. افترض أن $P$ <strong>خاطئة</strong> (النقيض).
+                        <br>2. حاول الوصول إلى نتيجة منطقية مستحيلة (تناقض).
+                        <br>3. إذاً الفرضية خاطئة، و $P$ صحيحة.
+                        <br><span class="text-xs text-slate-400 block mt-1">(مثال: إثبات أن $\sqrt{2}$ عدد غير نسبي).</span>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-16 mb-10">
+            <div class="bg-pink-600 text-white py-3 px-6 rounded-t-xl font-bold text-xl flex items-center shadow-lg">
+                <span class="mr-2">🛡️</span> EXAM VAULT (خزنة الاختبار)
+            </div>
+            <div class="bg-white border-2 border-pink-600 rounded-b-xl p-6 shadow-xl">
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-pink-50 p-4 rounded-lg border border-pink-100">
+                        <span class="bg-pink-200 text-pink-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">TRAP / فخ</span>
+                        <p class="font-bold text-slate-800 mb-1">Empty Set vs Set Containing Empty Set</p>
+                        <p class="text-sm text-slate-600">
+                            انتبه للفرق!
+                            <br>$\emptyset$ : مجموعة فارغة، عدد عناصرها 0.
+                            <br>$\{\emptyset\}$ : مجموعة تحتوي على عنصر واحد (وهو المجموعة الفارغة)، عدد عناصرها 1.
+                        </p>
+                    </div>
+
+                    <div class="bg-purple-50 p-4 rounded-lg border border-purple-100">
+                        <span class="bg-purple-200 text-purple-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">CALCULATION / حساب</span>
+                        <p class="font-bold text-slate-800 mb-1">Number of Subsets</p>
+                        <p class="text-sm text-slate-600">
+                            كم عدد المجموعات الجزئية لمجموعة تحتوي على 5 عناصر؟
+                            <br>القاعدة: $|P(S)| = 2^{|S|}$
+                            <br>الجواب: $2^5 = 32$.
+                            <br><span class="text-xs text-purple-600 font-bold">تذكر: المجموعة الفارغة ونفس المجموعة دائماً من ضمنهم.</span>
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="flex justify-between mt-12 mb-8">
+            <a href="index.html" class="bg-slate-200 text-slate-600 hover:bg-slate-300 px-6 py-3 rounded-lg font-bold transition">الرئيسية</a>
+            <a href="chapter2.html" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-bold shadow-lg transition transform hover:scale-105">الفصل التالي (Ch 2) ←</a>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center border-t border-slate-800">
+        <p>© 2024 TheoryMaster Study Guide. Crafted for Excellence.</p>
+    </footer>
+
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. تحديد مفتاح التخزين بناءً على اسم المجلد
+            const path = window.location.pathname;
+            let courseKey = null;
+
+            // التحقق من اسم المجلد لتحديد المادة
+            if (path.includes('Computer-Architecture')) courseKey = 'arch_progress';
+            else if (path.includes('Theory-of-Computing')) courseKey = 'theory_progress';
+            else if (path.includes('Data-Structures')) courseKey = 'data_struct_progress';
+            else if (path.includes('Discrete-Mathematics')) courseKey = 'discrete_progress';
+
+            // 2. إذا تم التعرف على المادة، سجل الصفحة الحالية
+            if (courseKey) {
+                // استخراج اسم الملف فقط (مثلاً chapter5.html)
+                const pageName = path.split('/').pop();
+
+                // جلب البيانات القديمة
+                let visited = JSON.parse(localStorage.getItem(courseKey)) || [];
+
+                // إذا لم تكن الصفحة مسجلة مسبقاً، أضفها
+                if (!visited.includes(pageName)) {
+                    visited.push(pageName);
+                    localStorage.setItem(courseKey, JSON.stringify(visited));
+                    console.log(`✅ Progress Saved: ${pageName} in ${courseKey}`);
+                }
+            }
+        });
+    </script>
+	
+
+</body>
+</html>

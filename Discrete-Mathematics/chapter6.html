@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch6: Recurrence Relations - Discrete Math</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .amber-gradient { background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.2); border-color: #f59e0b; }
+        .math-step { background: #fff7ed; border-right: 4px solid #f97316; padding: 10px; margin-bottom: 8px; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-white shadow-lg sticky top-0 z-50 border-b border-amber-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-black text-amber-700 ml-2">DiscreteMaster</a>
+                    <span class="text-sm bg-amber-100 text-amber-800 py-1 px-2 rounded-full">Ch 6: Recurrence</span>
+                </div>
+                <div class="flex items-center space-x-2 space-x-reverse">
+                    <a href="chapter5.html" class="text-slate-600 hover:text-amber-600 px-3 py-2 rounded-md font-medium transition">→ السابق</a>
+                    <a href="index.html" class="text-slate-600 hover:text-amber-600 px-3 py-2 rounded-md font-medium transition">الرئيسية</a>
+                    <a href="chapter7.html" class="bg-amber-500 text-white px-3 py-2 rounded-md font-medium hover:bg-amber-600 transition shadow-md">التالي (ف7) ←</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-white py-12 border-b border-amber-100">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-slate-900">Recurrence Relations</h1>
+            <p class="text-xl text-slate-600 mb-6">الفصل السادس: العلاقات التكرارية وحلها</p>
+            <div class="inline-flex items-center bg-orange-50 text-orange-700 px-4 py-2 rounded-lg border border-orange-200 shadow-sm">
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                <span>الهدف: نمذجة المشاكل (مثل فيبوناتشي وهانوي) وحل المعادلات التكرارية للحصول على صيغة صريحة.</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">1</div>
+                <h2 class="text-3xl font-bold text-slate-800">Defining Recurrence</h2>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-hover">
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <h3 class="font-bold text-amber-700 mb-3">التعريف</h3>
+                        <p class="text-slate-600 mb-4 text-sm">
+                            هي معادلة تعبر عن الحد $a_n$ بدلالة واحد أو أكثر من الحدود السابقة ($a_{n-1}, a_{n-2}, \dots$).
+                            <br>لابد من وجود <strong>شروط ابتدائية (Initial Conditions)</strong> لتحديد القيم بدقة.
+                        </p>
+                        <div class="bg-orange-50 p-3 rounded border border-orange-200 text-center font-bold text-slate-800">
+                            Example: $a_n = a_{n-1} - a_{n-2}$
+                            <br><span class="text-xs font-normal text-slate-600">Initial: $a_0 = 3, a_1 = 5$</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-700 mb-2">أمثلة شهيرة :</h4>
+                        <ul class="text-sm space-y-2 text-slate-600">
+                            <li class="bg-gray-50 p-2 rounded"><strong>Fibonacci:</strong> $f_n = f_{n-1} + f_{n-2}$ (نمو الأرانب).</li>
+                            <li class="bg-gray-50 p-2 rounded"><strong>Compound Interest:</strong> $P_n = (1.11) P_{n-1}$ (الفائدة المركبة).</li>
+                            <li class="bg-gray-50 p-2 rounded"><strong>Tower of Hanoi:</strong> $H_n = 2H_{n-1} + 1$.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">2</div>
+                <h2 class="text-3xl font-bold text-slate-800">Solving Linear Homogeneous Relations</h2>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-lg border-r-4 border-amber-500">
+                <h3 class="text-lg font-bold text-slate-700 mb-4">الخوارزمية السحرية (The Algorithm)</h3>
+                <p class="text-sm text-slate-600 mb-4">
+                    لحل علاقة مثل $a_n = c_1 a_{n-1} + c_2 a_{n-2}$، نتبع الخطوات التالية :
+                </p>
+                
+                <div class="space-y-2">
+                    <div class="math-step">
+                        <strong>1. Characteristic Equation:</strong>
+                        <br>عوض عن $a_n$ بـ $r^n$. نقسم على أصغر أس لنحصل على:
+                        <br>$$ r^2 - c_1 r - c_2 = 0 $$
+                    </div>
+                    <div class="math-step">
+                        <strong>2. Find Roots:</strong>
+                        <br>أوجد جذور المعادلة ($r_1, r_2$).
+                    </div>
+                    <div class="math-step">
+                        <strong>3. General Solution:</strong>
+                        <br>• إذا كانت الجذور مختلفة: $a_n = \alpha_1 r_1^n + \alpha_2 r_2^n$.
+                        <br>• إذا كانت مكررة ($r_1 = r_2$): $a_n = \alpha_1 r_1^n + \alpha_2 n r_1^n$.
+                    </div>
+                    <div class="math-step">
+                        <strong>4. Find Constants ($\alpha_1, \alpha_2$):</strong>
+                        <br>استخدم الشروط الابتدائية ($a_0, a_1$) لعمل نظام معادلات وحله.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">3</div>
+                <h2 class="text-3xl font-bold text-slate-800">Divide & Conquer Algorithms</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 card-hover">
+                    <h3 class="font-bold text-amber-700 mb-2">Binary Search</h3>
+                    <p class="text-sm text-slate-600 mb-3">
+                        نقسم المشكلة إلى نصف واحد (1 subproblem of size n/2).
+                    </p>
+                    <div class="bg-gray-100 p-3 rounded font-mono text-sm ltr text-center">
+                        $$ f(n) = f(n/2) + 2 $$
+                    </div>
+                    <p class="text-xs text-slate-500 mt-2 text-right">الـ +2 تمثل المقارنات (Comparison) .</p>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 card-hover border-t-4 border-orange-500">
+                    <h3 class="font-bold text-orange-700 mb-2">Merge Sort</h3>
+                    <p class="text-sm text-slate-600 mb-3">
+                        نقسم المشكلة إلى نصفين (2 subproblems of size n/2) ثم ندمج.
+                    </p>
+                    <div class="bg-gray-100 p-3 rounded font-mono text-sm ltr text-center">
+                        $$ M(n) = 2M(n/2) + n $$
+                    </div>
+                    <p class="text-xs text-slate-500 mt-2 text-right">الـ +n تمثل عملية الدمج (Merge).</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-16 mb-10">
+            <div class="bg-amber-700 text-white py-3 px-6 rounded-t-xl font-bold text-xl flex items-center shadow-lg">
+                <span class="mr-2">🛡️</span> EXAM VAULT (خزنة الاختبار)
+            </div>
+            <div class="bg-white border-2 border-amber-700 rounded-b-xl p-6 shadow-xl">
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                        <span class="bg-red-200 text-red-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">TRAP / تمييز النوع</span>
+                        <p class="font-bold text-slate-800 mb-1">Is it Linear Homogeneous؟</p>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>$a_n = a_{n-1} + a_{n-2}^2$ ❌ (ليس خطياً بسبب التربيع).</li>
+                            <li>$a_n = 2a_{n-1} + 1$ ❌ (ليس متجانساً بسبب الثابت 1).</li>
+                            <li>$a_n = n a_{n-1}$ ❌ (المعاملات ليست ثابتة Constant Coefficients).</li>
+                            <li>$a_n = 3a_{n-1} - 4a_{n-2}$ ✅ (Linear, Homogeneous, Constant Coeff).</li>
+                        </ul>
+                        
+                    </div>
+
+                    <div class="bg-orange-50 p-4 rounded-lg border border-orange-100">
+                        <span class="bg-orange-200 text-orange-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">EXAMPLE / مثال شهير</span>
+                        <p class="font-bold text-slate-800 mb-1">Fibonacci Closed Form</p>
+                        <p class="text-sm text-slate-600">
+                            المعادلة: $r^2 - r - 1 = 0$.
+                            <br>الجذور: $\frac{1 \pm \sqrt{5}}{2}$ (النسبة الذهبية).
+                            <br>الحل العام: $f_n = \frac{1}{\sqrt{5}} (\frac{1+\sqrt{5}}{2})^n - \frac{1}{\sqrt{5}} (\frac{1-\sqrt{5}}{2})^n$.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="flex justify-between mt-12 mb-8">
+            <a href="chapter5.html" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-lg font-bold shadow-sm transition transform hover:scale-105">→ السابق (Ch 5)</a>
+            <a href="chapter7.html" class="bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-lg font-bold shadow-lg transition transform hover:scale-105">الفصل التالي (Ch 7) ←</a>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center border-t border-slate-800">
+        <p>© 2024 DiscreteMaster Study Guide. Crafted for Excellence.</p>
+    </footer>
+
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. تحديد مفتاح التخزين بناءً على اسم المجلد
+            const path = window.location.pathname;
+            let courseKey = null;
+
+            // التحقق من اسم المجلد لتحديد المادة
+            if (path.includes('Computer-Architecture')) courseKey = 'arch_progress';
+            else if (path.includes('Theory-of-Computing')) courseKey = 'theory_progress';
+            else if (path.includes('Data-Structures')) courseKey = 'data_struct_progress';
+            else if (path.includes('Discrete-Mathematics')) courseKey = 'discrete_progress';
+
+            // 2. إذا تم التعرف على المادة، سجل الصفحة الحالية
+            if (courseKey) {
+                // استخراج اسم الملف فقط (مثلاً chapter5.html)
+                const pageName = path.split('/').pop();
+
+                // جلب البيانات القديمة
+                let visited = JSON.parse(localStorage.getItem(courseKey)) || [];
+
+                // إذا لم تكن الصفحة مسجلة مسبقاً، أضفها
+                if (!visited.includes(pageName)) {
+                    visited.push(pageName);
+                    localStorage.setItem(courseKey, JSON.stringify(visited));
+                    console.log(`✅ Progress Saved: ${pageName} in ${courseKey}`);
+                }
+            }
+        });
+    </script>
+	
+
+</body>
+</html>

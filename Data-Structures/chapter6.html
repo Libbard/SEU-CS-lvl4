@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch6: Trees (Part 1) - Data Structures</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.15); border-color: #10b981; }
+        .tree-node { width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; background: white; border: 2px solid #059669; position: relative; z-index: 10; }
+        .tree-line { position: absolute; background: #9ca3af; z-index: 0; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-white shadow-lg sticky top-0 z-50 border-b border-emerald-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-black text-emerald-700 ml-2">DataMaster</a>
+                    <span class="text-sm bg-emerald-100 text-emerald-800 py-1 px-2 rounded-full">Ch 6: Trees I</span>
+                </div>
+                <div class="flex items-center space-x-2 space-x-reverse">
+                    <a href="chapter5.html" class="text-slate-600 hover:text-emerald-600 px-3 py-2 rounded-md font-medium transition">→ السابق</a>
+                    <a href="index.html" class="text-slate-600 hover:text-emerald-600 px-3 py-2 rounded-md font-medium transition">الرئيسية</a>
+                    <a href="chapter7.html" class="bg-emerald-600 text-white px-3 py-2 rounded-md font-medium hover:bg-emerald-700 transition shadow-md">التالي (ف7) ←</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-white py-12 border-b border-emerald-100">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-slate-900">Trees & BST</h1>
+            <p class="text-xl text-slate-600 mb-6">الفصل السادس: الأشجار وشجرة البحث الثنائية</p>
+            <div class="inline-flex items-center bg-green-50 text-green-700 px-4 py-2 rounded-lg border border-green-200 shadow-sm">
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                <span>الهدف: الانتقال من البيانات الخطية إلى الهرمية، وفهم خوارزميات البحث السريع (BST).</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">1</div>
+                <h2 class="text-3xl font-bold text-slate-800">Fundamental Terminology</h2>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-hover">
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <h3 class="font-bold text-xl text-emerald-800 mb-3">مصطلحات الشجرة</h3>
+                        <ul class="space-y-2 text-sm text-slate-700 list-disc list-inside">
+                            [cite_start]<li><strong>Root (الجذر):</strong> العقدة الوحيدة التي ليس لها أب (Parent) [cite: 8-9].</li>
+                            [cite_start]<li><strong>Leaf (الورقة):</strong> العقدة التي ليس لها أبناء (Children) [cite: 8-9].</li>
+                            <li><strong>Siblings (الأخوة):</strong> عقد لها نفس الأب.</li>
+                            <li><strong>Depth (العمق):</strong> طول المسار من الجذر إلى العقدة (Root depth = 0).</li>
+                            <li><strong>Height (الارتفاع):</strong> طول أطول مسار من العقدة إلى ورقة (Leaf height = 0).</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="relative h-48 w-full flex justify-center bg-emerald-50 rounded-lg border border-emerald-100">
+                        <div class="absolute top-4 left-1/2 -translate-x-1/2 flex flex-col items-center">
+                            <div class="tree-node bg-emerald-200">A</div>
+                            <span class="text-xs text-gray-500">Root</span>
+                        </div>
+                        
+                        <div class="absolute top-20 left-1/4 flex flex-col items-center">
+                            <div class="tree-node">B</div>
+                        </div>
+                        <div class="absolute top-20 right-1/4 flex flex-col items-center">
+                            <div class="tree-node">C</div>
+                        </div>
+
+                        <div class="absolute top-36 left-[15%]"><div class="tree-node bg-yellow-100">D</div></div>
+                        <div class="absolute top-36 left-[35%]"><div class="tree-node bg-yellow-100">E</div></div>
+                        <div class="absolute top-36 right-[25%]"><div class="tree-node bg-yellow-100">F</div></div>
+
+                        <div class="absolute top-8 left-1/2 w-24 h-12 border-t-2 border-l-2 border-r-2 border-gray-400 rounded-t-full -translate-x-1/2 -z-0"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">2</div>
+                <h2 class="text-3xl font-bold text-slate-800">Tree Traversals</h2>
+            </div>
+
+            <p class="text-slate-600 mb-4">كيف تزور كل العقد في الشجرة؟ [cite_start]هناك 3 طرق رئيسية[cite: 14]:</p>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 card-hover">
+                    <h3 class="font-bold text-emerald-700 mb-2">Preorder (قبل)</h3>
+                    <div class="bg-emerald-50 p-2 rounded text-center font-bold text-sm mb-2">Node → Left → Right</div>
+                    <p class="text-xs text-slate-500">
+                        تزور العقدة الحالية أولاً، ثم أبناءها.
+                        <br>مفيد لنسخ الشجرة (Copying).
+                    </p>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 card-hover border-t-4 border-blue-500">
+                    <h3 class="font-bold text-blue-700 mb-2">Inorder (بين)</h3>
+                    <div class="bg-blue-50 p-2 rounded text-center font-bold text-sm mb-2">Left → Node → Right</div>
+                    <p class="text-xs text-slate-500">
+                        تزور اليسار، ثم العقدة، ثم اليمين.
+                        <br><strong>في الـ BST:</strong> يطبع العناصر مرتبة تصاعدياً!
+                    </p>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 card-hover">
+                    <h3 class="font-bold text-purple-700 mb-2">Postorder (بعد)</h3>
+                    <div class="bg-purple-50 p-2 rounded text-center font-bold text-sm mb-2">Left → Right → Node</div>
+                    <p class="text-xs text-slate-500">
+                        تزور الأبناء أولاً، ثم العقدة.
+                        <br>مفيد لحذف الشجرة (Deleting) أو حساب حجم الملفات.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">3</div>
+                <h2 class="text-3xl font-bold text-slate-800">Binary Search Tree (BST)</h2>
+            </div>
+            
+            <div class="bg-slate-900 text-white p-6 rounded-xl shadow-lg relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-500 rounded-full blur-3xl opacity-20"></div>
+                
+                [cite_start]<h3 class="text-xl font-bold text-yellow-400 mb-4">قاعدة الـ BST الذهبية [cite: 23]</h3>
+                <p class="text-lg text-center font-mono bg-slate-800 p-4 rounded border border-slate-700">
+                    Left Subtree < Node < Right Subtree
+                </p>
+                
+                <div class="mt-6 grid md:grid-cols-2 gap-6 text-sm text-slate-300">
+                    <div>
+                        <strong class="text-emerald-400 block mb-1">المميزات:</strong>
+                        البحث، الإضافة، والحذف تأخذ $O(\log N)$ في المتوسط.
+                        <br>(لأننا نستبعد نصف الشجرة في كل خطوة).
+                    </div>
+                    <div>
+                        <strong class="text-red-400 block mb-1">العيوب (Worst Case):</strong>
+                        إذا كانت الشجرة غير متوازنة (مثل القائمة المتصلة)، يصبح التعقيد $O(N)$.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-16 mb-10">
+            <div class="bg-emerald-700 text-white py-3 px-6 rounded-t-xl font-bold text-xl flex items-center shadow-lg">
+                <span class="mr-2">🛡️</span> EXAM VAULT (خزنة الاختبار)
+            </div>
+            <div class="bg-white border-2 border-emerald-700 rounded-b-xl p-6 shadow-xl">
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                        <span class="bg-red-200 text-red-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">TRAP / أصعب عملية</span>
+                        <p class="font-bold text-slate-800 mb-1">Removing Node with 2 Children</p>
+                        <p class="text-sm text-slate-600">
+                            لا يمكنك حذف العقدة مباشرة!
+                            [cite_start]<br><strong>الحل:</strong> استبدل قيمتها بأصغر قيمة في اليمين (Min of Right Subtree)، ثم احذف تلك العقدة الصغيرة (التي سيكون لها طفل واحد أو لا شيء) [cite: 37-43].
+                        </p>
+                    </div>
+
+                    <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-100">
+                        <span class="bg-yellow-200 text-yellow-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">TRACING / تتبع</span>
+                        <p class="font-bold text-slate-800 mb-1">Expression Tree Traversal</p>
+                        <p class="text-sm text-slate-600">
+                            شجرة التعبير $a + b * c$:
+                            <br><strong>Inorder:</strong> $a + b * c$ (المعادلة الأصلية).
+                            <br><strong>Postorder:</strong> $a b c * +$ (Postfix).
+                            <br><strong>Preorder:</strong> $+ a * b c$ (Prefix).
+                            [cite_start]<br>[cite: 20]
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="flex justify-between mt-12 mb-8">
+            <a href="chapter5.html" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-lg font-bold shadow-sm transition transform hover:scale-105">→ السابق (Ch 5)</a>
+            <a href="chapter7.html" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg font-bold shadow-lg transition transform hover:scale-105">الفصل التالي (Ch 7) ←</a>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center border-t border-slate-800">
+        <p>© 2024 DataMaster Study Guide. Crafted for Excellence.</p>
+    </footer>
+
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. تحديد مفتاح التخزين بناءً على اسم المجلد
+            const path = window.location.pathname;
+            let courseKey = null;
+
+            // التحقق من اسم المجلد لتحديد المادة
+            if (path.includes('Computer-Architecture')) courseKey = 'arch_progress';
+            else if (path.includes('Theory-of-Computing')) courseKey = 'theory_progress';
+            else if (path.includes('Data-Structures')) courseKey = 'data_struct_progress';
+            else if (path.includes('Discrete-Mathematics')) courseKey = 'discrete_progress';
+
+            // 2. إذا تم التعرف على المادة، سجل الصفحة الحالية
+            if (courseKey) {
+                // استخراج اسم الملف فقط (مثلاً chapter5.html)
+                const pageName = path.split('/').pop();
+
+                // جلب البيانات القديمة
+                let visited = JSON.parse(localStorage.getItem(courseKey)) || [];
+
+                // إذا لم تكن الصفحة مسجلة مسبقاً، أضفها
+                if (!visited.includes(pageName)) {
+                    visited.push(pageName);
+                    localStorage.setItem(courseKey, JSON.stringify(visited));
+                    console.log(`✅ Progress Saved: ${pageName} in ${courseKey}`);
+                }
+            }
+        });
+    </script>
+	
+
+</body>
+</html>

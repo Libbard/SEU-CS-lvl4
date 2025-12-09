@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch10: Trees - Discrete Math</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .amber-gradient { background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.2); border-color: #f59e0b; }
+        .tree-node { width: 30px; height: 30px; background: #fff; border: 2px solid #b45309; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; margin: 0 5px; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-white shadow-lg sticky top-0 z-50 border-b border-amber-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-black text-amber-700 ml-2">DiscreteMaster</a>
+                    <span class="text-sm bg-amber-100 text-amber-800 py-1 px-2 rounded-full">Ch 10: Trees</span>
+                </div>
+                <div class="flex items-center space-x-2 space-x-reverse">
+                    <a href="chapter9.html" class="text-slate-600 hover:text-amber-600 px-3 py-2 rounded-md font-medium transition">→ السابق</a>
+                    <a href="index.html" class="text-slate-600 hover:text-amber-600 px-3 py-2 rounded-md font-medium transition">الرئيسية</a>
+                    <a href="chapter11.html" class="bg-amber-500 text-white px-3 py-2 rounded-md font-medium hover:bg-amber-600 transition shadow-md">التالي (ف11) ←</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-white py-12 border-b border-amber-100">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-slate-900">Tree Properties</h1>
+            <p class="text-xl text-slate-600 mb-6">الفصل العاشر: الخصائص الرياضية للأشجار</p>
+            <div class="inline-flex items-center bg-orange-50 text-orange-700 px-4 py-2 rounded-lg border border-orange-200 shadow-sm">
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                <span>الهدف: التمييز بين أنواع الأشجار (m-ary, Full)، وحساب عدد العقد والحواف بدقة.</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">1</div>
+                <h2 class="text-3xl font-bold text-slate-800">What is a Tree؟</h2>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-hover">
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <h3 class="font-bold text-amber-700 mb-3">التعريف الرياضي</h3>
+                        <p class="text-sm text-slate-600 mb-3">
+                            الشجرة هي رسم بياني غير موجه (Undirected Graph) يحقق شرطين معاً:
+                        </p>
+                        <ul class="text-sm text-slate-700 list-disc list-inside bg-orange-50 p-3 rounded border border-orange-100">
+                            <li><strong>Connected:</strong> متصل (يوجد مسار بين أي نقطتين).</li>
+                            <li><strong>Acyclic:</strong> لا يحتوي على أي دورة (No simple circuits).</li>
+                        </ul>
+                        <p class="text-xs text-slate-500 mt-2">
+                            <strong>Forest (الغابة):</strong> مجموعة من الأشجار المنفصلة (Graph بدون دورات ولكن قد يكون غير متصل).
+                        </p>
+                    </div>
+                    <div class="flex justify-center space-x-4">
+                        <div class="text-center">
+                            <div class="mb-2"><div class="tree-node">A</div></div>
+                            <div class="w-0.5 h-4 bg-gray-400 mx-auto"></div>
+                            <div class="flex space-x-2">
+                                <div class="tree-node">B</div>
+                                <div class="tree-node">C</div>
+                            </div>
+                            <p class="text-xs text-green-600 mt-2 font-bold">Tree ✅</p>
+                        </div>
+                        <div class="w-px bg-gray-200"></div>
+                        <div class="text-center">
+                            <div class="mb-2"><div class="tree-node">A</div></div>
+                            <div class="w-0.5 h-4 bg-gray-400 mx-auto"></div>
+                            <div class="flex space-x-2 relative">
+                                <div class="tree-node">B</div>
+                                <div class="border-t-2 border-gray-400 absolute w-full top-1/2 -z-10"></div>
+                                <div class="tree-node">C</div>
+                            </div>
+                            <p class="text-xs text-red-600 mt-2 font-bold">Not Tree ❌ (Cycle)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">2</div>
+                <h2 class="text-3xl font-bold text-slate-800">Rooted Trees Terminology</h2>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-lg border-r-4 border-amber-500">
+                <p class="text-slate-600 mb-4 text-sm">
+                    عندما نختار رأساً ليكون "الجذر" ونوجه الحواف بعيداً عنه، نحصل على <strong>Rooted Tree</strong>.
+                </p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-sm">
+                    <div class="bg-gray-50 p-3 rounded">
+                        <strong class="block text-slate-800">Parent (الأب)</strong>
+                        الرأس $u$ الذي يتصل به $v$ مباشرة من جهة الجذر.
+                    </div>
+                    <div class="bg-gray-50 p-3 rounded">
+                        <strong class="block text-slate-800">Child (الابن)</strong>
+                        الرأس $v$ الذي أبوه هو $u$.
+                    </div>
+                    <div class="bg-gray-50 p-3 rounded">
+                        <strong class="block text-slate-800">Siblings (الإخوة)</strong>
+                        رؤوس لها نفس الأب.
+                    </div>
+                    <div class="bg-gray-50 p-3 rounded">
+                        <strong class="block text-slate-800">Ancestors (الأجداد)</strong>
+                        كل الرؤوس في المسار من الجذر إلى الرأس.
+                    </div>
+                </div>
+                
+                <div class="mt-4 flex gap-4 text-sm">
+                    <div class="flex-1 bg-green-50 p-3 rounded border border-green-200">
+                        <strong class="text-green-800">Leaf (الورقة):</strong> رأس ليس له أبناء (Degree Out = 0).
+                    </div>
+                    <div class="flex-1 bg-blue-50 p-3 rounded border border-blue-200">
+                        <strong class="text-blue-800">Internal Vertex:</strong> رأس له ابن واحد على الأقل (ليس ورقة).
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">3</div>
+                <h2 class="text-3xl font-bold text-slate-800">m-ary Trees</h2>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-hover">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="font-bold text-slate-700 mb-2">أنواع الأشجار حسب التفريغ</h3>
+                        <ul class="space-y-3 text-sm text-slate-600">
+                            <li><strong class="text-amber-600">m-ary Tree:</strong> كل عقدة داخلية لها <strong>على الأكثر</strong> $m$ أبناء.</li>
+                            <li><strong class="text-orange-600">Full m-ary Tree:</strong> كل عقدة داخلية لها <strong>بالضبط</strong> $m$ أبناء.</li>
+                            <li><strong class="text-slate-800">Binary Tree:</strong> هي m-ary tree حيث $m=2$.</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-900 text-white p-4 rounded-lg">
+                        <h4 class="text-yellow-400 font-bold mb-3 text-center">Counting Theorems (قوانين العد)</h4>
+                        <div class="space-y-2 text-sm font-mono ltr text-center">
+                            <p class="border-b border-gray-600 pb-1">Tree with $n$ vertices $\to$ $n-1$ edges</p>
+                            <p class="text-xs text-gray-400 mb-2"></p>
+                            
+                            <p class="border-b border-gray-600 pb-1">Full m-ary Tree:</p>
+                            <p>$n = m \cdot i + 1$</p>
+                            <p>$l = (m-1)i + 1$</p>
+                            <p>$i = (l-1)/(m-1)$</p>
+                            <div class="mt-2 text-xs text-gray-400 text-right">
+                                $n$: Total vertices<br>
+                                $i$: Internal vertices<br>
+                                $l$: Leaves<br>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-16 mb-10">
+            <div class="bg-amber-700 text-white py-3 px-6 rounded-t-xl font-bold text-xl flex items-center shadow-lg">
+                <span class="mr-2">🛡️</span> EXAM VAULT (خزنة الاختبار)
+            </div>
+            <div class="bg-white border-2 border-amber-700 rounded-b-xl p-6 shadow-xl">
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                        <span class="bg-red-200 text-red-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">TRAP / الفرق الدقيق</span>
+                        <p class="font-bold text-slate-800 mb-1">Full m-ary Tree Definition</p>
+                        <p class="text-sm text-slate-600">
+                            هل الشجرة التي فيها عقدة لها ابن واحد وعقدة أخرى لها ابنان تعتبر "Full Binary Tree"؟
+                            <br><span class="text-red-600 font-bold">لا!</span>
+                            <br>في الـ Full Binary Tree، كل عقدة داخلية يجب أن يكون لها <strong>بالضبط 2</strong> أبناء. لا يُسمح بـ 1.
+                        </p>
+                    </div>
+
+                    <div class="bg-orange-50 p-4 rounded-lg border border-orange-100">
+                        <span class="bg-orange-200 text-orange-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">FORMULA / الارتفاع</span>
+                        <p class="font-bold text-slate-800 mb-1">Height of m-ary Tree</p>
+                        <p class="text-sm text-slate-600">
+                            لشجرة $m$-ary كاملة بـ $l$ ورقة:
+                            <br>أقل ارتفاع ممكن (Balanced): $h = \lceil \log_m l \rceil$.
+                            <br>هذا القانون يحدد كفاءة الأشجار في تخزين البيانات (كما في BST).
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="flex justify-between mt-12 mb-8">
+            <a href="chapter9.html" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-lg font-bold shadow-sm transition transform hover:scale-105">→ السابق (Ch 9)</a>
+            <a href="chapter11.html" class="bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-lg font-bold shadow-lg transition transform hover:scale-105">الفصل التالي (Ch 11) ←</a>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center border-t border-slate-800">
+        <p>© 2024 DiscreteMaster Study Guide. Crafted for Excellence.</p>
+    </footer>
+
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. تحديد مفتاح التخزين بناءً على اسم المجلد
+            const path = window.location.pathname;
+            let courseKey = null;
+
+            // التحقق من اسم المجلد لتحديد المادة
+            if (path.includes('Computer-Architecture')) courseKey = 'arch_progress';
+            else if (path.includes('Theory-of-Computing')) courseKey = 'theory_progress';
+            else if (path.includes('Data-Structures')) courseKey = 'data_struct_progress';
+            else if (path.includes('Discrete-Mathematics')) courseKey = 'discrete_progress';
+
+            // 2. إذا تم التعرف على المادة، سجل الصفحة الحالية
+            if (courseKey) {
+                // استخراج اسم الملف فقط (مثلاً chapter5.html)
+                const pageName = path.split('/').pop();
+
+                // جلب البيانات القديمة
+                let visited = JSON.parse(localStorage.getItem(courseKey)) || [];
+
+                // إذا لم تكن الصفحة مسجلة مسبقاً، أضفها
+                if (!visited.includes(pageName)) {
+                    visited.push(pageName);
+                    localStorage.setItem(courseKey, JSON.stringify(visited));
+                    console.log(`✅ Progress Saved: ${pageName} in ${courseKey}`);
+                }
+            }
+        });
+    </script>
+	
+
+</body>
+</html>

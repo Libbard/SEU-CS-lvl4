@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch3: Number Theory & Crypto - Discrete Math</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .amber-gradient { background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.2); border-color: #f59e0b; }
+        .crypto-key { font-family: monospace; background: #fff7ed; padding: 2px 6px; border-radius: 4px; border: 1px solid #fdba74; color: #c2410c; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-white shadow-lg sticky top-0 z-50 border-b border-amber-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-black text-amber-700 ml-2">DiscreteMaster</a>
+                    <span class="text-sm bg-amber-100 text-amber-800 py-1 px-2 rounded-full">Ch 3: Number Theory</span>
+                </div>
+                <div class="flex items-center space-x-2 space-x-reverse">
+                    <a href="chapter2.html" class="text-slate-600 hover:text-amber-600 px-3 py-2 rounded-md font-medium transition">→ السابق</a>
+                    <a href="index.html" class="text-slate-600 hover:text-amber-600 px-3 py-2 rounded-md font-medium transition">الرئيسية</a>
+                    <a href="chapter4.html" class="bg-amber-500 text-white px-3 py-2 rounded-md font-medium hover:bg-amber-600 transition shadow-md">التالي (ف4) ←</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-white py-12 border-b border-amber-100">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-slate-900">Number Theory & Cryptography</h1>
+            <p class="text-xl text-slate-600 mb-6">الفصل الثالث: نظرية الأعداد والتشفير</p>
+            <div class="inline-flex items-center bg-orange-50 text-orange-700 px-4 py-2 rounded-lg border border-orange-200 shadow-sm">
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                <span>الهدف: فهم حساب المود (Modulo)، خوارزمية إقليدس، وكيف يعمل تشفير RSA.</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">1</div>
+                <h2 class="text-3xl font-bold text-slate-800">Modular Arithmetic (حساب المود)</h2>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-hover">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="font-bold text-amber-700 mb-3">التعريف الأساسي</h3>
+                        <p class="text-slate-600 mb-4 text-sm">
+                            نقول أن $a$ يطابق $b$ مود $m$ وتكتب $a \equiv b \pmod m$ إذا كان $m$ يقسم الفرق بينهما $(a-b)$.
+                            <br>بمعنى آخر: لهما نفس الباقي عند القسمة على $m$.
+                        </p>
+                        <div class="bg-orange-50 p-3 rounded border border-orange-100 text-center font-bold text-orange-800">
+                            $17 \equiv 5 \pmod{12}$
+                            <br><span class="text-xs font-normal text-slate-600">(لأن 17 - 5 = 12، وهو يقبل القسمة على 12)</span>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                        <strong class="block text-slate-700 mb-2">خصائص هامة:</strong>
+                        <ul class="text-sm space-y-2 text-slate-600">
+                            <li>إذا كان $a \equiv b$ و $c \equiv d$:</li>
+                            <li class="pl-4 border-r-2 border-amber-300">$a + c \equiv b + d \pmod m$</li>
+                            <li class="pl-4 border-r-2 border-amber-300">$a \cdot c \equiv b \cdot d \pmod m$</li>
+                            <li class="pl-4 border-r-2 border-amber-300">$a^k \equiv b^k \pmod m$</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">2</div>
+                <h2 class="text-3xl font-bold text-slate-800">Primes & GCD</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 card-hover">
+                    <h3 class="font-bold text-amber-700 mb-2">Euclidean Algorithm (لإيجاد GCD)</h3>
+                    <p class="text-sm text-slate-600 mb-3">
+                        لإيجاد القاسم المشترك الأكبر لرقمين كبيرين، نكرر عملية القسمة.
+                        <br>$GCD(a, b) = GCD(b, a \pmod b)$
+                    </p>
+                    <div class="bg-gray-100 p-3 rounded font-mono text-xs ltr">
+                        GCD(252, 105):<br>
+                        252 = 2 * 105 + 42<br>
+                        105 = 2 * 42 + 21<br>
+                        42 = 2 * 21 + 0<br>
+                        Result: 21 (آخر باقي غير صفري)
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 card-hover border-t-4 border-orange-500">
+                    <h3 class="font-bold text-orange-700 mb-2">Bézout's Identity</h3>
+                    <p class="text-sm text-slate-600 mb-3">
+                        إذا كان $d = GCD(a, b)$، فإنه توجد أعداد صحيحة $s$ و $t$ بحيث:
+                    </p>
+                    <div class="text-center font-bold text-lg text-slate-800 mb-2">
+                        $s \cdot a + t \cdot b = d$
+                    </div>
+                    <p class="text-xs text-slate-500">
+                        هذه المعادلة هي الأساس لإيجاد <strong>المعكوس الضربي (Modular Inverse)</strong>، وهو أهم خطوة في التشفير.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">3</div>
+                <h2 class="text-3xl font-bold text-slate-800">RSA Cryptography</h2>
+            </div>
+            
+            <div class="bg-slate-900 text-white p-6 rounded-xl shadow-lg relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-orange-500 rounded-full blur-3xl opacity-20"></div>
+                
+                <h3 class="text-2xl font-bold text-yellow-400 mb-4">كيف يعمل RSA؟</h3>
+                <div class="space-y-4 text-sm text-slate-300">
+                    <div class="flex items-start">
+                        <span class="bg-slate-700 px-2 py-1 rounded text-xs mr-3 min-w-[60px] text-center">Step 1</span>
+                        <div>اختر عددين أوليين كبيرين $p$ و $q$. احسب $n = p \cdot q$.</div>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="bg-slate-700 px-2 py-1 rounded text-xs mr-3 min-w-[60px] text-center">Step 2</span>
+                        <div>احسب $\phi(n) = (p-1)(q-1)$.</div>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="bg-slate-700 px-2 py-1 rounded text-xs mr-3 min-w-[60px] text-center">Step 3</span>
+                        <div>اختر مفتاح التشفير $e$ بحيث يكون أولي نسبياً مع $\phi(n)$. <span class="text-yellow-500">(Public Key: n, e)</span></div>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="bg-slate-700 px-2 py-1 rounded text-xs mr-3 min-w-[60px] text-center">Step 4</span>
+                        <div>احسب مفتاح فك التشفير $d$ بحيث $d \cdot e \equiv 1 \pmod{\phi(n)}$. <span class="text-red-400">(Private Key: d)</span></div>
+                    </div>
+                </div>
+
+                <div class="mt-6 grid grid-cols-2 gap-4 text-center">
+                    <div class="bg-slate-800 p-3 rounded border border-slate-600">
+                        <strong class="block text-green-400 mb-1">Encryption</strong>
+                        $C = M^e \pmod n$
+                    </div>
+                    <div class="bg-slate-800 p-3 rounded border border-slate-600">
+                        <strong class="block text-blue-400 mb-1">Decryption</strong>
+                        $M = C^d \pmod n$
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-16 mb-10">
+            <div class="bg-amber-700 text-white py-3 px-6 rounded-t-xl font-bold text-xl flex items-center shadow-lg">
+                <span class="mr-2">🛡️</span> EXAM VAULT (خزنة الاختبار)
+            </div>
+            <div class="bg-white border-2 border-amber-700 rounded-b-xl p-6 shadow-xl">
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                        <span class="bg-red-200 text-red-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">TRAP / فخ السالب</span>
+                        <p class="font-bold text-slate-800 mb-1">Negative Modulo</p>
+                        <p class="text-sm text-slate-600">
+                            ما هو $-13 \pmod 5$؟
+                            <br>الجواب ليس $-3$ ولا $-2$.
+                            <br>الجواب يجب أن يكون موجباً بين 0 و 4.
+                            <br>$-13 = 5(-3) + \mathbf{2}$. الجواب هو <strong>2</strong>.
+                            <br><span class="text-xs text-gray-500">(قاعدة سريعة: استمر بإضافة 5 حتى يصبح الرقم موجباً: -13 -> -8 -> -3 -> 2).</span>
+                        </p>
+                    </div>
+
+                    <div class="bg-orange-50 p-4 rounded-lg border border-orange-100">
+                        <span class="bg-orange-200 text-orange-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">THEORY / نظرية فيرما الصغرى</span>
+                        <p class="font-bold text-slate-800 mb-1">Fermat's Little Theorem</p>
+                        <p class="text-sm text-slate-600">
+                            إذا كان $p$ عدداً أولياً، فإن لأي عدد $a$ لا يقبل القسمة على $p$:
+                            <br>$$ a^{p-1} \equiv 1 \pmod p $$
+                            <br>تستخدم لتبسيط حساب الأسس الكبيرة جداً بسرعة هائلة.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="flex justify-between mt-12 mb-8">
+            <a href="chapter2.html" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-lg font-bold shadow-sm transition transform hover:scale-105">→ السابق (Ch 2)</a>
+            <a href="chapter4.html" class="bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-lg font-bold shadow-lg transition transform hover:scale-105">الفصل التالي (Ch 4) ←</a>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center border-t border-slate-800">
+        <p>© 2024 DiscreteMaster Study Guide. Crafted for Excellence.</p>
+    </footer>
+
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. تحديد مفتاح التخزين بناءً على اسم المجلد
+            const path = window.location.pathname;
+            let courseKey = null;
+
+            // التحقق من اسم المجلد لتحديد المادة
+            if (path.includes('Computer-Architecture')) courseKey = 'arch_progress';
+            else if (path.includes('Theory-of-Computing')) courseKey = 'theory_progress';
+            else if (path.includes('Data-Structures')) courseKey = 'data_struct_progress';
+            else if (path.includes('Discrete-Mathematics')) courseKey = 'discrete_progress';
+
+            // 2. إذا تم التعرف على المادة، سجل الصفحة الحالية
+            if (courseKey) {
+                // استخراج اسم الملف فقط (مثلاً chapter5.html)
+                const pageName = path.split('/').pop();
+
+                // جلب البيانات القديمة
+                let visited = JSON.parse(localStorage.getItem(courseKey)) || [];
+
+                // إذا لم تكن الصفحة مسجلة مسبقاً، أضفها
+                if (!visited.includes(pageName)) {
+                    visited.push(pageName);
+                    localStorage.setItem(courseKey, JSON.stringify(visited));
+                    console.log(`✅ Progress Saved: ${pageName} in ${courseKey}`);
+                }
+            }
+        });
+    </script>
+	
+
+</body>
+</html>

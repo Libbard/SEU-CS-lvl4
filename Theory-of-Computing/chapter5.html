@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch5: Context-Free Grammars - Theory of Computing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(147, 51, 234, 0.15); border-color: #9333ea; }
+        .grammar-rule { font-family: 'Fira Code', monospace; direction: ltr; background: #faf5ff; padding: 4px 8px; border-radius: 4px; border-left: 3px solid #d946ef; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-white shadow-lg sticky top-0 z-50 border-b border-purple-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-black text-purple-700 ml-2">TheoryMaster</a>
+                    <span class="text-sm bg-purple-100 text-purple-800 py-1 px-2 rounded-full">Ch 5: CFGs</span>
+                </div>
+                <div class="flex items-center space-x-2 space-x-reverse">
+                    <a href="chapter4.html" class="text-slate-600 hover:text-purple-600 px-3 py-2 rounded-md font-medium transition">→ السابق</a>
+                    <a href="index.html" class="text-slate-600 hover:text-purple-600 px-3 py-2 rounded-md font-medium transition">الرئيسية</a>
+                    <a href="chapter6.html" class="bg-purple-600 text-white px-3 py-2 rounded-md font-medium hover:bg-purple-700 transition shadow-md">التالي (ف6) ←</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-white py-12 border-b border-purple-100">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-slate-900">Context-Free Grammars</h1>
+            <p class="text-xl text-slate-600 mb-6">الفصل الخامس: القواعد الخالية من السياق</p>
+            <div class="inline-flex items-center bg-pink-50 text-pink-700 px-4 py-2 rounded-lg border border-pink-200 shadow-sm">
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                <span>الهدف: وصف اللغات التي تعتمد على "التوازن" و "التداخل" (مثل $0^n 1^n$) التي تعجز عنها اللغات المنتظمة.</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">1</div>
+                <h2 class="text-3xl font-bold text-slate-800">What is a CFG؟</h2>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-hover">
+                <p class="text-slate-600 mb-4">هي طريقة لوصف اللغات باستخدام قواعد "استبدال" (Substitution Rules).</p>
+                <div class="bg-slate-50 p-4 rounded border border-slate-200">
+                    <h3 class="font-bold text-purple-700 mb-2">The 4-Tuple $(V, T, P, S)$:</h3>
+                    <ul class="space-y-2 text-sm text-slate-700">
+                        <li><strong class="text-indigo-600">V (Variables):</strong> رموز غير نهائية (Non-terminals) يمكن استبدالها (عادة حروف كبيرة مثل A, B, S).</li>
+                        <li><strong class="text-pink-600">T (Terminals):</strong> رموز نهائية تكون الجملة (حروف صغيرة، أرقام، أقواس).</li>
+                        <li><strong class="text-green-600">P (Productions):</strong> قواعد الاستبدال. شكلها: $A \to \alpha$.</li>
+                        <li><strong class="text-orange-600">S (Start Symbol):</strong> المتغير الذي نبدأ منه الاشتقاق.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">2</div>
+                <h2 class="text-3xl font-bold text-slate-800">Derivations & Parse Trees</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 card-hover">
+                    <h3 class="font-bold text-lg text-slate-700 mb-3">Example: $L = \{0^n 1^n\}$</h3>
+                    <div class="grammar-rule mb-3">S $\to$ 0S1 | $\epsilon$</div>
+                    <p class="text-sm text-slate-600 mb-2">لإنتاج الكلمة <strong>0011</strong>:</p>
+                    <ol class="list-decimal list-inside text-sm space-y-1 font-mono ltr text-left bg-gray-50 p-3 rounded text-slate-700">
+                        <li>S $\Rightarrow$ 0S1</li>
+                        <li>$\Rightarrow$ 0(0S1)1 = 00S11</li>
+                        <li>$\Rightarrow$ 00($\epsilon$)11 = 0011</li>
+                    </ol>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 card-hover">
+                    <h3 class="font-bold text-lg text-slate-700 mb-3">Types of Derivation</h3>
+                    <ul class="space-y-3 text-sm">
+                        <li class="bg-purple-50 p-2 rounded border-r-4 border-purple-500">
+                            <strong>Leftmost Derivation:</strong><br>
+                            نستبدل دائماً المتغير الموجود في أقصى <strong>اليسار</strong> أولاً.
+                        </li>
+                        <li class="bg-pink-50 p-2 rounded border-r-4 border-pink-500">
+                            <strong>Rightmost Derivation:</strong><br>
+                            نستبدل دائماً المتغير الموجود في أقصى <strong>اليمين</strong> أولاً.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mt-6 bg-slate-900 text-white p-6 rounded-xl shadow-lg text-center">
+                <h4 class="font-bold text-yellow-400 mb-4">Parse Tree (شجرة الإعراب)</h4>
+                <p class="text-sm text-slate-300 mb-4">تمثيل رسومي لعملية الاشتقاق. (الجذر S، الأوراق Terminals).</p>
+                <div class="inline-block relative w-48 h-32 border-2 border-slate-600 rounded p-2">
+                    <div class="absolute top-2 left-1/2 -translate-x-1/2 font-bold">S</div>
+                    <div class="absolute top-10 left-4">0</div>
+                    <div class="absolute top-10 left-1/2 -translate-x-1/2 font-bold">S</div>
+                    <div class="absolute top-10 right-4">1</div>
+                    
+                    <div class="absolute top-6 left-1/2 w-px h-4 bg-slate-500 rotate-45 origin-top"></div> <div class="absolute top-6 left-1/2 w-px h-4 bg-slate-500 -rotate-45 origin-top"></div> <div class="absolute top-6 left-1/2 w-px h-4 bg-slate-500"></div> <p class="absolute bottom-2 w-full text-xs text-slate-500">Yield: 0011</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">3</div>
+                <h2 class="text-3xl font-bold text-slate-800">Ambiguity (الغموض)</h2>
+            </div>
+            
+            <div class="bg-red-50 border-l-4 border-red-500 p-6 rounded-xl">
+                <h3 class="text-xl font-bold text-red-800 mb-2">متى تكون القواعد غامضة؟</h3>
+                <p class="text-slate-700 mb-4">
+                    إذا كان لنفس الكلمة (String) أكثر من <strong>شجرة إعراب (Parse Tree)</strong> مختلفة (أو أكثر من Leftmost Derivation).
+                </p>
+
+                <div class="bg-white p-4 rounded shadow-sm">
+                    <strong class="block text-red-700 mb-2">مثال شهير (Expressions):</strong>
+                    <div class="grammar-rule mb-2">E $\to$ E + E | E * E | (E) | id</div>
+                    <p class="text-sm text-slate-600">
+                        الكلمة <code>id + id * id</code> يمكن فهمها بطريقتين:
+                        <br>1. (id + id) * id
+                        <br>2. id + (id * id) <span class="text-green-600 font-bold">✓ (الصحيح رياضياً)</span>
+                    </p>
+                </div>
+
+                <div class="mt-4">
+                    <h4 class="font-bold text-slate-800">الحل (Disambiguation):</h4>
+                    <ul class="list-disc list-inside text-sm text-slate-700 mt-1">
+                        <li>فرض <strong>أسبقية العمليات (Precedence)</strong>: الضرب أقوى من الجمع.</li>
+                        <li>فرض <strong>الترابط (Associativity)</strong>: من اليسار لليمين.</li>
+                        <li>إعادة كتابة القواعد (Rewrite Grammar) لتطبيق هذه القيود.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-16 mb-10">
+            <div class="bg-purple-700 text-white py-3 px-6 rounded-t-xl font-bold text-xl flex items-center shadow-lg">
+                <span class="mr-2">🛡️</span> EXAM VAULT (خزنة الاختبار)
+            </div>
+            <div class="bg-white border-2 border-purple-700 rounded-b-xl p-6 shadow-xl">
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-100">
+                        <span class="bg-indigo-200 text-indigo-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">CONCEPT / مفهوم عميق</span>
+                        <p class="font-bold text-slate-800 mb-1">Inherently Ambiguous Language</p>
+                        <p class="text-sm text-slate-600">
+                            هل الغموض في القواعد أم في اللغة؟
+                            <br>أحياناً تكون اللغة نفسها "مريضة" ولا يمكن كتابة <strong>أي</strong> قواعد (CFG) لها بدون غموض.
+                            <br>مثال: $L = \{a^n b^n c^m\} \cup \{a^n b^m c^m\}$.
+                        </p>
+                    </div>
+
+                    <div class="bg-pink-50 p-4 rounded-lg border border-pink-100">
+                        <span class="bg-pink-200 text-pink-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">TRAP / فخ</span>
+                        <p class="font-bold text-slate-800 mb-1">Is every Regular Language a CFL؟</p>
+                        <p class="text-sm text-slate-600">
+                            <strong>نعم!</strong> اللغات المنتظمة هي مجموعة جزئية (Subset) من اللغات الخالية من السياق.
+                            <br>كل DFA يمكن تحويله بسهولة إلى CFG.
+                            <br>العكس <strong>غير صحيح</strong> (ليست كل CFL هي Regular).
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="flex justify-between mt-12 mb-8">
+            <a href="chapter4.html" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-lg font-bold shadow-sm transition transform hover:scale-105">→ السابق (Ch 4)</a>
+            <a href="chapter6.html" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-bold shadow-lg transition transform hover:scale-105">الفصل التالي (Ch 6) ←</a>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center border-t border-slate-800">
+        <p>© 2024 TheoryMaster Study Guide. Crafted for Excellence.</p>
+    </footer>
+
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. تحديد مفتاح التخزين بناءً على اسم المجلد
+            const path = window.location.pathname;
+            let courseKey = null;
+
+            // التحقق من اسم المجلد لتحديد المادة
+            if (path.includes('Computer-Architecture')) courseKey = 'arch_progress';
+            else if (path.includes('Theory-of-Computing')) courseKey = 'theory_progress';
+            else if (path.includes('Data-Structures')) courseKey = 'data_struct_progress';
+            else if (path.includes('Discrete-Mathematics')) courseKey = 'discrete_progress';
+
+            // 2. إذا تم التعرف على المادة، سجل الصفحة الحالية
+            if (courseKey) {
+                // استخراج اسم الملف فقط (مثلاً chapter5.html)
+                const pageName = path.split('/').pop();
+
+                // جلب البيانات القديمة
+                let visited = JSON.parse(localStorage.getItem(courseKey)) || [];
+
+                // إذا لم تكن الصفحة مسجلة مسبقاً، أضفها
+                if (!visited.includes(pageName)) {
+                    visited.push(pageName);
+                    localStorage.setItem(courseKey, JSON.stringify(visited));
+                    console.log(`✅ Progress Saved: ${pageName} in ${courseKey}`);
+                }
+            }
+        });
+    </script>
+	
+
+</body>
+</html>

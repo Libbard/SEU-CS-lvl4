@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch5: Discrete Probability - Discrete Math</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .amber-gradient { background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.2); border-color: #f59e0b; }
+        .bayes-box { background: #fffbeb; border: 2px solid #f59e0b; padding: 15px; border-radius: 8px; text-align: center; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-white shadow-lg sticky top-0 z-50 border-b border-amber-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-black text-amber-700 ml-2">DiscreteMaster</a>
+                    <span class="text-sm bg-amber-100 text-amber-800 py-1 px-2 rounded-full">Ch 5: Probability</span>
+                </div>
+                <div class="flex items-center space-x-2 space-x-reverse">
+                    <a href="chapter4.html" class="text-slate-600 hover:text-amber-600 px-3 py-2 rounded-md font-medium transition">→ السابق</a>
+                    <a href="index.html" class="text-slate-600 hover:text-amber-600 px-3 py-2 rounded-md font-medium transition">الرئيسية</a>
+                    <a href="chapter6.html" class="bg-amber-500 text-white px-3 py-2 rounded-md font-medium hover:bg-amber-600 transition shadow-md">التالي (ف6) ←</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-white py-12 border-b border-amber-100">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-slate-900">Discrete Probability</h1>
+            <p class="text-xl text-slate-600 mb-6">الفصل الخامس: الاحتمالات المتقطعة ونظرية بايز</p>
+            <div class="inline-flex items-center bg-orange-50 text-orange-700 px-4 py-2 rounded-lg border border-orange-200 shadow-sm">
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                <span>الهدف: حساب الاحتمالات الشرطية، تطبيق نظرية بايز، وحساب التباين للمتغيرات العشوائية.</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">1</div>
+                <h2 class="text-3xl font-bold text-slate-800">Probability Basics</h2>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-hover">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="font-bold text-amber-700 mb-3">المصطلحات الأساسية</h3>
+                        <ul class="space-y-3 text-sm text-slate-700">
+                            <li><strong>Experiment:</strong> إجراء يؤدي لواحد من عدة نواتج محتملة (رمي نرد).</li>
+                            <li><strong>Sample Space ($S$):</strong> مجموعة كل النواتج الممكنة. ($S=\{1,2,3,4,5,6\}$).</li>
+                            <li><strong>Event ($E$):</strong> مجموعة جزئية من $S$ (ظهور رقم زوجي $E=\{2,4,6\}$).</li>
+                        </ul>
+                    </div>
+                    <div class="bg-orange-50 p-4 rounded-lg border border-orange-100 text-center">
+                        <strong class="block text-orange-800 mb-2">Laplace Definition</strong>
+                        <p class="text-sm text-slate-600 mb-2">إذا كانت النواتج متساوية الاحتمال (Equally Likely):</p>
+                        <div class="text-xl font-bold text-slate-800 math-font">
+                            $$ p(E) = \frac{|E|}{|S|} $$
+                        </div>
+                        <p class="text-xs text-slate-500 mt-2">عدد عناصر الحدث / العدد الكلي.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">2</div>
+                <h2 class="text-3xl font-bold text-slate-800">Rules & Conditional Probability</h2>
+            </div>
+
+            <div class="space-y-6">
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="bg-white p-4 rounded shadow-sm border border-slate-200">
+                        <strong class="text-amber-700 block mb-1">Union Rule (الاتحاد)</strong>
+                        <p class="text-sm text-slate-600 ltr">
+                            $$ p(E \cup F) = p(E) + p(F) - p(E \cap F) $$
+                        </p>
+                        <p class="text-xs text-slate-500 mt-1">نطرح التقاطع حتى لا نعده مرتين.</p>
+                    </div>
+                    <div class="bg-white p-4 rounded shadow-sm border border-slate-200">
+                        <strong class="text-amber-700 block mb-1">Complement Rule (المكملة)</strong>
+                        <p class="text-sm text-slate-600 ltr">
+                            $$ p(\bar{E}) = 1 - p(E) $$
+                        </p>
+                        <p class="text-xs text-slate-500 mt-1">احتمال "عدم" حدوث الحدث.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl border-t-4 border-amber-500 shadow-sm">
+                    <h3 class="font-bold text-lg text-slate-800 mb-2">Conditional Probability (الاحتمال الشرطي)</h3>
+                    <p class="text-sm text-slate-600 mb-3">
+                        احتمال حدوث $E$ بشرط أن $F$ قد حدث بالفعل ($p(E|F)$).
+                        <br>بما أن $F$ حدث، فإن فضاء العينة يتقلص ليصبح $F$.
+                    </p>
+                    <div class="bg-slate-100 p-3 rounded text-center font-mono text-sm">
+                        $$ p(E|F) = \frac{p(E \cap F)}{p(F)} $$
+                    </div>
+                    <div class="mt-3 bg-green-50 p-2 rounded text-xs text-green-800">
+                        <strong>Independence (الاستقلال):</strong>
+                        <br>يكون $E$ و $F$ مستقلين إذا كان: $p(E \cap F) = p(E) \cdot p(F)$.
+                        <br>(حدوث أحدهما لا يؤثر على احتمال الآخر). 
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">3</div>
+                <h2 class="text-3xl font-bold text-slate-800">Bayes' Theorem (نظرية بايز)</h2>
+            </div>
+            
+            <div class="bg-slate-900 text-white p-6 rounded-xl shadow-lg relative overflow-hidden">
+                <h3 class="text-2xl font-bold text-yellow-400 mb-4 text-center">قلب الاحتمالات</h3>
+                <p class="text-slate-300 text-sm text-center mb-6">
+                    تسمح لنا بحساب $p(F|E)$ إذا كنا نعرف $p(E|F)$.
+                    <br>تستخدم لتحديث احتمالية الفرضية بناءً على دليل جديد.
+                </p>
+                
+                <div class="bayes-box text-slate-900 font-bold text-lg mb-4">
+                    $$ p(F|E) = \frac{p(E|F) \cdot p(F)}{p(E|F)p(F) + p(E|\bar{F})p(\bar{F})} $$
+                </div>
+
+                <div class="text-xs text-slate-400 text-center">
+                    $p(F)$: Prior Probability (الاحتمال المسبق).
+                    <br>$p(F|E)$: Posterior Probability (الاحتمال اللاحق).
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">4</div>
+                <h2 class="text-3xl font-bold text-slate-800">Expectation & Variance</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 card-hover">
+                    <h3 class="font-bold text-amber-700 mb-2">Expected Value ($E(X)$)</h3>
+                    <p class="text-sm text-slate-600 mb-3">
+                        هو "المعدل الموزون" للقيم المتوقعة.
+                    </p>
+                    <div class="bg-orange-50 p-2 rounded text-center font-mono text-sm">
+                        $$ E(X) = \sum_{s \in S} X(s) p(s) $$
+                    </div>
+                    <p class="text-xs text-slate-500 mt-2">
+                        Linearity: $E(aX + bY) = aE(X) + bE(Y)$. 
+                    </p>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 card-hover">
+                    <h3 class="font-bold text-amber-700 mb-2">Variance ($V(X)$)</h3>
+                    <p class="text-sm text-slate-600 mb-3">
+                        يقيس مدى "تشتت" القيم عن المعدل.
+                    </p>
+                    <div class="bg-orange-50 p-2 rounded text-center font-mono text-sm">
+                        $$ V(X) = E(X^2) - (E(X))^2 $$
+                    </div>
+                    <p class="text-xs text-slate-500 mt-2">
+                        Standard Deviation $\sigma = \sqrt{V(X)}$.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-16 mb-10">
+            <div class="bg-amber-700 text-white py-3 px-6 rounded-t-xl font-bold text-xl flex items-center shadow-lg">
+                <span class="mr-2">🛡️</span> EXAM VAULT (خزنة الاختبار)
+            </div>
+            <div class="bg-white border-2 border-amber-700 rounded-b-xl p-6 shadow-xl">
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                        <span class="bg-red-200 text-red-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">TRAP / خطأ قاتل</span>
+                        <p class="font-bold text-slate-800 mb-1">$p(E|F) \neq p(F|E)$</p>
+                        <p class="text-sm text-slate-600">
+                            "احتمال أن تكون مريضاً إذا كان الاختبار إيجابياً" يختلف تماماً عن "احتمال أن يكون الاختبار إيجابياً إذا كنت مريضاً".
+                            <br>الخلط بينهما يسمى <strong>Prosecutor's Fallacy</strong>.
+                        </p>
+                    </div>
+
+                    <div class="bg-orange-50 p-4 rounded-lg border border-orange-100">
+                        <span class="bg-orange-200 text-orange-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">CALCULATION / قانون برنولي</span>
+                        <p class="font-bold text-slate-800 mb-1">Bernoulli Trials</p>
+                        <p class="text-sm text-slate-600">
+                            احتمال تحقيق $k$ نجاحات في $n$ محاولة (باحتمال نجاح $p$):
+                            <br>$$ P(k) = C(n, k) p^k (1-p)^{n-k} $$
+                            <br>
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="flex justify-between mt-12 mb-8">
+            <a href="chapter4.html" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-lg font-bold shadow-sm transition transform hover:scale-105">→ السابق (Ch 4)</a>
+            <a href="chapter6.html" class="bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-lg font-bold shadow-lg transition transform hover:scale-105">الفصل التالي (Ch 6) ←</a>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center border-t border-slate-800">
+        <p>© 2024 DiscreteMaster Study Guide. Crafted for Excellence.</p>
+    </footer>
+
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. تحديد مفتاح التخزين بناءً على اسم المجلد
+            const path = window.location.pathname;
+            let courseKey = null;
+
+            // التحقق من اسم المجلد لتحديد المادة
+            if (path.includes('Computer-Architecture')) courseKey = 'arch_progress';
+            else if (path.includes('Theory-of-Computing')) courseKey = 'theory_progress';
+            else if (path.includes('Data-Structures')) courseKey = 'data_struct_progress';
+            else if (path.includes('Discrete-Mathematics')) courseKey = 'discrete_progress';
+
+            // 2. إذا تم التعرف على المادة، سجل الصفحة الحالية
+            if (courseKey) {
+                // استخراج اسم الملف فقط (مثلاً chapter5.html)
+                const pageName = path.split('/').pop();
+
+                // جلب البيانات القديمة
+                let visited = JSON.parse(localStorage.getItem(courseKey)) || [];
+
+                // إذا لم تكن الصفحة مسجلة مسبقاً، أضفها
+                if (!visited.includes(pageName)) {
+                    visited.push(pageName);
+                    localStorage.setItem(courseKey, JSON.stringify(visited));
+                    console.log(`✅ Progress Saved: ${pageName} in ${courseKey}`);
+                }
+            }
+        });
+    </script>
+	
+
+</body>
+</html>

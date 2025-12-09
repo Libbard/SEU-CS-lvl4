@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch2: Finite Automata - Theory of Computing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(147, 51, 234, 0.15); border-color: #9333ea; }
+        .state-circle { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 2px solid #4b5563; background: white; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-white shadow-lg sticky top-0 z-50 border-b border-purple-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-black text-purple-700 ml-2">TheoryMaster</a>
+                    <span class="text-sm bg-purple-100 text-purple-800 py-1 px-2 rounded-full">Ch 2: Finite Automata</span>
+                </div>
+                <div class="flex items-center space-x-2 space-x-reverse">
+                    <a href="chapter1.html" class="text-slate-600 hover:text-purple-600 px-3 py-2 rounded-md font-medium transition">→ السابق</a>
+                    <a href="index.html" class="text-slate-600 hover:text-purple-600 px-3 py-2 rounded-md font-medium transition">الرئيسية</a>
+                    <a href="chapter3.html" class="bg-purple-600 text-white px-3 py-2 rounded-md font-medium hover:bg-purple-700 transition shadow-md">التالي (ف3) ←</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-white py-12 border-b border-purple-100">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-slate-900">Finite Automata</h1>
+            <p class="text-xl text-slate-600 mb-6">الفصل الثاني: الآلات المحدودة (DFA & NFA)</p>
+            <div class="inline-flex items-center bg-pink-50 text-pink-700 px-4 py-2 rounded-lg border border-pink-200 shadow-sm">
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                <span>الهدف: فهم كيفية عمل الآلات المحدودة للتعرف على الأنماط (Pattern Recognition).</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">1</div>
+                <h2 class="text-3xl font-bold text-slate-800">DFA (Deterministic Finite Automata)</h2>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-hover">
+                <p class="text-slate-600 mb-4">آلة بسيطة ذات ذاكرة محدودة جداً. تكون دائماً في حالة (State) واحدة فقط في أي لحظة.</p>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h4 class="font-bold text-purple-700 mb-2">المكونات الخمسة (5-Tuple):</h4>
+                        <ul class="space-y-2 text-sm font-mono text-slate-700 bg-slate-50 p-4 rounded border border-slate-100">
+                            <li>$Q$: مجموعة الحالات (States).</li>
+                            <li>$\Sigma$: الأبجدية (Input Symbols).</li>
+                            <li>$\delta$: دالة الانتقال (Transition Function).</li>
+                            <li>$q_0$: حالة البداية (Start State).</li>
+                            <li>$F$: مجموعة الحالات النهائية (Final States).</li>
+                        </ul>
+                    </div>
+                    <div class="flex flex-col justify-center items-center bg-purple-50 rounded-lg p-4">
+                        <div class="text-center text-sm font-bold text-purple-800 mb-4">مثال بصري (Switch On/Off)</div>
+                        <div class="flex items-center space-x-8 space-x-reverse">
+                            <div class="state-circle border-purple-500">Off</div>
+                            <div class="text-2xl text-slate-400">⇄</div>
+                            <div class="state-circle border-double border-4 border-purple-700">On</div>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-4 text-center">لكل مدخل، هناك انتقال <strong>واحد ومحدد</strong> (Deterministic).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">2</div>
+                <h2 class="text-3xl font-bold text-slate-800">NFA (Nondeterministic Finite Automata)</h2>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-pink-500">
+                <h3 class="font-bold text-lg text-slate-800 mb-2">ما الفرق بين DFA و NFA؟</h3>
+                <p class="text-sm text-slate-600 mb-4">في NFA، الآلة يمكن أن تكون في <strong>عدة حالات</strong> في نفس الوقت، ويمكنها "التخمين" (Guessing).</p>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-center border-collapse">
+                        <thead class="bg-slate-100 text-slate-700">
+                            <tr>
+                                <th class="p-3 border">الخاصية</th>
+                                <th class="p-3 border text-purple-700">DFA</th>
+                                <th class="p-3 border text-pink-700">NFA</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="p-3 border font-bold">الانتقال (Transition)</td>
+                                <td class="p-3 border">مسار واحد فقط لكل مدخل.</td>
+                                <td class="p-3 border">صفر، واحد، أو أكثر من المسارات.</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 border font-bold">دالة الانتقال ($\delta$)</td>
+                                <td class="p-3 border font-mono">$Q \times \Sigma \to Q$</td>
+                                <td class="p-3 border font-mono">$Q \times \Sigma \to P(Q)$ (مجموعة)</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 border font-bold">Epsilon Moves ($\epsilon$)</td>
+                                <td class="p-3 border text-red-500">غير مسموح.</td>
+                                <td class="p-3 border text-green-500">مسموح (انتقال بدون دخل).</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">3</div>
+                <h2 class="text-3xl font-bold text-slate-800">Equivalence & Applications</h2>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-indigo-50 p-5 rounded-xl border border-indigo-200">
+                    <h3 class="font-bold text-indigo-800 mb-2">حقيقة هامة (Equivalence)</h3>
+                    <p class="text-sm text-slate-700 mb-3">
+                        كل NFA له DFA مكافئ له يقبل نفس اللغة تماماً.
+                        <br>
+                        <strong>NFA = DFA</strong> (من حيث القدرة التعبيرية).
+                    </p>
+                    <div class="bg-white p-2 rounded text-xs text-indigo-600 border border-indigo-100">
+                        التحويل يتم عبر خوارزمية <strong>Subset Construction</strong> (انظر خزنة الاختبار).
+                    </div>
+                </div>
+
+                <div class="bg-pink-50 p-5 rounded-xl border border-pink-200">
+                    <h3 class="font-bold text-pink-800 mb-2">تطبيق عملي: البحث عن النصوص</h3>
+                    <p class="text-sm text-slate-700">
+                        كيف تجد كلمة "ebay" أو "web" في صفحة ويب؟
+                        <br>نستخدم <strong>NFA</strong> حيث كل حالة تمثل حرفاً تم مطابقته.
+                        <br>هذا هو أساس عمل أدوات مثل <code>grep</code> و <code>Lexical Analyzers</code>.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">4</div>
+                <h2 class="text-3xl font-bold text-slate-800">$\epsilon$-NFA (Epsilon Transitions)</h2>
+            </div>
+            
+            <p class="text-slate-600 mb-4">هي قدرة الآلة على تغيير حالتها <strong>تلقائياً</strong> دون قراءة أي رمز من المدخلات (قفزة مجانية).</p>
+            
+            <div class="bg-slate-900 text-white p-5 rounded-xl shadow-lg">
+                <h4 class="font-bold text-yellow-400 mb-2">ECLOSE (Epsilon Closure)</h4>
+                <p class="text-sm text-slate-300 mb-3">
+                    هي مجموعة كل الحالات التي يمكن الوصول إليها من حالة معينة $q$ باستخدام انتقالات $\epsilon$ فقط.
+                </p>
+                <div class="bg-slate-800 p-3 rounded font-mono text-sm text-center ltr">
+                    ECLOSE(q) = { q } $\cup$ { reachable via $\epsilon$ }
+                </div>
+                <p class="text-xs text-slate-400 mt-2 text-right">* ملاحظة: الحالة نفسها دائماً جزء من الـ ECLOSE الخاص بها.</p>
+            </div>
+        </section>
+
+        <section class="mt-16 mb-10">
+            <div class="bg-purple-700 text-white py-3 px-6 rounded-t-xl font-bold text-xl flex items-center shadow-lg">
+                <span class="mr-2">🛡️</span> EXAM VAULT (خزنة الاختبار)
+            </div>
+            <div class="bg-white border-2 border-purple-700 rounded-b-xl p-6 shadow-xl">
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                        <span class="bg-red-200 text-red-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">TRAP / فخ التعاريف</span>
+                        <p class="font-bold text-slate-800 mb-1">DFA vs NFA Function Range</p>
+                        <p class="text-sm text-slate-600">
+                            انتبه في الاختيارات:
+                            <br><strong>DFA:</strong> $\delta(q, a) = q'$ (حالة واحدة).
+                            <br><strong>NFA:</strong> $\delta(q, a) = \{q_1, q_2, \dots\}$ (مجموعة من الحالات Subset of Q).
+                            <br>الفرق هو في <strong>المجموعة (Set)</strong>.
+                        </p>
+                    </div>
+
+                    <div class="bg-green-50 p-4 rounded-lg border border-green-100">
+                        <span class="bg-green-200 text-green-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">PROCESS / طريقة الحل</span>
+                        <p class="font-bold text-slate-800 mb-1">Subset Construction</p>
+                        <p class="text-sm text-slate-600">
+                            لتحويل NFA إلى DFA:
+                            <br>1. ابدأ بـ $q_0$ (أو ECLOSE($q_0$)).
+                            <br>2. لكل رمز، جد <strong>مجموعة</strong> الحالات الممكنة.
+                            <br>3. كل <strong>مجموعة</strong> جديدة تصبح <strong>حالة واحدة</strong> في الـ DFA.
+                            <br>4. أي مجموعة تحتوي على حالة نهائية من NFA تصبح نهائية في DFA.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="flex justify-between mt-12 mb-8">
+            <a href="chapter1.html" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-lg font-bold shadow-sm transition transform hover:scale-105">→ السابق (Ch 1)</a>
+            <a href="chapter3.html" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-bold shadow-lg transition transform hover:scale-105">الفصل التالي (Ch 3) ←</a>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center border-t border-slate-800">
+        <p>© 2024 TheoryMaster Study Guide. Crafted for Excellence.</p>
+    </footer>
+
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. تحديد مفتاح التخزين بناءً على اسم المجلد
+            const path = window.location.pathname;
+            let courseKey = null;
+
+            // التحقق من اسم المجلد لتحديد المادة
+            if (path.includes('Computer-Architecture')) courseKey = 'arch_progress';
+            else if (path.includes('Theory-of-Computing')) courseKey = 'theory_progress';
+            else if (path.includes('Data-Structures')) courseKey = 'data_struct_progress';
+            else if (path.includes('Discrete-Mathematics')) courseKey = 'discrete_progress';
+
+            // 2. إذا تم التعرف على المادة، سجل الصفحة الحالية
+            if (courseKey) {
+                // استخراج اسم الملف فقط (مثلاً chapter5.html)
+                const pageName = path.split('/').pop();
+
+                // جلب البيانات القديمة
+                let visited = JSON.parse(localStorage.getItem(courseKey)) || [];
+
+                // إذا لم تكن الصفحة مسجلة مسبقاً، أضفها
+                if (!visited.includes(pageName)) {
+                    visited.push(pageName);
+                    localStorage.setItem(courseKey, JSON.stringify(visited));
+                    console.log(`✅ Progress Saved: ${pageName} in ${courseKey}`);
+                }
+            }
+        });
+    </script>
+	
+
+</body>
+</html>

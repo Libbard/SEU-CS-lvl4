@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataMaster - Data Structures Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; background-color: #f0fdf4; } /* خلفية خضراء فاتحة جداً */
+        .hero-bg { background: linear-gradient(135deg, #064e3b 0%, #065f46 100%); }
+        .chapter-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 2px solid transparent; }
+        .chapter-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.2); border-color: #10b981; }
+        
+        /* تأثير البطاقة المكتملة (أخضر) */
+        .completed-card {
+            background-color: #dcfce7 !important; /* أخضر فاتح */
+            border-color: #22c55e !important; /* green-500 */
+        }
+        .completed-badge { display: none; }
+        .completed-card .completed-badge { display: inline-block; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-slate-900 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <span class="text-2xl font-black text-emerald-400 ml-2">DataMaster</span>
+                    <span class="text-xs bg-emerald-900 text-emerald-200 py-1 px-2 rounded-full border border-emerald-700">CS-240</span>
+                </div>
+                
+                <a href="../index.html" class="flex items-center bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-lg transition border border-slate-700 group">
+                    <span class="font-bold text-sm ml-2">بوابة المواد (Hub)</span>
+                    <svg class="w-4 h-4 text-slate-400 group-hover:text-white transition transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero-bg text-white py-16 px-4 text-center relative overflow-hidden">
+        <div class="max-w-4xl mx-auto relative z-10">
+            <h1 class="text-4xl md:text-6xl font-black mb-4 text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-green-300">
+                Data Structures
+            </h1>
+            <p class="text-lg md:text-xl text-slate-200 font-light mb-8">
+                الدليل الشامل للهياكل والخوارزميات (Java).
+            </p>
+            
+            <div class="bg-slate-800/50 backdrop-blur rounded-xl p-4 max-w-lg mx-auto border border-emerald-500/30">
+                <div class="flex justify-between text-xs text-emerald-200 mb-2 font-bold">
+                    <span>نسبة الإنجاز</span>
+                    <span id="progress-text">0%</span>
+                </div>
+                <div class="w-full bg-slate-700 rounded-full h-2.5">
+                    <div id="progress-bar" class="bg-emerald-500 h-2.5 rounded-full transition-all duration-1000 shadow-[0_0_10px_rgba(16,185,129,0.5)]" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-16">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="chapters-grid">
+
+            <a href="chapter1.html" class="chapter-card bg-white p-6 rounded-xl block relative overflow-hidden group">
+                <div class="absolute top-4 left-4 text-emerald-600 completed-badge animate-bounce">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                </div>
+                <div class="absolute top-0 right-0 w-2 h-full bg-emerald-500"></div>
+                <span class="text-xs font-bold text-emerald-600 uppercase tracking-widest mb-1 block">Module 1</span>
+                <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-emerald-700 transition">Introduction</h3>
+                <p class="text-sm text-slate-500">مراجعة الرياضيات، الـ Generics، وأهمية الكفاءة.</p>
+            </a>
+
+            <a href="chapter2.html" class="chapter-card bg-white p-6 rounded-xl block relative overflow-hidden group">
+                <div class="absolute top-4 left-4 text-emerald-600 completed-badge animate-bounce">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                </div>
+                <div class="absolute top-0 right-0 w-2 h-full bg-emerald-500"></div>
+                <span class="text-xs font-bold text-emerald-600 uppercase tracking-widest mb-1 block">Module 2</span>
+                <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-emerald-700 transition">Algorithm Analysis</h3>
+                <p class="text-sm text-slate-500">الـ Big-O Notation وتحليل وقت التشغيل.</p>
+            </a>
+
+            <a href="chapter3.html" class="chapter-card bg-white p-6 rounded-xl block relative overflow-hidden group">
+                <div class="absolute top-4 left-4 text-emerald-600 completed-badge animate-bounce">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                </div>
+                <div class="absolute top-0 right-0 w-2 h-full bg-emerald-500"></div>
+                <span class="text-xs font-bold text-emerald-600 uppercase tracking-widest mb-1 block">Module 3</span>
+                <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-emerald-700 transition">Lists & Arrays</h3>
+                <p class="text-sm text-slate-500">ArrayList vs LinkedList، والـ Iterators.</p>
+            </a>
+
+            <a href="chapter4.html" class="chapter-card bg-white p-6 rounded-xl block relative overflow-hidden group">
+                <div class="absolute top-4 left-4 text-emerald-600 completed-badge animate-bounce">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                </div>
+                <div class="absolute top-0 right-0 w-2 h-full bg-emerald-500"></div>
+                <span class="text-xs font-bold text-emerald-600 uppercase tracking-widest mb-1 block">Module 4</span>
+                <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-emerald-700 transition">Stacks</h3>
+                <p class="text-sm text-slate-500">مبدأ LIFO، موازنة الأقواس، وتطبيقاته.</p>
+            </a>
+
+            <a href="chapter5.html" class="chapter-card bg-white p-6 rounded-xl block relative overflow-hidden group">
+                <div class="absolute top-4 left-4 text-emerald-600 completed-badge animate-bounce">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                </div>
+                <div class="absolute top-0 right-0 w-2 h-full bg-emerald-500"></div>
+                <span class="text-xs font-bold text-emerald-600 uppercase tracking-widest mb-1 block">Module 5</span>
+                <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-emerald-700 transition">Queues</h3>
+                <p class="text-sm text-slate-500">مبدأ FIFO، المصفوفة الدائرية (Circular Array).</p>
+            </a>
+
+            <a href="chapter6.html" class="chapter-card bg-white p-6 rounded-xl block relative overflow-hidden group">
+                <div class="absolute top-4 left-4 text-emerald-600 completed-badge animate-bounce">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                </div>
+                <div class="absolute top-0 right-0 w-2 h-full bg-green-500"></div>
+                <span class="text-xs font-bold text-green-600 uppercase tracking-widest mb-1 block">Module 6</span>
+                <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-green-700 transition">Trees & BST</h3>
+                <p class="text-sm text-slate-500">أساسيات الأشجار، الزيارات (Traversals)، والبحث.</p>
+            </a>
+
+            <a href="chapter7.html" class="chapter-card bg-white p-6 rounded-xl block relative overflow-hidden group">
+                <div class="absolute top-4 left-4 text-emerald-600 completed-badge animate-bounce">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                </div>
+                <div class="absolute top-0 right-0 w-2 h-full bg-green-500"></div>
+                <span class="text-xs font-bold text-green-600 uppercase tracking-widest mb-1 block">Module 7</span>
+                <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-green-700 transition">BST Impl</h3>
+                <p class="text-sm text-slate-500">كتابة كود الـ BST، وحالات الحذف المعقدة.</p>
+            </a>
+
+            <a href="chapter8.html" class="chapter-card bg-white p-6 rounded-xl block relative overflow-hidden group">
+                <div class="absolute top-4 left-4 text-emerald-600 completed-badge animate-bounce">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                </div>
+                <div class="absolute top-0 right-0 w-2 h-full bg-green-500"></div>
+                <span class="text-xs font-bold text-green-600 uppercase tracking-widest mb-1 block">Module 8</span>
+                <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-green-700 transition">Hashing & Heaps</h3>
+                <p class="text-sm text-slate-500">جداول التجزئة، حل التصادم، وأكوام الأولويات.</p>
+            </a>
+
+            <a href="chapter9.html" class="chapter-card bg-white p-6 rounded-xl block relative overflow-hidden group">
+                <div class="absolute top-4 left-4 text-emerald-600 completed-badge animate-bounce">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                </div>
+                <div class="absolute top-0 right-0 w-2 h-full bg-teal-500"></div>
+                <span class="text-xs font-bold text-teal-600 uppercase tracking-widest mb-1 block">Module 9</span>
+                <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-teal-700 transition">Sorting I</h3>
+                <p class="text-sm text-slate-500">Insertion Sort, Shellsort, Heapsort.</p>
+            </a>
+
+            <a href="chapter10.html" class="chapter-card bg-white p-6 rounded-xl block relative overflow-hidden group">
+                <div class="absolute top-4 left-4 text-emerald-600 completed-badge animate-bounce">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                </div>
+                <div class="absolute top-0 right-0 w-2 h-full bg-teal-500"></div>
+                <span class="text-xs font-bold text-teal-600 uppercase tracking-widest mb-1 block">Module 10</span>
+                <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-teal-700 transition">Sorting II</h3>
+                <p class="text-sm text-slate-500">Mergesort, Quicksort, External Sorting.</p>
+            </a>
+
+            <a href="chapter11.html" class="chapter-card bg-white p-6 rounded-xl block relative overflow-hidden group">
+                <div class="absolute top-4 left-4 text-emerald-600 completed-badge animate-bounce">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                </div>
+                <div class="absolute top-0 right-0 w-2 h-full bg-teal-500"></div>
+                <span class="text-xs font-bold text-teal-600 uppercase tracking-widest mb-1 block">Module 11</span>
+                <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-teal-700 transition">Graph Algorithms</h3>
+                <p class="text-sm text-slate-500">Dijkstra, Prim, Kruskal, Topological Sort.</p>
+            </a>
+
+            <a href="chapter12.html" class="chapter-card bg-white p-6 rounded-xl block relative overflow-hidden group">
+                <div class="absolute top-4 left-4 text-emerald-600 completed-badge animate-bounce">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                </div>
+                <div class="absolute top-0 right-0 w-2 h-full bg-teal-500"></div>
+                <span class="text-xs font-bold text-teal-600 uppercase tracking-widest mb-1 block">Module 12</span>
+                <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-teal-700 transition">Design I</h3>
+                <p class="text-sm text-slate-500">Greedy, Divide & Conquer, Dynamic Programming.</p>
+            </a>
+
+            <a href="chapter13.html" class="chapter-card bg-white p-6 rounded-xl block relative overflow-hidden group border-2 border-yellow-400">
+                <div class="absolute top-4 left-4 text-emerald-600 completed-badge animate-bounce">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                </div>
+                <div class="absolute top-0 right-0 w-2 h-full bg-yellow-500"></div>
+                <span class="text-xs font-bold text-yellow-600 uppercase tracking-widest mb-1 block">Module 13</span>
+                <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-yellow-700 transition">Design II</h3>
+                <p class="text-sm text-slate-500">Randomized Algorithms, Backtracking.</p>
+            </a>
+            
+            <a href="final-review.html" class="chapter-card bg-gradient-to-br from-emerald-50 to-teal-50 p-6 rounded-xl block border-2 border-emerald-400 transform hover:scale-105 shadow-xl md:col-span-2 lg:col-span-3 text-center group relative">
+                <div class="absolute top-4 left-4 text-emerald-600 completed-badge animate-bounce">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                </div>
+                <div class="flex justify-center mb-4">
+                    <span class="bg-emerald-600 text-white text-sm font-black px-4 py-1 rounded-full shadow animate-pulse">🎓 FINAL REVIEW</span>
+                </div>
+                <h3 class="text-3xl font-black text-slate-800 mb-2 group-hover:text-emerald-700 transition">The Algorithmic Core</h3>
+                <p class="text-lg text-slate-600">
+                    المراجعة النهائية لما بعد المنتصف (Modules 6 - 13).
+                    <br>
+                    <span class="text-sm font-bold text-emerald-600">Complexities, Trees & Graphs</span>
+                </p>
+            </a>
+
+        </div>
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center border-t border-slate-800">
+        <p>© 2024 DataMaster Study Guide. Crafted with ❤️ & AI.</p>
+        <button id="reset-btn" class="mt-4 text-xs text-red-400 hover:text-red-300 underline">إعادة تعيين التقدم</button>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const courseKey = 'data_struct_progress'; // Unique key for DS course
+            const chapters = document.querySelectorAll('.chapter-card');
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+            const resetBtn = document.getElementById('reset-btn');
+
+            // Load Progress
+            function loadProgress() {
+                const visited = JSON.parse(localStorage.getItem(courseKey)) || [];
+                let completedCount = 0;
+
+                chapters.forEach(card => {
+                    const link = card.getAttribute('href');
+                    if (visited.includes(link)) {
+                        card.classList.add('completed-card');
+                        completedCount++;
+                    } else {
+                        card.classList.remove('completed-card');
+                    }
+                    
+                    // Click Handler
+                    card.addEventListener('click', () => {
+                        if (!visited.includes(link)) {
+                            visited.push(link);
+                            localStorage.setItem(courseKey, JSON.stringify(visited));
+                        }
+                    });
+                });
+
+                // Update UI Bar
+                const percent = Math.round((completedCount / chapters.length) * 100);
+                progressBar.style.width = percent + '%';
+                progressText.innerText = percent + '%';
+            }
+
+            // Reset Function
+            resetBtn.addEventListener('click', () => {
+                if(confirm('هل أنت متأكد من حذف جميع بيانات التقدم؟')) {
+                    localStorage.removeItem(courseKey);
+                    location.reload();
+                }
+            });
+
+            loadProgress();
+        });
+    </script>
+
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. تحديد مفتاح التخزين بناءً على اسم المجلد
+            const path = window.location.pathname;
+            let courseKey = null;
+
+            // التحقق من اسم المجلد لتحديد المادة
+            if (path.includes('Computer-Architecture')) courseKey = 'arch_progress';
+            else if (path.includes('Theory-of-Computing')) courseKey = 'theory_progress';
+            else if (path.includes('Data-Structures')) courseKey = 'data_struct_progress';
+            else if (path.includes('Discrete-Mathematics')) courseKey = 'discrete_progress';
+
+            // 2. إذا تم التعرف على المادة، سجل الصفحة الحالية
+            if (courseKey) {
+                // استخراج اسم الملف فقط (مثلاً chapter5.html)
+                const pageName = path.split('/').pop();
+
+                // جلب البيانات القديمة
+                let visited = JSON.parse(localStorage.getItem(courseKey)) || [];
+
+                // إذا لم تكن الصفحة مسجلة مسبقاً، أضفها
+                if (!visited.includes(pageName)) {
+                    visited.push(pageName);
+                    localStorage.setItem(courseKey, JSON.stringify(visited));
+                    console.log(`✅ Progress Saved: ${pageName} in ${courseKey}`);
+                }
+            }
+        });
+    </script>
+	
+
+</body>
+</html>

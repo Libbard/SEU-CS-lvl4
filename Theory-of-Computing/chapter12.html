@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch12: Advanced Complexity - Theory of Computing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(147, 51, 234, 0.15); border-color: #9333ea; }
+        .graph-node { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 2px solid; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-white shadow-lg sticky top-0 z-50 border-b border-purple-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-black text-purple-700 ml-2">TheoryMaster</a>
+                    <span class="text-sm bg-purple-100 text-purple-800 py-1 px-2 rounded-full">Ch 12: Advanced Complexity</span>
+                </div>
+                <div class="flex items-center space-x-2 space-x-reverse">
+                    <a href="chapter11.html" class="text-slate-600 hover:text-purple-600 px-3 py-2 rounded-md font-medium transition">→ السابق</a>
+                    <a href="index.html" class="text-slate-600 hover:text-purple-600 px-3 py-2 rounded-md font-medium transition">الرئيسية</a>
+                    <a href="chapter13.html" class="bg-purple-600 text-white px-3 py-2 rounded-md font-medium hover:bg-purple-700 transition shadow-md">التالي (ف13) ←</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-white py-12 border-b border-purple-100">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-slate-900">Advanced Complexity Classes</h1>
+            <p class="text-xl text-slate-600 mb-6">الفصل الثاني عشر: ما وراء NP-Complete والتعقيد المكاني</p>
+            <div class="inline-flex items-center bg-pink-50 text-pink-700 px-4 py-2 rounded-lg border border-pink-200 shadow-sm">
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                <span>الهدف: استكشاف مشاكل NP الشهيرة (TSP, Vertex Cover) وفهم صنف PSPACE.</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">1</div>
+                <h2 class="text-3xl font-bold text-slate-800">The Tale of Two SATs</h2>
+            </div>
+            
+            <p class="text-slate-600 mb-6">مشكلة الإرضاء المنطقي (SAT) لها عدة أشكال، وتغيير بسيط في الشروط يقلب الموازين تماماً.</p>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-sm border-t-4 border-red-500 card-hover">
+                    <h3 class="font-bold text-xl text-red-700 mb-2">3SAT (3-Satisfiability)</h3>
+                    <div class="bg-red-50 p-3 rounded font-mono text-sm mb-3 ltr">
+                        $(x_1 \lor \bar{x}_2 \lor x_3) \land (x_2 \lor x_4 \lor \bar{x}_1) \dots$
+                    </div>
+                    <ul class="text-sm text-slate-700 space-y-2">
+                        <li><strong>الوصف:</strong> كل قوس (Clause) يحتوي على 3 متغيرات بالضبط.</li>
+                        [cite_start]<li><strong>التصنيف:</strong> <span class="bg-red-100 text-red-800 px-2 py-1 rounded font-bold">NP-Complete [cite: 8]</span>.</li>
+                        <li><strong>السبب:</strong> لا توجد طريقة معروفة لحلها سوى التجربة (التي تأخذ وقتاً أسياً).</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border-t-4 border-green-500 card-hover">
+                    <h3 class="font-bold text-xl text-green-700 mb-2">2SAT (2-Satisfiability)</h3>
+                    <div class="bg-green-50 p-3 rounded font-mono text-sm mb-3 ltr">
+                        $(x_1 \lor \bar{x}_2) \land (\bar{x}_1 \lor x_3) \dots$
+                    </div>
+                    <ul class="text-sm text-slate-700 space-y-2">
+                        <li><strong>الوصف:</strong> كل قوس يحتوي على متغيرين فقط.</li>
+                        [cite_start]<li><strong>التصنيف:</strong> <span class="bg-green-100 text-green-800 px-2 py-1 rounded font-bold">P (Easy) [cite: 26]</span>.</li>
+                        <li><strong>السبب:</strong> يمكن تحويلها لمشكلة "رسم بياني" (Graph Reachability) وحلها في وقت خطي $O(n)$.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">2</div>
+                <h2 class="text-3xl font-bold text-slate-800">Famous NP-Complete Problems</h2>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-white p-6 rounded-xl shadow-lg border border-slate-200">
+                    <div class="flex flex-col md:flex-row gap-8">
+                        <div class="flex-1">
+                            <h3 class="font-bold text-lg text-indigo-700 mb-2">1. [cite_start]Independent Set (IS) [cite: 33]</h3>
+                            <p class="text-sm text-slate-600 mb-2">
+                                اختر أكبر مجموعة من العقد (Nodes) بحيث لا يوجد أي عقدتين متصلتين ببعضهما.
+                            </p>
+                            <div class="flex justify-center space-x-4 my-4">
+                                <div class="graph-node bg-indigo-500 text-white border-indigo-700">A</div>
+                                <div class="w-8 h-0.5 bg-gray-300 self-center"></div>
+                                <div class="graph-node bg-white text-gray-400 border-gray-300">B</div>
+                                <div class="w-8 h-0.5 bg-gray-300 self-center"></div>
+                                <div class="graph-node bg-indigo-500 text-white border-indigo-700">C</div>
+                            </div>
+                        </div>
+                        <div class="hidden md:block w-px bg-slate-200"></div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-lg text-pink-700 mb-2">2. [cite_start]Node (Vertex) Cover (VC) [cite: 38]</h3>
+                            <p class="text-sm text-slate-600 mb-2">
+                                اختر أقل مجموعة من العقد بحيث تغطي كل الحواف (Edges) في الرسم البياني.
+                            </p>
+                            <div class="flex justify-center space-x-4 my-4">
+                                <div class="graph-node bg-white text-gray-400 border-gray-300">A</div>
+                                <div class="w-8 h-0.5 bg-pink-300 self-center"></div>
+                                <div class="graph-node bg-pink-500 text-white border-pink-700">B</div>
+                                <div class="w-8 h-0.5 bg-pink-300 self-center"></div>
+                                <div class="graph-node bg-white text-gray-400 border-gray-300">C</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 bg-yellow-50 p-3 rounded text-center text-sm font-bold text-yellow-800">
+                        علاقة هامة: لأي رسم بياني بـ $n$ عقد، حجم الـ IS + حجم الـ VC = $n$.
+                        <br>لذلك، يمكن تحويل المشكلتين لبعضهما بسهولة (Reduction).
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-hover border-l-4 border-orange-500">
+                    <h3 class="font-bold text-lg text-orange-700 mb-2">3. [cite_start]Traveling Salesman Problem (TSP) [cite: 48]</h3>
+                    <p class="text-sm text-slate-600">
+                        لديك مجموعة مدن والمسافات بينها. هل يوجد مسار يزور كل مدينة مرة واحدة ويعود للبداية بمسافة إجمالية $\le k$؟
+                        <br>
+                        <span class="text-xs text-orange-500 mt-2 block font-bold">* هذه المشكلة هي التعميم لمشكلة Hamilton Circuit.</span>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">3</div>
+                <h2 class="text-3xl font-bold text-slate-800">Space Complexity (PSPACE)</h2>
+            </div>
+            
+            <div class="bg-slate-900 text-white p-6 rounded-xl shadow-lg relative overflow-hidden">
+                [cite_start]<h3 class="text-2xl font-bold text-purple-300 mb-4">ما هو PSPACE؟ [cite: 53]</h3>
+                <p class="text-slate-300 mb-6">
+                    هو صنف المشاكل التي يمكن حلها باستخدام مساحة ذاكرة (Tape Cells) محدودة بـ <strong>كثير حدود (Polynomial)</strong> بالنسبة لطول المدخل.
+                    <br>
+                    <span class="text-sm opacity-70">* الوقت (Time) غير محدود، المهم الذاكرة فقط.</span>
+                </p>
+
+                <div class="flex justify-center items-center space-x-4 space-x-reverse text-lg font-bold">
+                    <div class="bg-green-600 p-3 rounded-full w-16 h-16 flex items-center justify-center shadow-lg z-30">P</div>
+                    <span class="text-2xl">⊆</span>
+                    <div class="bg-orange-600 p-3 rounded-full w-20 h-20 flex items-center justify-center shadow-lg z-20">NP</div>
+                    <span class="text-2xl">⊆</span>
+                    <div class="bg-purple-600 p-3 rounded-full w-24 h-24 flex items-center justify-center shadow-lg z-10 text-sm">PSPACE</div>
+                </div>
+                [cite_start]<p class="text-center text-xs text-slate-400 mt-4 [cite: 56]">يعتقد العلماء أن $P \ne NP \ne PSPACE$، لكن لم يثبت ذلك أحد!</p>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">4</div>
+                <h2 class="text-3xl font-bold text-slate-800">QBF (The King of PSPACE)</h2>
+            </div>
+
+            <div class="bg-indigo-50 p-6 rounded-xl border-l-4 border-indigo-500">
+                [cite_start]<h3 class="font-bold text-indigo-800 mb-3 text-lg">ما هي QBF؟ [cite: 63]</h3>
+                <p class="text-sm text-slate-700 mb-4">
+                    هي تعميم لمشكلة SAT. في SAT نسأل: "هل يوجد قيم للمتغيرات؟" ($\exists$).
+                    <br>في QBF، نستخدم <strong>المكممات (Quantifiers)</strong>: "لكل" ($\forall$) و "يوجد" ($\exists$).
+                </p>
+                
+                <div class="bg-white p-4 rounded shadow-sm font-mono text-sm ltr mb-4 text-center">
+                    $\forall x \exists y \forall z \dots (x \lor y \land \bar{z} \dots)$
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-4 text-sm">
+                    <div class="bg-white p-3 rounded shadow-sm">
+                        <strong class="text-purple-700">SAT (NP-Complete):</strong>
+                        <br>$\exists x_1 \exists x_2 \dots \phi$
+                        <br>(Player 1 moves only).
+                    </div>
+                    <div class="bg-white p-3 rounded shadow-sm">
+                        [cite_start]<strong class="text-indigo-700">QBF (PSPACE-Complete)[cite: 62]:</strong>
+                        <br>$\forall x_1 \exists x_2 \forall x_3 \dots \phi$
+                        <br>(Game between 2 players).
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-16 mb-10">
+            <div class="bg-purple-700 text-white py-3 px-6 rounded-t-xl font-bold text-xl flex items-center shadow-lg">
+                <span class="mr-2">🛡️</span> EXAM VAULT (خزنة الاختبار)
+            </div>
+            <div class="bg-white border-2 border-purple-700 rounded-b-xl p-6 shadow-xl">
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                        <span class="bg-red-200 text-red-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">TRAP / فخ</span>
+                        <p class="font-bold text-slate-800 mb-1">Difference between 2SAT and 3SAT</p>
+                        <p class="text-sm text-slate-600">
+                            قد تظن أن 2SAT هي NP-Complete مثل 3SAT، لكنها <strong>ليست كذلك</strong>.
+                            <br>2SAT تنتمي إلى <strong>P</strong> ويمكن حلها بكفاءة.
+                            <br>السبب: قيودها تسمح بحلها عبر خوارزميات الرسم البياني (Implication Graph).
+                        </p>
+                    </div>
+
+                    <div class="bg-green-50 p-4 rounded-lg border border-green-100">
+                        <span class="bg-green-200 text-green-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">THEOREM / نظرية</span>
+                        <p class="font-bold text-slate-800 mb-1">Savitch's Theorem</p>
+                        <p class="text-sm text-slate-600">
+                            تقول النظرية: $NPSPACE = PSPACE$.
+                            <br>بمعنى: الـ Non-determinism <strong>لا يضيف قوة</strong> عندما يتعلق الأمر بالمساحة (Space)، بعكس الوقت (Time) حيث $P$ قد لا تساوي $NP$.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="flex justify-between mt-12 mb-8">
+            <a href="chapter11.html" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-lg font-bold shadow-sm transition transform hover:scale-105">→ السابق (Ch 11)</a>
+            <a href="chapter13.html" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-bold shadow-lg transition transform hover:scale-105">الفصل التالي (Ch 13) ←</a>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center border-t border-slate-800">
+        <p>© 2024 TheoryMaster Study Guide. Crafted for Excellence.</p>
+    </footer>
+
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. تحديد مفتاح التخزين بناءً على اسم المجلد
+            const path = window.location.pathname;
+            let courseKey = null;
+
+            // التحقق من اسم المجلد لتحديد المادة
+            if (path.includes('Computer-Architecture')) courseKey = 'arch_progress';
+            else if (path.includes('Theory-of-Computing')) courseKey = 'theory_progress';
+            else if (path.includes('Data-Structures')) courseKey = 'data_struct_progress';
+            else if (path.includes('Discrete-Mathematics')) courseKey = 'discrete_progress';
+
+            // 2. إذا تم التعرف على المادة، سجل الصفحة الحالية
+            if (courseKey) {
+                // استخراج اسم الملف فقط (مثلاً chapter5.html)
+                const pageName = path.split('/').pop();
+
+                // جلب البيانات القديمة
+                let visited = JSON.parse(localStorage.getItem(courseKey)) || [];
+
+                // إذا لم تكن الصفحة مسجلة مسبقاً، أضفها
+                if (!visited.includes(pageName)) {
+                    visited.push(pageName);
+                    localStorage.setItem(courseKey, JSON.stringify(visited));
+                    console.log(`✅ Progress Saved: ${pageName} in ${courseKey}`);
+                }
+            }
+        });
+    </script>
+	
+
+</body>
+</html>

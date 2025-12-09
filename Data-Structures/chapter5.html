@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch5: Queues - Data Structures</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.15); border-color: #10b981; }
+        .queue-container { display: flex; align-items: center; justify-content: center; gap: 5px; background: #f0fdf4; padding: 15px; border-radius: 8px; border: 2px dashed #10b981; }
+        .queue-item { background: #34d399; color: white; padding: 8px 15px; border-radius: 4px; font-weight: bold; position: relative; }
+        .queue-arrow { font-size: 24px; color: #059669; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-white shadow-lg sticky top-0 z-50 border-b border-emerald-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-black text-emerald-700 ml-2">DataMaster</a>
+                    <span class="text-sm bg-emerald-100 text-emerald-800 py-1 px-2 rounded-full">Ch 5: Queues</span>
+                </div>
+                <div class="flex items-center space-x-2 space-x-reverse">
+                    <a href="chapter4.html" class="text-slate-600 hover:text-emerald-600 px-3 py-2 rounded-md font-medium transition">→ السابق</a>
+                    <a href="index.html" class="text-slate-600 hover:text-emerald-600 px-3 py-2 rounded-md font-medium transition">الرئيسية</a>
+                    <a href="chapter6.html" class="bg-emerald-600 text-white px-3 py-2 rounded-md font-medium hover:bg-emerald-700 transition shadow-md">التالي (ف6) ←</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-white py-12 border-b border-emerald-100">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-slate-900">The Queue ADT</h1>
+            <p class="text-xl text-slate-600 mb-6">الفصل الخامس: الطابور (FIFO)</p>
+            <div class="inline-flex items-center bg-green-50 text-green-700 px-4 py-2 rounded-lg border border-green-200 shadow-sm">
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                <span>الهدف: فهم مبدأ "ما يدخل أولاً يخرج أولاً" وتنفيذه باستخدام المصفوفة الدائرية.</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">1</div>
+                <h2 class="text-3xl font-bold text-slate-800">FIFO (First In, First Out)</h2>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-hover">
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <h3 class="font-bold text-xl text-emerald-800 mb-3">كيف يعمل الطابور؟</h3>
+                        <p class="text-slate-600 mb-4 text-sm leading-relaxed">
+                            تماما مثل طابور الدفع في السوبرماركت. الإضافة تكون من <strong>الخلف (Rear)</strong>، والخدمة (الحذف) تكون من <strong>الأمام (Front)</strong>.
+                        </p>
+                        <div class="bg-emerald-50 p-3 rounded border border-emerald-100 text-sm">
+                            <strong>العمليات الأساسية ($O(1)$):</strong>
+                            <ul class="list-disc list-inside mt-2 space-y-1 text-slate-700">
+                                [cite_start]<li><code>enqueue(x)</code>: إضافة عنصر في النهاية [cite: 8-9].</li>
+                                [cite_start]<li><code>dequeue()</code>: إزالة وإرجاع العنصر من البداية [cite: 8-9].</li>
+                                <li><code>getFront()</code>: رؤية من عليه الدور دون حذفه.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="flex justify-between w-full text-xs text-gray-500 mb-1 px-4">
+                            <span>Out (Front) ←</span>
+                            <span>← In (Rear)</span>
+                        </div>
+                        <div class="queue-container">
+                            <div class="queue-item">Client 1</div>
+                            <div class="queue-item">Client 2</div>
+                            <div class="queue-item">Client 3</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">2</div>
+                <h2 class="text-3xl font-bold text-slate-800">The Circular Array Problem</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 card-hover">
+                    <h3 class="font-bold text-red-700 mb-2">مشكلة المصفوفة العادية</h3>
+                    <p class="text-sm text-slate-600 mb-3">
+                        عند حذف عنصر من البداية، تبقى خانة فارغة. إذا استمرينا في الإضافة والحذف، سيصل الـ <code>Rear</code> لنهاية المصفوفة بينما توجد مساحة فارغة في البداية!
+                    </p>
+                    <div class="bg-slate-100 p-2 text-center text-xs font-mono rounded">
+                        [ _ , _ , Data , Data , Data ] (End!)
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 card-hover">
+                    <h3 class="font-bold text-green-700 mb-2">الحل: المصفوفة الدائرية (Circular)</h3>
+                    <p class="text-sm text-slate-600 mb-3">
+                        عندما يصل المؤشر للنهاية، نجعله يلتف (Wrap Around) ويعود للبداية باستخدام باقي القسمة (Modulo).
+                    </p>
+                    <div class="bg-slate-900 text-white p-3 rounded text-xs font-mono ltr">
+                        back = (back + 1) % array.length;<br>
+                        array[back] = x;<br>
+                        currentSize++;
+                    </div>
+                    [cite_start]<p class="text-xs text-green-500 mt-2 font-bold text-right">[cite: 16-17]</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">3</div>
+                <h2 class="text-3xl font-bold text-slate-800">Applications of Queue</h2>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="bg-white p-4 rounded-lg shadow-sm border-r-4 border-blue-500">
+                    <h4 class="font-bold text-slate-700">1. Printer Spooling (طابور الطباعة)</h4>
+                    <p class="text-sm text-slate-600">
+                        [cite_start]عندما يرسل عدة مستخدمين ملفات للطابعة، يتم وضعها في طابور لطباعتها بالترتيب[cite: 36].
+                    </p>
+                </div>
+
+                <div class="bg-white p-4 rounded-lg shadow-sm border-r-4 border-purple-500">
+                    <h4 class="font-bold text-slate-700">2. Operating Systems (أنظمة التشغيل)</h4>
+                    <p class="text-sm text-slate-600">
+                        [cite_start]جدولة العمليات (Process Scheduling) تعتمد على طوابير لخدمة البرامج بشكل عادل[cite: 36].
+                    </p>
+                </div>
+
+                <div class="bg-white p-4 rounded-lg shadow-sm border-r-4 border-orange-500">
+                    <h4 class="font-bold text-slate-700">3. Generating Binary Numbers</h4>
+                    <p class="text-sm text-slate-600">
+                        خوارزمية ذكية لتوليد الأرقام الثنائية (1, 10, 11, 100...):
+                        <br>ابدأ بـ "1". [cite_start]في كل خطوة، اسحب العنصر، اطبعه، ثم ضف إليه "0" وأعد إدخاله، وضف إليه "1" وأعد إدخاله[cite: 38].
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-16 mb-10">
+            <div class="bg-emerald-700 text-white py-3 px-6 rounded-t-xl font-bold text-xl flex items-center shadow-lg">
+                <span class="mr-2">🛡️</span> EXAM VAULT (خزنة الاختبار)
+            </div>
+            <div class="bg-white border-2 border-emerald-700 rounded-b-xl p-6 shadow-xl">
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                        <span class="bg-red-200 text-red-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">TRAP / فخ</span>
+                        <p class="font-bold text-slate-800 mb-1">Circular Array: Empty or Full?</p>
+                        <p class="text-sm text-slate-600">
+                            في المصفوفة الدائرية، حالة "الامتلاء" وحالة "الفراغ" قد تبدو متشابهة (المؤشرات في نفس المكان).
+                            [cite_start]<br><strong>الحل:</strong> نحتفظ بمتغير منفصل اسمه <code>currentSize</code> لتتبع عدد العناصر بدقة[cite: 17].
+                        </p>
+                    </div>
+
+                    <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-100">
+                        <span class="bg-yellow-200 text-yellow-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">CALCULATION / حساب</span>
+                        <p class="font-bold text-slate-800 mb-1">Back Index Calculation</p>
+                        <p class="text-sm text-slate-600">
+                            إذا كان طول المصفوفة 10، والـ <code>front</code> عند 8، والحجم الحالي 4. أين يقع الـ <code>back</code> (آخر عنصر)؟
+                            <br>القانون: <code>(front + currentSize - 1) % length</code>
+                            <br>الحساب: $(8 + 4 - 1) \% 10 = 11 \% 10 = 1$.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="flex justify-between mt-12 mb-8">
+            <a href="chapter4.html" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-lg font-bold shadow-sm transition transform hover:scale-105">→ السابق (Ch 4)</a>
+            <a href="chapter6.html" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg font-bold shadow-lg transition transform hover:scale-105">الفصل التالي (Ch 6) ←</a>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center border-t border-slate-800">
+        <p>© 2024 DataMaster Study Guide. Crafted for Excellence.</p>
+    </footer>
+
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. تحديد مفتاح التخزين بناءً على اسم المجلد
+            const path = window.location.pathname;
+            let courseKey = null;
+
+            // التحقق من اسم المجلد لتحديد المادة
+            if (path.includes('Computer-Architecture')) courseKey = 'arch_progress';
+            else if (path.includes('Theory-of-Computing')) courseKey = 'theory_progress';
+            else if (path.includes('Data-Structures')) courseKey = 'data_struct_progress';
+            else if (path.includes('Discrete-Mathematics')) courseKey = 'discrete_progress';
+
+            // 2. إذا تم التعرف على المادة، سجل الصفحة الحالية
+            if (courseKey) {
+                // استخراج اسم الملف فقط (مثلاً chapter5.html)
+                const pageName = path.split('/').pop();
+
+                // جلب البيانات القديمة
+                let visited = JSON.parse(localStorage.getItem(courseKey)) || [];
+
+                // إذا لم تكن الصفحة مسجلة مسبقاً، أضفها
+                if (!visited.includes(pageName)) {
+                    visited.push(pageName);
+                    localStorage.setItem(courseKey, JSON.stringify(visited));
+                    console.log(`✅ Progress Saved: ${pageName} in ${courseKey}`);
+                }
+            }
+        });
+    </script>
+	
+
+</body>
+</html>

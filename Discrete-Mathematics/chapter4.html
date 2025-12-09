@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch4: Induction & Counting - Discrete Math</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .amber-gradient { background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.2); border-color: #f59e0b; }
+        .proof-step { border-right: 3px solid #f59e0b; padding-right: 15px; margin-bottom: 10px; background: #fffbeb; padding: 10px; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-white shadow-lg sticky top-0 z-50 border-b border-amber-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-black text-amber-700 ml-2">DiscreteMaster</a>
+                    <span class="text-sm bg-amber-100 text-amber-800 py-1 px-2 rounded-full">Ch 4: Induction & Counting</span>
+                </div>
+                <div class="flex items-center space-x-2 space-x-reverse">
+                    <a href="chapter3.html" class="text-slate-600 hover:text-amber-600 px-3 py-2 rounded-md font-medium transition">→ السابق</a>
+                    <a href="index.html" class="text-slate-600 hover:text-amber-600 px-3 py-2 rounded-md font-medium transition">الرئيسية</a>
+                    <a href="chapter5.html" class="bg-amber-500 text-white px-3 py-2 rounded-md font-medium hover:bg-amber-600 transition shadow-md">التالي (ف5) ←</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-white py-12 border-b border-amber-100">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-slate-900">Induction, Recursion & Counting</h1>
+            <p class="text-xl text-slate-600 mb-6">الفصل الرابع: الاستقراء الرياضي، التكرار، وطرق العد</p>
+            <div class="inline-flex items-center bg-orange-50 text-orange-700 px-4 py-2 rounded-lg border border-orange-200 shadow-sm">
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"></path></svg>
+                <span>الهدف: إثبات النظريات (Induction)، حل المشاكل بالتكرار (Recursion)، والتمييز بين التباديل والتوافيق.</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">1</div>
+                <h2 class="text-3xl font-bold text-slate-800">Mathematical Induction (الاستقراء الرياضي)</h2>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-hover">
+                <p class="text-slate-600 mb-4 text-sm">
+                    تخيل صفاً لا نهائياً من قطع الدومينو. لإثبات أن كلها ستسقط، يكفي أن تثبت أمرين:
+                    <br>1. القطعة الأولى سقطت.
+                    <br>2. إذا سقطت أي قطعة، فإنها تسقط التي تليها.
+                </p>
+                
+                <div class="space-y-4">
+                    <div class="proof-step">
+                        <strong class="text-amber-800 block mb-1">1. Basis Step (الخطوة الأساسية):</strong>
+                        أثبت أن العبارة $P(n)$ صحيحة عند $n=1$ (أو أول قيمة ممكنة).
+                        <br><span class="text-xs text-slate-500">مثال: $P(1)$ صحيحة.</span>
+                    </div>
+                    <div class="proof-step">
+                        <strong class="text-amber-800 block mb-1">2. Inductive Hypothesis (فرضية الاستقراء):</strong>
+                        افترض أن $P(k)$ صحيحة لعدد ما $k$.
+                        <br><span class="text-xs text-slate-500">هذا هو "الجسر" الذي سنستخدمه.</span>
+                    </div>
+                    <div class="proof-step">
+                        <strong class="text-amber-800 block mb-1">3. Inductive Step (خطوة الاستقراء):</strong>
+                        استخدم الفرضية لإثبات أن $P(k+1)$ صحيحة.
+                        <br><span class="text-xs text-slate-500">الهدف: إثبات $P(k) \to P(k+1)$.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">2</div>
+                <h2 class="text-3xl font-bold text-slate-800">Strong Induction (الاستقراء القوي)</h2>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-hover border-l-4 border-orange-500">
+                <h3 class="font-bold text-orange-700 mb-2">ما الفرق؟</h3>
+                <p class="text-sm text-slate-600 mb-3">
+                    في الاستقراء العادي، نفترض صحة $P(k)$ فقط لإثبات $P(k+1)$.
+                    <br>في الاستقراء <strong>القوي</strong>، نفترض صحة $P(1), P(2), \dots, P(k)$ جميعاً لإثبات $P(k+1)$.
+                </p>
+                <div class="bg-orange-50 p-3 rounded text-sm text-slate-700">
+                    <strong>متى نستخدمه؟</strong>
+                    <br>عندما نحتاج للرجوع لأكثر من خطوة واحدة للخلف (مثلاً في الأعداد الأولية، أو متتاليات مثل فيبوناتشي حيث $F_n$ يعتمد على $F_{n-1}$ و $F_{n-2}$).
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">3</div>
+                <h2 class="text-3xl font-bold text-slate-800">Recursion & Algorithms</h2>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-hover">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="font-bold text-slate-700 mb-2">Recursive Definition</h3>
+                        <p class="text-sm text-slate-600 mb-2">
+                            تعريف الدالة أو المجموعة بدلالة نفسها (بشرط وجود حالة توقف Base Case).
+                        </p>
+                        <div class="bg-gray-100 p-2 rounded text-xs font-mono ltr">
+                            Factorial n!:<br>
+                            - Basis: 0! = 1<br>
+                            - Recursive: n! = n * (n-1)!
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-700 mb-2">Program Correctness</h3>
+                        <p class="text-sm text-slate-600 mb-2">
+                            كيف نثبت صحة خوارزمية (Loop)؟
+                            <br>نستخدم <strong>Loop Invariant</strong>.
+                        </p>
+                        <ul class="text-xs text-slate-500 list-disc list-inside">
+                            <li>صحيح قبل دخول الحلقة (Initialization).</li>
+                            <li>يبقى صحيحاً بعد كل تكرار (Maintenance).</li>
+                            <li>عند التوقف، يعطينا النتيجة المطلوبة (Termination).</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">4</div>
+                <h2 class="text-3xl font-bold text-slate-800">Counting Principles</h2>
+            </div>
+
+            <div class="space-y-6">
+                <div class="grid md:grid-cols-2 gap-4 text-center">
+                    <div class="bg-white p-4 rounded shadow-sm border border-slate-200">
+                        <strong class="text-green-700 block mb-1">Sum Rule (قاعدة الجمع)</strong>
+                        <p class="text-xs text-slate-600">إذا كان الحدث A يحدث بـ $n$ طرق، و B بـ $m$ طرق (ولا يمكن حدوثهما معاً)، فإحداهما يحدث بـ $n+m$.</p>
+                    </div>
+                    <div class="bg-white p-4 rounded shadow-sm border border-slate-200">
+                        <strong class="text-blue-700 block mb-1">Product Rule (قاعدة الضرب)</strong>
+                        <p class="text-xs text-slate-600">إذا كان A يحدث بـ $n$ طرق، وبعده B بـ $m$ طرق، فكلاهما يحدث بـ $n \times m$.</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900 text-white p-6 rounded-xl shadow-lg">
+                    <h3 class="text-yellow-400 font-bold mb-4 text-center text-xl">Permutations vs Combinations</h3>
+                    <div class="grid md:grid-cols-2 gap-8 text-sm">
+                        <div class="border-r border-slate-700 pr-4">
+                            <strong class="block text-lg mb-2 text-amber-300">Permutations ($P$)</strong>
+                            <p class="mb-2">الترتيب <strong>مهم</strong> (Order matters).</p>
+                            <p class="text-gray-400 text-xs mb-2">مثال: ترتيب متسابقين في سباق (الأول يختلف عن الثاني).</p>
+                            <div class="bg-slate-800 p-2 rounded text-center font-mono ltr">
+                                $P(n, r) = \frac{n!}{(n-r)!}$
+                            </div>
+                        </div>
+                        <div class="pl-4">
+                            <strong class="block text-lg mb-2 text-amber-300">Combinations ($C$)</strong>
+                            <p class="mb-2">الترتيب <strong>غير مهم</strong> (Order doesn't matter).</p>
+                            <p class="text-gray-400 text-xs mb-2">مثال: اختيار 3 طلاب للجنة (لجنة {أ، ب} هي نفسها {ب، أ}).</p>
+                            <div class="bg-slate-800 p-2 rounded text-center font-mono ltr">
+                                $C(n, r) = \frac{n!}{r!(n-r)!}$
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-16 mb-10">
+            <div class="bg-amber-700 text-white py-3 px-6 rounded-t-xl font-bold text-xl flex items-center shadow-lg">
+                <span class="mr-2">🛡️</span> EXAM VAULT (خزنة الاختبار)
+            </div>
+            <div class="bg-white border-2 border-amber-700 rounded-b-xl p-6 shadow-xl">
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                        <span class="bg-red-200 text-red-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">TRAP / التكرار</span>
+                        <p class="font-bold text-slate-800 mb-1">With vs Without Repetition</p>
+                        <p class="text-sm text-slate-600">
+                            انتبه للسؤال!
+                            <br>• Permutations with repetition: $n^r$ (مثل كلمة مرور).
+                            <br>• Combinations with repetition: $C(n+r-1, r)$ (مثل توزيع كرات في صناديق) .
+                        </p>
+                    </div>
+
+                    <div class="bg-orange-50 p-4 rounded-lg border border-orange-100">
+                        <span class="bg-orange-200 text-orange-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">RULE / قانون</span>
+                        <p class="font-bold text-slate-800 mb-1">Permutations with Indistinguishable Objects</p>
+                        <p class="text-sm text-slate-600">
+                            كم كلمة يمكن تكوينها من حروف "SUCCESS"؟
+                            <br>الحروف S و C متكررة ولا يمكن تمييزها.
+                            <br>القانون: $\frac{n!}{n_1! n_2! \dots}$
+                            <br>الحل: $\frac{7!}{3! (S) \times 2! (C) \times 1! (U) \times 1! (E)}$.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="flex justify-between mt-12 mb-8">
+            <a href="chapter3.html" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-lg font-bold shadow-sm transition transform hover:scale-105">→ السابق (Ch 3)</a>
+            <a href="chapter5.html" class="bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-lg font-bold shadow-lg transition transform hover:scale-105">الفصل التالي (Ch 5) ←</a>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center border-t border-slate-800">
+        <p>© 2024 DiscreteMaster Study Guide. Crafted for Excellence.</p>
+    </footer>
+
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. تحديد مفتاح التخزين بناءً على اسم المجلد
+            const path = window.location.pathname;
+            let courseKey = null;
+
+            // التحقق من اسم المجلد لتحديد المادة
+            if (path.includes('Computer-Architecture')) courseKey = 'arch_progress';
+            else if (path.includes('Theory-of-Computing')) courseKey = 'theory_progress';
+            else if (path.includes('Data-Structures')) courseKey = 'data_struct_progress';
+            else if (path.includes('Discrete-Mathematics')) courseKey = 'discrete_progress';
+
+            // 2. إذا تم التعرف على المادة، سجل الصفحة الحالية
+            if (courseKey) {
+                // استخراج اسم الملف فقط (مثلاً chapter5.html)
+                const pageName = path.split('/').pop();
+
+                // جلب البيانات القديمة
+                let visited = JSON.parse(localStorage.getItem(courseKey)) || [];
+
+                // إذا لم تكن الصفحة مسجلة مسبقاً، أضفها
+                if (!visited.includes(pageName)) {
+                    visited.push(pageName);
+                    localStorage.setItem(courseKey, JSON.stringify(visited));
+                    console.log(`✅ Progress Saved: ${pageName} in ${courseKey}`);
+                }
+            }
+        });
+    </script>
+	
+
+</body>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Review - Theory of Computing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .purple-gradient { background: linear-gradient(135deg, #7c3aed 0%, #db2777 100%); }
+        details > summary { list-style: none; cursor: pointer; transition: all 0.3s; }
+        details > summary::-webkit-details-marker { display: none; }
+        details[open] > summary { background-color: #fdf4ff; color: #7e22ce; }
+        .hierarchy-box { border: 2px solid #e9d5ff; padding: 10px; border-radius: 8px; text-align: center; margin-bottom: 5px; font-weight: bold; background: white; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-slate-900 shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-2xl font-black text-purple-400 ml-2">TheoryMaster</span>
+                    <span class="text-sm bg-purple-900 text-purple-200 py-1 px-2 rounded-full">المراجعة النهائية (Mod 6-13)</span>
+                </div>
+                <div class="flex items-center">
+                    <a href="index.html" class="text-slate-300 hover:text-white px-3 py-2 rounded-md font-medium transition">العودة للفهرس</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="purple-gradient text-white py-16 text-center shadow-lg">
+        <h1 class="text-5xl font-black mb-4 drop-shadow-md">The Final Theorem</h1>
+        <p class="text-xl font-medium opacity-90">ملخص ما بعد المنتصف: من المكدس (Stack) إلى المستحيل (Undecidable)</p>
+        <div class="mt-6 flex justify-center space-x-4 space-x-reverse text-sm font-bold text-purple-100">
+            <span class="bg-white/20 px-3 py-1 rounded-full">PDA & CFLs</span>
+            <span class="bg-white/20 px-3 py-1 rounded-full">Turing Machines</span>
+            <span class="bg-white/20 px-3 py-1 rounded-full">P vs NP</span>
+            <span class="bg-white/20 px-3 py-1 rounded-full">Logic</span>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-10 space-y-10">
+
+        <section>
+            <div class="flex items-center mb-6">
+                <span class="text-3xl mr-2">👑</span>
+                <h2 class="text-3xl font-bold text-slate-800">The Chomsky Hierarchy & Beyond</h2>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow border border-slate-200">
+                <p class="text-center text-slate-600 mb-6">ترتيب اللغات من الأضعف (الأقل قيوداً) إلى الأقوى (الأكثر تعقيداً):</p>
+                <div class="max-w-2xl mx-auto space-y-2">
+                    <div class="hierarchy-box border-red-200 bg-red-50 text-red-800">
+                        Recursively Enumerable (RE)
+                        <span class="block text-xs font-normal text-red-600">Accepted by TM (May Loop)</span>
+                    </div>
+                    <div class="hierarchy-box border-orange-200 bg-orange-50 text-orange-800 w-11/12 mx-auto">
+                        Recursive (Decidable)
+                        <span class="block text-xs font-normal text-orange-600">Accepted by TM (Always Halts)</span>
+                    </div>
+                    <div class="hierarchy-box border-green-200 bg-green-50 text-green-800 w-10/12 mx-auto">
+                        Context-Sensitive
+                        <span class="block text-xs font-normal text-green-600">Linear Bounded Automata</span>
+                    </div>
+                    <div class="hierarchy-box border-blue-200 bg-blue-50 text-blue-800 w-9/12 mx-auto">
+                        Context-Free (CFL)
+                        <span class="block text-xs font-normal text-blue-600">Pushdown Automata (PDA)</span>
+                    </div>
+                    <div class="hierarchy-box border-purple-200 bg-purple-50 text-purple-800 w-8/12 mx-auto">
+                        Regular
+                        <span class="block text-xs font-normal text-purple-600">Finite Automata (DFA/NFA)</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <span class="text-3xl mr-2">📜</span>
+                <h2 class="text-3xl font-bold text-slate-800">The Theorem Sheet (أهم النظريات)</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-white p-5 rounded-xl shadow border-t-4 border-pink-500">
+                    <h3 class="font-bold text-pink-700 mb-2">Pumping Lemma (CFL)</h3>
+                    <p class="text-xs text-slate-600 mb-2">لإثبات أن اللغة <strong>ليست</strong> CFL.</p>
+                    <div class="bg-slate-100 p-2 rounded font-mono text-xs ltr text-center mb-2">
+                        $z = uvwxy$<br>
+                        $|vx| \ge 1, |vwx| \le n$<br>
+                        $uv^iwx^iy \in L$
+                    </div>
+                    <p class="text-xs text-slate-500">نضخ جزئين ($v$ و $x$) معاً.</p>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl shadow border-t-4 border-purple-500">
+                    <h3 class="font-bold text-purple-700 mb-2">Cook's Theorem</h3>
+                    <p class="text-sm text-slate-600">
+                        مشكلة <strong>SAT</strong> (Boolean Satisfiability) هي أول مشكلة تم إثبات أنها <strong>NP-Complete</strong>.
+                    </p>
+                    <p class="text-xs text-slate-400 mt-2">بداية عصر التعقيد الحسابي.</p>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl shadow border-t-4 border-indigo-500">
+                    <h3 class="font-bold text-indigo-700 mb-2">Savitch's Theorem</h3>
+                    <div class="bg-slate-100 p-2 rounded font-mono text-sm ltr text-center mb-2">
+                        $NPSPACE = PSPACE$
+                    </div>
+                    <p class="text-xs text-slate-600">
+                        عدم الحتمية (Nondeterminism) لا تزيد القوة في <strong>المساحة (Space)</strong>، فقط في الوقت.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <span class="text-3xl mr-2">🧠</span>
+                <h2 class="text-3xl font-bold text-slate-800">Module Recaps (6 - 13)</h2>
+            </div>
+
+            <div class="space-y-4">
+                <details class="bg-white rounded-lg shadow group">
+                    <summary class="p-4 font-bold text-slate-700 flex justify-between items-center bg-slate-50 hover:bg-purple-50 rounded-lg">
+                        <span>Module 6: Pushdown Automata (PDA)</span>
+                        <span class="text-xl group-open:rotate-180 transition">▼</span>
+                    </summary>
+                    <div class="p-4 border-t border-slate-100 text-sm">
+                        <ul class="list-disc list-inside space-y-1 text-slate-600">
+                            <li><strong>المعادلة:</strong> PDA = $\epsilon$-NFA + Stack (ذاكرة LIFO).</li>
+                            <li><strong>القبول:</strong> إما بالوصول لحالة نهائية (Final State) أو بتفريغ المكدس (Empty Stack).</li>
+                            <li><strong>الحتمية:</strong> $DPDA \neq NPDA$ (الـ NPDA أقوى).</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details class="bg-white rounded-lg shadow group">
+                    <summary class="p-4 font-bold text-slate-700 flex justify-between items-center bg-slate-50 hover:bg-purple-50 rounded-lg">
+                        <span>Module 7: CFL Properties & CNF</span>
+                        <span class="text-xl group-open:rotate-180 transition">▼</span>
+                    </summary>
+                    <div class="p-4 border-t border-slate-100 text-sm">
+                        <ul class="list-disc list-inside space-y-1 text-slate-600">
+                            <li><strong>CNF:</strong> كل قاعدة إما $A \to BC$ أو $A \to a$.</li>
+                            <li><strong>الإغلاق (Closure):</strong> مغلقة تحت الاتحاد، والضرب، والنجمة. <span class="text-red-600 font-bold">ليست</span> مغلقة تحت التقاطع (Intersection) أو المتممة.</li>
+                            <li><strong>CYK Algo:</strong> لفحص الانتماء في وقت $O(n^3)$.</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details class="bg-white rounded-lg shadow group">
+                    <summary class="p-4 font-bold text-slate-700 flex justify-between items-center bg-slate-50 hover:bg-purple-50 rounded-lg">
+                        <span>Module 8 & 9: Turing Machines</span>
+                        <span class="text-xl group-open:rotate-180 transition">▼</span>
+                    </summary>
+                    <div class="p-4 border-t border-slate-100 text-sm">
+                        <ul class="list-disc list-inside space-y-1 text-slate-600">
+                            <li><strong>التعريف:</strong> شريط لانهائي + رأس قراءة/كتابة + تحكم محدود.</li>
+                            <li><strong>Extensions:</strong> تعدد الأشرطة (Multi-tape) أو عدم الحتمية (Nondeterminism) <span class="text-red-600 font-bold">لا تزيد</span> من قوة الآلة (فقط الكفاءة).</li>
+                            <li><strong>Universal TM:</strong> آلة يمكنها محاكاة أي آلة أخرى (أساس البرمجة).</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details class="bg-white rounded-lg shadow group">
+                    <summary class="p-4 font-bold text-slate-700 flex justify-between items-center bg-slate-50 hover:bg-purple-50 rounded-lg">
+                        <span>Module 10: Undecidability</span>
+                        <span class="text-xl group-open:rotate-180 transition">▼</span>
+                    </summary>
+                    <div class="p-4 border-t border-slate-100 text-sm">
+                        <ul class="list-disc list-inside space-y-1 text-slate-600">
+                            <li><strong>Halting Problem:</strong> لا يوجد برنامج يحدد هل سيتوقف برنامج آخر أم لا (Undecidable).</li>
+                            <li><strong>$L_d$:</strong> لغة القطرية (ليست RE).</li>
+                            <li><strong>$L_u$:</strong> اللغة الشاملة (RE ولكن ليست Recursive).</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details class="bg-white rounded-lg shadow group">
+                    <summary class="p-4 font-bold text-slate-700 flex justify-between items-center bg-slate-50 hover:bg-purple-50 rounded-lg">
+                        <span>Module 11 & 12: Complexity (P vs NP)</span>
+                        <span class="text-xl group-open:rotate-180 transition">▼</span>
+                    </summary>
+                    <div class="p-4 border-t border-slate-100 text-sm">
+                        <ul class="list-disc list-inside space-y-1 text-slate-600">
+                            <li><strong>P:</strong> حل سريع. <strong>NP:</strong> تحقق سريع.</li>
+                            <li><strong>NP-Complete:</strong> أصعب مشاكل في NP (مثل SAT, TSP).</li>
+                            <li><strong>PSPACE:</strong> مشاكل محدودة الذاكرة (مثل QBF).</li>
+                        </ul>
+                    </div>
+                </details>
+            </div>
+        </section>
+
+        <div class="text-center mt-12 mb-8">
+            <a href="index.html" class="inline-flex items-center justify-center bg-purple-700 text-white px-8 py-4 rounded-full font-bold shadow-2xl hover:bg-purple-800 transition transform hover:scale-105 border-4 border-purple-200">
+                <span class="ml-2">🏠</span> العودة للفهرس الرئيسي
+            </a>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center border-t border-slate-800">
+        <p>🎉 You are now ready to conquer the Theory exam!</p>
+    </footer>
+
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. تحديد مفتاح التخزين بناءً على اسم المجلد
+            const path = window.location.pathname;
+            let courseKey = null;
+
+            // التحقق من اسم المجلد لتحديد المادة
+            if (path.includes('Computer-Architecture')) courseKey = 'arch_progress';
+            else if (path.includes('Theory-of-Computing')) courseKey = 'theory_progress';
+            else if (path.includes('Data-Structures')) courseKey = 'data_struct_progress';
+            else if (path.includes('Discrete-Mathematics')) courseKey = 'discrete_progress';
+
+            // 2. إذا تم التعرف على المادة، سجل الصفحة الحالية
+            if (courseKey) {
+                // استخراج اسم الملف فقط (مثلاً chapter5.html)
+                const pageName = path.split('/').pop();
+
+                // جلب البيانات القديمة
+                let visited = JSON.parse(localStorage.getItem(courseKey)) || [];
+
+                // إذا لم تكن الصفحة مسجلة مسبقاً، أضفها
+                if (!visited.includes(pageName)) {
+                    visited.push(pageName);
+                    localStorage.setItem(courseKey, JSON.stringify(visited));
+                    console.log(`✅ Progress Saved: ${pageName} in ${courseKey}`);
+                }
+            }
+        });
+    </script>
+	
+
+</body>
+</html>

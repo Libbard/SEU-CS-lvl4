@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch1: Introduction - Computer Architecture</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .gradient-text { background-clip: text; -webkit-background-clip: text; color: transparent; background-image: linear-gradient(to right, #2563eb, #06b6d4); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-white shadow-lg sticky top-0 z-50 border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-black text-blue-600 ml-2">ArchMaster</a>
+                    <span class="text-sm bg-blue-100 text-blue-800 py-1 px-2 rounded-full">المشروع الشامل</span>
+                </div>
+                <div class="flex items-center space-x-4 space-x-reverse">
+                    <a href="index.html" class="text-slate-600 hover:text-blue-600 px-3 py-2 rounded-md font-medium transition">الرئيسية</a>
+                    <a href="chapter2.html" class="bg-blue-600 text-white px-3 py-2 rounded-md font-medium hover:bg-blue-700 transition">التالي ←</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-white py-12 border-b border-slate-200">
+        <div class="max-w-5xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-slate-900">Introduction to Computer Systems</h1>
+            <p class="text-xl text-slate-600 mb-6">الفصل الأول: مقدمة في معمارية وتنظيم الحاسب</p>
+            <div class="inline-flex items-center bg-blue-50 text-blue-700 px-4 py-2 rounded-lg border border-blue-200">
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span>الهدف: فهم الفرق بين التنظيم والمعمارية، تاريخ الحاسب، ومعمارية فون نيومان.</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3">1</div>
+                <h2 class="text-3xl font-bold text-slate-800">Architecture vs. Organization</h2>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border-t-4 border-indigo-500 card-hover">
+                    <h3 class="text-xl font-bold text-indigo-700 mb-3">Computer Architecture (المعمارية)</h3>
+                    <p class="text-slate-600 mb-4">تركز على الجوانب المنطقية التي يراها المبرمج (Logical Aspects).</p>
+                    <ul class="space-y-2 text-sm">
+                        <li class="flex items-start"><span class="text-indigo-500 ml-2">●</span><span>Instruction Sets (مجموعة التعليمات).</span></li>
+                        <li class="flex items-start"><span class="text-indigo-500 ml-2">●</span><span>Data Types & Formats.</span></li>
+                        <li class="flex items-start"><span class="text-indigo-500 ml-2">●</span><span>Addressing Modes.</span></li>
+                    </ul>
+                    <div class="mt-4 bg-indigo-50 p-3 rounded text-center text-indigo-800 font-semibold text-sm">
+                        السؤال الجوهري: ?How do I design a computer
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border-t-4 border-emerald-500 card-hover">
+                    <h3 class="text-xl font-bold text-emerald-700 mb-3">Computer Organization (التنظيم)</h3>
+                    <p class="text-slate-600 mb-4">تركز على المكونات الفيزيائية وكيفية عملها (Physical Aspects).</p>
+                    <ul class="space-y-2 text-sm">
+                        <li class="flex items-start"><span class="text-emerald-500 ml-2">●</span><span>Circuit Design (تصميم الدوائر).</span></li>
+                        <li class="flex items-start"><span class="text-emerald-500 ml-2">●</span><span>Control Signals (إشارات التحكم).</span></li>
+                        <li class="flex items-start"><span class="text-emerald-500 ml-2">●</span><span>Memory Types & Peripherals.</span></li>
+                    </ul>
+                    <div class="mt-4 bg-emerald-50 p-3 rounded text-center text-emerald-800 font-semibold text-sm">
+                        السؤال الجوهري: ?How does a computer work
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-6 bg-gradient-to-r from-slate-800 to-slate-900 text-white p-6 rounded-xl shadow-lg">
+                <h3 class="text-lg font-bold text-yellow-400 mb-2">⭐ Principle of Equivalence of Hardware and Software</h3>
+                <p class="text-slate-200 italic text-lg leading-relaxed">
+                    "أي مهمة يمكن تنفيذها بواسطة البرمجيات (Software) يمكن تنفيذها بواسطة العتاد (Hardware)، والعكس صحيح."
+                </p>
+                <p class="text-sm text-slate-400 mt-2">* بشرط أن لا تكون السرعة (Speed) هي المعيار الأساسي.</p>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3">2</div>
+                <h2 class="text-3xl font-bold text-slate-800">System Measures (وحدات القياس)</h2>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-slate-200">
+                <div class="grid md:grid-cols-2">
+                    <div class="p-6 border-b md:border-b-0 md:border-l border-slate-200">
+                        <h4 class="font-bold text-blue-600 mb-4">Capacity & Speed (السعة والسرعة)</h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm text-right">
+                                <thead class="bg-slate-50">
+                                    <tr><th class="p-2">Unit</th><th class="p-2">Power of 10</th><th class="p-2">Power of 2</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b"><td class="p-2 font-mono text-blue-600">Kilo (K)</td><td class="p-2">$10^3$</td><td class="p-2">$2^{10}$</td></tr>
+                                    <tr class="border-b"><td class="p-2 font-mono text-blue-600">Mega (M)</td><td class="p-2">$10^6$</td><td class="p-2">$2^{20}$</td></tr>
+                                    <tr class="border-b"><td class="p-2 font-mono text-blue-600">Giga (G)</td><td class="p-2">$10^9$</td><td class="p-2">$2^{30}$</td></tr>
+                                    <tr class="border-b"><td class="p-2 font-mono text-blue-600">Tera (T)</td><td class="p-2">$10^{12}$</td><td class="p-2">$2^{40}$</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-2">Peta (15), Exa (18), Zetta (21), Yotta (24)</p>
+                    </div>
+                    <div class="p-6">
+                        <h4 class="font-bold text-red-600 mb-4">Time Units (وحدات الزمن)</h4>
+                        <ul class="space-y-3 text-sm">
+                            <li class="flex justify-between items-center bg-red-50 p-2 rounded">
+                                <span>Milli (m)</span>
+                                <span class="font-mono" dir="ltr">$10^{-3}$ (Thousandth)</span>
+                            </li>
+                            <li class="flex justify-between items-center bg-red-50 p-2 rounded">
+                                <span>Micro ($\mu$)</span>
+                                <span class="font-mono" dir="ltr">$10^{-6}$ (Millionth)</span>
+                            </li>
+                            <li class="flex justify-between items-center bg-red-50 p-2 rounded">
+                                <span>Nano (n)</span>
+                                <span class="font-mono" dir="ltr">$10^{-9}$ (Billionth)</span>
+                            </li>
+                            <li class="flex justify-between items-center bg-red-50 p-2 rounded">
+                                <span>Pico (p)</span>
+                                <span class="font-mono" dir="ltr">$10^{-12}$ (Trillionth)</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3">3</div>
+                <h2 class="text-3xl font-bold text-slate-800">History & Generations</h2>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="flex">
+                    <div class="flex-shrink-0 w-24 font-bold text-slate-400 pt-1">Gen 0</div>
+                    <div class="border-r-4 border-slate-300 pr-4 pb-6">
+                        <h4 class="text-lg font-bold text-slate-800">Mechanical Computers (1642-1945)</h4>
+                        <p class="text-sm text-slate-600">باسكال (Pascaline)، تشارلز باباج (Difference Engine)، وهوليريث (Punched Cards).</p>
+                    </div>
+                </div>
+                <div class="flex">
+                    <div class="flex-shrink-0 w-24 font-bold text-blue-500 pt-1">Gen 1</div>
+                    <div class="border-r-4 border-blue-500 pr-4 pb-6">
+                        <h4 class="text-lg font-bold text-blue-700">Vacuum Tubes (1945-1953)</h4>
+                        <p class="text-sm text-slate-600">أنابيب التفريغ. أشهر الأجهزة: <strong>ENIAC</strong> (أول حاسوب عام الأغراض). جون فون نيومان كان في هذه الحقبة.</p>
+                    </div>
+                </div>
+                <div class="flex">
+                    <div class="flex-shrink-0 w-24 font-bold text-green-500 pt-1">Gen 2</div>
+                    <div class="border-r-4 border-green-500 pr-4 pb-6">
+                        <h4 class="text-lg font-bold text-green-700">Transistors (1954-1965)</h4>
+                        <p class="text-sm text-slate-600">استخدام الترانزستور بدلاً من الأنابيب. الأجهزة أصبحت أصغر وأسرع.</p>
+                    </div>
+                </div>
+                <div class="flex">
+                    <div class="flex-shrink-0 w-24 font-bold text-purple-500 pt-1">Gen 3</div>
+                    <div class="border-r-4 border-purple-500 pr-4 pb-6">
+                        <h4 class="text-lg font-bold text-purple-700">Integrated Circuits (1965-1980)</h4>
+                        <p class="text-sm text-slate-600">الدوائر المتكاملة. سيطرة IBM (جهاز IBM 360).</p>
+                    </div>
+                </div>
+                <div class="flex">
+                    <div class="flex-shrink-0 w-24 font-bold text-orange-500 pt-1">Gen 4</div>
+                    <div class="border-r-4 border-orange-500 pr-4">
+                        <h4 class="text-lg font-bold text-orange-700">VLSI (1980-Present)</h4>
+                        <p class="text-sm text-slate-600">الدوائر المتكاملة ذات النطاق الواسع جداً. ظهور المعالجات الدقيقة (Microprocessors) والحاسب الشخصي.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="grid md:grid-cols-2 gap-6">
+            <div class="bg-blue-50 p-6 rounded-xl border border-blue-200">
+                <h3 class="text-xl font-bold text-blue-800 mb-2">Moore's Law (1965)</h3>
+                <p class="font-medium text-slate-700 mb-2">"كثافة الترانزستورات في الشريحة تتضاعف كل سنة (أو 18 شهراً)."</p>
+                <p class="text-sm text-slate-500">يعني أن الأجهزة تصبح أسرع وأرخص وأصغر مع الوقت.</p>
+            </div>
+            <div class="bg-red-50 p-6 rounded-xl border border-red-200">
+                <h3 class="text-xl font-bold text-red-800 mb-2">Rock's Law</h3>
+                <p class="font-medium text-slate-700 mb-2">"تكلفة المعدات اللازمة لتصنيع أشباه الموصلات تتضاعف كل 4 سنوات."</p>
+                <p class="text-sm text-slate-500">للاستمرار في قانون مور، تكلفة التصنيع تزيد بشكل جنوني (Rock's Law must fall for Moore's to hold).</p>
+            </div>
+        </section>
+
+        <section>
+             <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3">5</div>
+                <h2 class="text-3xl font-bold text-slate-800">Hierarchy & Cloud Computing</h2>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-700 mb-3 text-center">The 7 Levels of Hierarchy</h3>
+                    <div class="space-y-1">
+                        <div class="bg-slate-200 p-2 text-center text-xs rounded">Level 6: User (Executable Programs)</div>
+                        <div class="bg-slate-300 p-2 text-center text-xs rounded">Level 5: High-Level Language (C++, Java)</div>
+                        <div class="bg-slate-200 p-2 text-center text-xs rounded">Level 4: Assembly Language</div>
+                        <div class="bg-slate-300 p-2 text-center text-xs rounded">Level 3: System Software (OS)</div>
+                        <div class="bg-slate-200 p-2 text-center text-xs rounded border-2 border-blue-400">Level 2: Machine (ISA)</div>
+                        <div class="bg-slate-300 p-2 text-center text-xs rounded">Level 1: Control</div>
+                        <div class="bg-slate-200 p-2 text-center text-xs rounded">Level 0: Digital Logic (Circuits)</div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-100">
+                    <h3 class="text-lg font-bold text-blue-600 mb-3">Cloud Computing Models</h3>
+                    <ul class="space-y-3 text-sm">
+                        <li class="border-b pb-2">
+                            <strong class="text-slate-800">SaaS (Software as a Service):</strong> شراء التطبيق جاهزاً (Gmail, Netflix).
+                        </li>
+                        <li class="border-b pb-2">
+                            <strong class="text-slate-800">PaaS (Platform as a Service):</strong> توفير السيرفر ونظام التشغيل وأدوات التطوير (Google App Engine).
+                        </li>
+                        <li class="pb-2">
+                            <strong class="text-slate-800">IaaS (Infrastructure as a Service):</strong> توفير العتاد فقط (Servers) وأنت تدير السوفتوير (Amazon EC2).
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-slate-900 text-white rounded-2xl p-8 relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-32 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+            
+            <h2 class="text-3xl font-bold mb-6 relative z-10">The Von Neumann Architecture</h2>
+            
+            <div class="grid md:grid-cols-2 gap-8 relative z-10">
+                <div>
+                    <h4 class="text-blue-400 font-bold mb-2 uppercase tracking-wide">Three Main Components</h4>
+                    <ol class="list-decimal list-inside space-y-2 text-slate-300 mb-6">
+                        <li><strong class="text-white">CPU:</strong> المعالج (يحتوي على Control Unit و ALU و Registers).</li>
+                        <li><strong class="text-white">Main Memory:</strong> ذاكرة لتخزين البيانات والبرامج معاً.</li>
+                        <li><strong class="text-white">I/O System:</strong> لنقل البيانات من وإلى العالم الخارجي.</li>
+                    </ol>
+                </div>
+
+                <div class="bg-slate-800 p-4 rounded-lg border border-slate-700">
+                    <h4 class="text-red-400 font-bold mb-2">⚠️ The Von Neumann Bottleneck</h4>
+                    <p class="text-sm text-slate-300 mb-4">
+                        يوجد مسار واحد فقط (Single Data Path) بين المعالج (CPU) والذاكرة الرئيسية. هذا المسار الموحد يسبب "عنق زجاجة" يحد من سرعة النظام.
+                    </p>
+                </div>
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-slate-700">
+                <h4 class="text-yellow-400 font-bold mb-3 text-center">Execution Cycle (دورة التنفيذ)</h4>
+                <div class="flex justify-center items-center space-x-4 space-x-reverse text-sm font-mono">
+                    <div class="bg-slate-700 px-4 py-2 rounded">Fetch (جلب)</div>
+                    <div class="text-slate-500">→</div>
+                    <div class="bg-slate-700 px-4 py-2 rounded">Decode (فك تشفير)</div>
+                    <div class="text-slate-500">→</div>
+                    <div class="bg-slate-700 px-4 py-2 rounded">Execute (تنفيذ)</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-16 mb-10">
+            <div class="bg-red-600 text-white py-3 px-6 rounded-t-xl font-bold text-xl flex items-center">
+                <svg class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                EXAM VAULT (خزنة الاختبار)
+            </div>
+            <div class="bg-white border-2 border-red-600 rounded-b-xl p-6 shadow-xl">
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-red-50 p-4 rounded-lg">
+                        <span class="bg-red-200 text-red-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">TRAP / فخ</span>
+                        <p class="font-bold text-slate-800 mb-1">Architecture vs Organization</p>
+                        <p class="text-sm text-slate-600">
+                            في الاختبار، إذا سألك عن "Interfaces" أو "Instruction Set"، فهذه <span class="font-bold text-red-600">Architecture</span>.
+                            <br>إذا سألك عن "Hardware components" أو "Circuit design"، فهذه <span class="font-bold text-red-600">Organization</span>.
+                            <br>لا تخلط بينهما!
+                        </p>
+                    </div>
+
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <span class="bg-blue-200 text-blue-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">CALCULATION / حساب</span>
+                        <p class="font-bold text-slate-800 mb-1">Cycle Time Calculation</p>
+                        <p class="text-sm text-slate-600 mb-2">القاعدة: الزمن هو مقلوب التردد.</p>
+                        <div class="bg-white p-2 rounded border border-blue-200 font-mono text-sm ltr text-left" dir="ltr">
+                            Frequency = 133 MHz<br>
+                            Cycle Time = 1 / (133 × 10^6)<br>
+                            = 7.52 ns
+                        </div>
+                    </div>
+
+                    <div class="bg-yellow-50 p-4 rounded-lg md:col-span-2">
+                        <span class="bg-yellow-200 text-yellow-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">UNIT CONFUSION</span>
+                        <p class="font-bold text-slate-800 mb-1">Powers of 10 vs Powers of 2</p>
+                        <p class="text-sm text-slate-600">
+                            انتبه! عند الحديث عن <strong>السرعة (Clock Speed/Hertz)</strong> نستخدم قوى 10 ($1 MHz = 10^6$).
+                            <br>
+                            عند الحديث عن <strong>التخزين (Storage/Bytes)</strong> نستخدم قوى 2 ($1 KB = 2^{10} = 1024$).
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="flex justify-between mt-12 mb-8">
+            <a href="index.html" class="bg-slate-200 text-slate-600 hover:bg-slate-300 px-6 py-3 rounded-lg font-bold transition">الرئيسية</a>
+            <a href="chapter2.html" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-bold shadow-lg transition transform hover:scale-105">الفصل التالي (Ch 2) ←</a>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center border-t border-slate-800">
+        <p>© 2024 ArchMaster Study Guide. All chapters curated for excellence.</p>
+    </footer>
+
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. تحديد مفتاح التخزين بناءً على اسم المجلد
+            const path = window.location.pathname;
+            let courseKey = null;
+
+            // التحقق من اسم المجلد لتحديد المادة
+            if (path.includes('Computer-Architecture')) courseKey = 'arch_progress';
+            else if (path.includes('Theory-of-Computing')) courseKey = 'theory_progress';
+            else if (path.includes('Data-Structures')) courseKey = 'data_struct_progress';
+            else if (path.includes('Discrete-Mathematics')) courseKey = 'discrete_progress';
+
+            // 2. إذا تم التعرف على المادة، سجل الصفحة الحالية
+            if (courseKey) {
+                // استخراج اسم الملف فقط (مثلاً chapter5.html)
+                const pageName = path.split('/').pop();
+
+                // جلب البيانات القديمة
+                let visited = JSON.parse(localStorage.getItem(courseKey)) || [];
+
+                // إذا لم تكن الصفحة مسجلة مسبقاً، أضفها
+                if (!visited.includes(pageName)) {
+                    visited.push(pageName);
+                    localStorage.setItem(courseKey, JSON.stringify(visited));
+                    console.log(`✅ Progress Saved: ${pageName} in ${courseKey}`);
+                }
+            }
+        });
+    </script>
+	
+
+</body>
+</html>

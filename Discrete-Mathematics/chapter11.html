@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch11: Tree Applications - Discrete Math</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .amber-gradient { background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.2); border-color: #f59e0b; }
+        .code-node { width: 40px; height: 40px; background: #fff; border: 2px solid #b45309; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; margin: 2px; font-size: 0.8rem; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-white shadow-lg sticky top-0 z-50 border-b border-amber-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-black text-amber-700 ml-2">DiscreteMaster</a>
+                    <span class="text-sm bg-amber-100 text-amber-800 py-1 px-2 rounded-full">Ch 11: Tree Apps</span>
+                </div>
+                <div class="flex items-center space-x-2 space-x-reverse">
+                    <a href="chapter10.html" class="text-slate-600 hover:text-amber-600 px-3 py-2 rounded-md font-medium transition">→ السابق</a>
+                    <a href="index.html" class="text-slate-600 hover:text-amber-600 px-3 py-2 rounded-md font-medium transition">الرئيسية</a>
+                    <a href="chapter12.html" class="bg-amber-500 text-white px-3 py-2 rounded-md font-medium hover:bg-amber-600 transition shadow-md">التالي (ف12) ←</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-white py-12 border-b border-amber-100">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-slate-900">Applications of Trees</h1>
+            <p class="text-xl text-slate-600 mb-6">الفصل الحادي عشر: تطبيقات الأشجار (BST, Decision Trees, Huffman)</p>
+            <div class="inline-flex items-center bg-orange-50 text-orange-700 px-4 py-2 rounded-lg border border-orange-200 shadow-sm">
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                <span>الهدف: استخدام الأشجار للبحث السريع، اتخاذ القرارات، وضغط البيانات (Compression).</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">1</div>
+                <h2 class="text-3xl font-bold text-slate-800">Binary Search Trees (BST)</h2>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-hover">
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <h3 class="font-bold text-amber-700 mb-3">آلية العمل</h3>
+                        <p class="text-sm text-slate-600 mb-3">
+                            هي شجرة ثنائية يتم تخزين البيانات فيها بنظام معين لتسريع البحث:
+                        </p>
+                        <div class="bg-orange-50 p-3 rounded border border-orange-200 text-center font-bold text-slate-800 text-sm">
+                            Left Child < Parent < Right Child
+                        </div>
+                        <p class="text-xs text-slate-500 mt-2">
+                            <strong>التعقيد:</strong> $O(\log n)$ في المتوسط للبحث والإضافة. (مثل Binary Search في المصفوفات ولكن مرن في الإضافة). 
+                        </p>
+                    </div>
+                    
+                    <div class="flex justify-center">
+                        <div class="text-center relative w-40 h-32">
+                            <div class="code-node absolute top-0 left-1/2 -translate-x-1/2 bg-amber-200">10</div>
+                            <div class="code-node absolute top-10 left-4">5</div>
+                            <div class="code-node absolute top-10 right-4">15</div>
+                            <div class="code-node absolute top-20 left-0 text-gray-400 border-gray-300">2</div>
+                            <div class="code-node absolute top-20 left-8 text-gray-400 border-gray-300">8</div>
+                            <svg class="absolute top-0 left-0 w-full h-full -z-10">
+                                <line x1="80" y1="20" x2="40" y2="60" stroke="#cbd5e1" stroke-width="2"/>
+                                <line x1="80" y1="20" x2="120" y2="60" stroke="#cbd5e1" stroke-width="2"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">2</div>
+                <h2 class="text-3xl font-bold text-slate-800">Decision Trees</h2>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-lg border-r-4 border-amber-500">
+                <h3 class="text-lg font-bold text-slate-700 mb-2">الأشجار واتخاذ القرار</h3>
+                <p class="text-sm text-slate-600 mb-4">
+                    كل عقدة داخلية تمثل "سؤالاً" أو "مقارنة"، وكل ورقة (Leaf) تمثل "نتيجة" أو "قراراً".
+                </p>
+                
+                <div class="bg-gray-100 p-4 rounded-lg mb-4">
+                    <strong class="text-amber-800 block mb-2">نظرية الحد الأدنى للترتيب (Sorting Lower Bound)</strong>
+                    <p class="text-sm text-slate-700">
+                        أي خوارزمية ترتيب تعتمد على المقارنة (Comparison-based) يجب أن تقوم بـ $\lceil \log_2(n!) \rceil$ مقارنة على الأقل في أسوأ الأحوال.
+                        <br>$\approx O(n \log n)$.
+                    </p>
+                    <p class="text-xs text-slate-500 mt-1"></p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">3</div>
+                <h2 class="text-3xl font-bold text-slate-800">Huffman Coding (ضغط البيانات)</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 card-hover">
+                    <h3 class="font-bold text-amber-700 mb-2">Prefix Codes</h3>
+                    <p class="text-sm text-slate-600 mb-3">
+                        لتمثيل الحروف بـ Bits متغيرة الطول (Variable Length)، يجب ألا يكون أي كود "بادئة" لكود آخر.
+                        <br><span class="text-red-500 text-xs">خطأ: a=0, b=01 (لأن 0 بداية 01).</span>
+                        <br><span class="text-green-600 text-xs">صح: a=0, b=10, c=11.</span>
+                    </p>
+                    <p class="text-xs text-slate-500">يتم تمثيل الأكواد كأوراق في شجرة ثنائية (يسار=0، يمين=1) .</p>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 card-hover">
+                    <h3 class="font-bold text-orange-700 mb-2">Huffman Algorithm</h3>
+                    <p class="text-sm text-slate-600 mb-2">
+                        الهدف: الحروف الأكثر تكراراً تأخذ كوداً أقصر.
+                    </p>
+                    <div class="bg-orange-50 p-2 rounded text-xs">
+                        <strong>الخطوات:</strong>
+                        <ol class="list-decimal list-inside text-slate-700">
+                            <li>خذ أقل حرفين تكراراً واجمعهما في شجرة صغيرة.</li>
+                            <li>مجموعهما يصبح "حرفاً جديداً".</li>
+                            <li>كرر حتى تصبح شجرة واحدة كبيرة.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">4</div>
+                <h2 class="text-3xl font-bold text-slate-800">Tree Traversal & Expressions</h2>
+            </div>
+            
+            <div class="bg-slate-900 text-white p-6 rounded-xl shadow-lg">
+                <p class="text-sm text-slate-300 mb-4 text-center">
+                    يمكن تمثيل المعادلات الرياضية كأشجار (الجذر هو العملية، والأبناء هم الأرقام).
+                </p>
+                <div class="grid grid-cols-3 gap-4 text-center text-sm font-mono">
+                    <div class="bg-slate-800 p-3 rounded border border-slate-600">
+                        <strong class="block text-yellow-400 mb-1">Preorder</strong>
+                        Prefix Notation
+                        <br>$(+ a b)$
+                    </div>
+                    <div class="bg-slate-800 p-3 rounded border border-slate-600">
+                        <strong class="block text-green-400 mb-1">Inorder</strong>
+                        Infix Notation
+                        <br>$(a + b)$
+                    </div>
+                    <div class="bg-slate-800 p-3 rounded border border-slate-600">
+                        <strong class="block text-blue-400 mb-1">Postorder</strong>
+                        Postfix Notation
+                        <br>$(a b +)$
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-16 mb-10">
+            <div class="bg-amber-700 text-white py-3 px-6 rounded-t-xl font-bold text-xl flex items-center shadow-lg">
+                <span class="mr-2">🛡️</span> EXAM VAULT (خزنة الاختبار)
+            </div>
+            <div class="bg-white border-2 border-amber-700 rounded-b-xl p-6 shadow-xl">
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                        <span class="bg-red-200 text-red-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">TRAP / التفرد</span>
+                        <p class="font-bold text-slate-800 mb-1">Is Huffman Code Unique؟</p>
+                        <p class="text-sm text-slate-600">
+                            <strong>لا!</strong> شجرة هوفمان ليست وحيدة (يمكنك وضع الصفر يمين أو يسار، أو تبديل العناصر المتساوية في التكرار).
+                            <br>ولكن <strong>طول الكود المضغوط</strong> (عدد البتات الكلي) هو دائماً الأمثل والوحيد.
+                        </p>
+                    </div>
+
+                    <div class="bg-orange-50 p-4 rounded-lg border border-orange-100">
+                        <span class="bg-orange-200 text-orange-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">APPLICATION / الألعاب</span>
+                        <p class="font-bold text-slate-800 mb-1">Minimax Algorithm</p>
+                        <p class="text-sm text-slate-600">
+                            تستخدم أشجار القرار في الألعاب (مثل Tic-Tac-Toe).
+                            <br>اللاعب الأول يحاول تعظيم النتيجة (Max)، والخصم يحاول تقليلها (Min). الشجرة تمثل كل الحركات الممكنة .
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="flex justify-between mt-12 mb-8">
+            <a href="chapter10.html" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-lg font-bold shadow-sm transition transform hover:scale-105">→ السابق (Ch 10)</a>
+            <a href="chapter12.html" class="bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-lg font-bold shadow-lg transition transform hover:scale-105">الفصل التالي (Ch 12) ←</a>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center border-t border-slate-800">
+        <p>© 2024 DiscreteMaster Study Guide. Crafted for Excellence.</p>
+    </footer>
+
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. تحديد مفتاح التخزين بناءً على اسم المجلد
+            const path = window.location.pathname;
+            let courseKey = null;
+
+            // التحقق من اسم المجلد لتحديد المادة
+            if (path.includes('Computer-Architecture')) courseKey = 'arch_progress';
+            else if (path.includes('Theory-of-Computing')) courseKey = 'theory_progress';
+            else if (path.includes('Data-Structures')) courseKey = 'data_struct_progress';
+            else if (path.includes('Discrete-Mathematics')) courseKey = 'discrete_progress';
+
+            // 2. إذا تم التعرف على المادة، سجل الصفحة الحالية
+            if (courseKey) {
+                // استخراج اسم الملف فقط (مثلاً chapter5.html)
+                const pageName = path.split('/').pop();
+
+                // جلب البيانات القديمة
+                let visited = JSON.parse(localStorage.getItem(courseKey)) || [];
+
+                // إذا لم تكن الصفحة مسجلة مسبقاً، أضفها
+                if (!visited.includes(pageName)) {
+                    visited.push(pageName);
+                    localStorage.setItem(courseKey, JSON.stringify(visited));
+                    console.log(`✅ Progress Saved: ${pageName} in ${courseKey}`);
+                }
+            }
+        });
+    </script>
+	
+
+</body>
+</html>

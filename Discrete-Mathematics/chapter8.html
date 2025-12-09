@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch8: Advanced Recurrence - Discrete Math</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .amber-gradient { background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.2); border-color: #f59e0b; }
+        .guess-table th, .guess-table td { border: 1px solid #fcd34d; padding: 8px; text-align: center; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-white shadow-lg sticky top-0 z-50 border-b border-amber-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-black text-amber-700 ml-2">DiscreteMaster</a>
+                    <span class="text-sm bg-amber-100 text-amber-800 py-1 px-2 rounded-full">Ch 8: Adv Recurrence</span>
+                </div>
+                <div class="flex items-center space-x-2 space-x-reverse">
+                    <a href="chapter7.html" class="text-slate-600 hover:text-amber-600 px-3 py-2 rounded-md font-medium transition">→ السابق</a>
+                    <a href="index.html" class="text-slate-600 hover:text-amber-600 px-3 py-2 rounded-md font-medium transition">الرئيسية</a>
+                    <a href="chapter9.html" class="bg-amber-500 text-white px-3 py-2 rounded-md font-medium hover:bg-amber-600 transition shadow-md">التالي (ف9) ←</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-white py-12 border-b border-amber-100">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-slate-900">Advanced Recurrence Relations</h1>
+            <p class="text-xl text-slate-600 mb-6">الفصل الثامن: حل العلاقات التكرارية المتقدمة</p>
+            <div class="inline-flex items-center bg-orange-50 text-orange-700 px-4 py-2 rounded-lg border border-orange-200 shadow-sm">
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                <span>الهدف: التعامل مع الجذور المكررة وحل المعادلات غير المتجانسة ($F(n) \neq 0$).</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">1</div>
+                <h2 class="text-3xl font-bold text-slate-800">Repeated Roots (الجذور المكررة)</h2>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-hover">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="font-bold text-amber-700 mb-3">المشكلة</h3>
+                        <p class="text-slate-600 mb-4 text-sm">
+                            عند حل المعادلة المميزة $r^2 - c_1 r - c_2 = 0$، قد نجد جذراً واحداً مكرراً ($r_0$).
+                            <br>الحل القديم $\alpha_1 r_0^n + \alpha_2 r_0^n$ لا يكفي لأنهما حد واحد!
+                        </p>
+                        <div class="bg-orange-50 p-3 rounded border border-orange-200 text-sm">
+                            <strong>الحل الجديد (Theorem 2):</strong> 
+                            <br>نضرب الحد الثاني في $n$.
+                            <br>$$ a_n = \alpha_1 r_0^n + \alpha_2 n r_0^n $$
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-700 mb-2">تعميم (Multiplicity)</h3>
+                        <p class="text-sm text-slate-600 mb-2">
+                            إذا تكرر الجذر $r_0$ لـ $m$ مرات، تكون الحلول:
+                        </p>
+                        <div class="bg-gray-100 p-3 rounded text-xs font-mono ltr">
+                            $a_n = (\alpha_1 + \alpha_2 n + \alpha_3 n^2 + \dots + \alpha_m n^{m-1}) r_0^n$
+                        </div>
+                        <p class="text-xs text-slate-500 mt-2">مثال: $r=2$ مكرر 3 مرات. الحل: $c_1 2^n + c_2 n 2^n + c_3 n^2 2^n$.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">2</div>
+                <h2 class="text-3xl font-bold text-slate-800">Non-Homogeneous Relations</h2>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-lg border-r-4 border-amber-500">
+                <h3 class="text-lg font-bold text-slate-700 mb-4">الهيكل العام للحل</h3>
+                <p class="text-sm text-slate-600 mb-4">
+                    عندما تكون المعادلة على شكل:
+                    <br>$$ a_n = c_1 a_{n-1} + \dots + F(n) $$
+                    <br>حيث $F(n)$ دالة ليست صفراً (ثابت، كثيرة حدود، أو أسية).
+                </p>
+                
+                <div class="bg-slate-900 text-white p-4 rounded-lg text-center font-bold text-xl mb-4">
+                    $a_n = a_n^{(h)} + a_n^{(p)}$
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4 text-center text-sm">
+                    <div class="bg-gray-100 p-3 rounded">
+                        <strong class="text-amber-700 block">$a_n^{(h)}$ Homogeneous</strong>
+                        حل الجزء المتجانس (باعتبار $F(n)=0$).
+                        <br>(نستخدم الجذور $r$).
+                    </div>
+                    <div class="bg-gray-100 p-3 rounded">
+                        <strong class="text-orange-700 block">$a_n^{(p)}$ Particular</strong>
+                        حل خاص يحقق المعادلة كاملة مع $F(n)$.
+                        <br>(نستخدم التخمين Guessing). 
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">3</div>
+                <h2 class="text-3xl font-bold text-slate-800">Finding Particular Solutions ($a_n^{(p)}$)</h2>
+            </div>
+
+            <p class="text-slate-600 mb-4">كيف نعرف شكل $a_n^{(p)}$؟ نخمنه بناءً على شكل $F(n)$:</p>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm guess-table bg-white rounded-lg shadow-sm">
+                    <thead class="bg-amber-100 text-amber-900">
+                        <tr>
+                            <th>شكل الدالة $F(n)$</th>
+                            <th>التخمين المقترح (Guess)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-slate-700">
+                        <tr>
+                            <td class="font-mono ltr">Constant (e.g., 5)</td>
+                            <td class="font-mono ltr">$C$</td>
+                        </tr>
+                        <tr>
+                            <td class="font-mono ltr">Linear ($n$, $3n+5$)</td>
+                            <td class="font-mono ltr">$Cn + D$</td>
+                        </tr>
+                        <tr>
+                            <td class="font-mono ltr">Quadratic ($n^2$)</td>
+                            <td class="font-mono ltr">$An^2 + Bn + C$</td>
+                        </tr>
+                        <tr>
+                            <td class="font-mono ltr">Exponential ($s^n$)</td>
+                            <td class="font-mono ltr">$C \cdot s^n$</td>
+                        </tr>
+                        <tr>
+                            <td class="font-mono ltr">Poly $\times$ Exp ($n \cdot 2^n$)</td>
+                            <td class="font-mono ltr">$(An + B) \cdot 2^n$</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="mt-6 bg-red-50 p-4 rounded-lg border-l-4 border-red-500">
+                <h4 class="font-bold text-red-800 mb-2">⚠️ حالة الخطر (Collision Case)</h4>
+                <p class="text-sm text-slate-700">
+                    ماذا لو كان التخمين $s^n$ هو <strong>بالفعل جذر</strong> للمعادلة المتجانسة؟
+                    <br>في هذه الحالة، التخمين سيفشل (لأنه يعطي صفر).
+                    <br><strong>الحل:</strong> اضرب التخمين في $n$ (أو $n^m$ إذا كان الجذر مكرراً $m$ مرات). 
+                    <br><span class="font-mono bg-white px-1">Example: $F(n)=3^n$ and root $r=3$ $\to$ Guess $C \cdot n \cdot 3^n$.</span>
+                </p>
+            </div>
+        </section>
+
+        <section class="mt-16 mb-10">
+            <div class="bg-amber-700 text-white py-3 px-6 rounded-t-xl font-bold text-xl flex items-center shadow-lg">
+                <span class="mr-2">🛡️</span> EXAM VAULT (خزنة الاختبار)
+            </div>
+            <div class="bg-white border-2 border-amber-700 rounded-b-xl p-6 shadow-xl">
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                        <span class="bg-red-200 text-red-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">TRAP / نقص الحدود</span>
+                        <p class="font-bold text-slate-800 mb-1">Guessing Polynomials</p>
+                        <p class="text-sm text-slate-600">
+                            إذا كان $F(n) = n^2$، لا تخمن $An^2$ فقط!
+                            <br>يجب أن تخمن الصيغة العامة الكاملة: $An^2 + Bn + C$.
+                            <br>إهمال الحدود الأصغر سيؤدي لفشل الحل.
+                        </p>
+                    </div>
+
+                    <div class="bg-orange-50 p-4 rounded-lg border border-orange-100">
+                        <span class="bg-orange-200 text-orange-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">PROCESS / خطوات الحل</span>
+                        <p class="font-bold text-slate-800 mb-1">Solving Non-Homogeneous</p>
+                        <ol class="text-sm text-slate-600 list-decimal list-inside">
+                            <li>جد $a_n^{(h)}$ (الجذور).</li>
+                            <li>خمن $a_n^{(p)}$ بناءً على $F(n)$.</li>
+                            <li>تأكد ألا يتعارض التخمين مع الجذور (اضرب في $n$ إذا لزم).</li>
+                            <li>عوض بالتخمين في المعادلة الأصلية لإيجاد الثوابت ($A, B, C$).</li>
+                            <li>اجمع الحلين واستخدم الشروط الابتدائية.</li>
+                        </ol>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="flex justify-between mt-12 mb-8">
+            <a href="chapter7.html" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-lg font-bold shadow-sm transition transform hover:scale-105">→ السابق (Ch 7)</a>
+            <a href="chapter9.html" class="bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-lg font-bold shadow-lg transition transform hover:scale-105">الفصل التالي (Ch 9) ←</a>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center border-t border-slate-800">
+        <p>© 2024 DiscreteMaster Study Guide. Crafted for Excellence.</p>
+    </footer>
+
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. تحديد مفتاح التخزين بناءً على اسم المجلد
+            const path = window.location.pathname;
+            let courseKey = null;
+
+            // التحقق من اسم المجلد لتحديد المادة
+            if (path.includes('Computer-Architecture')) courseKey = 'arch_progress';
+            else if (path.includes('Theory-of-Computing')) courseKey = 'theory_progress';
+            else if (path.includes('Data-Structures')) courseKey = 'data_struct_progress';
+            else if (path.includes('Discrete-Mathematics')) courseKey = 'discrete_progress';
+
+            // 2. إذا تم التعرف على المادة، سجل الصفحة الحالية
+            if (courseKey) {
+                // استخراج اسم الملف فقط (مثلاً chapter5.html)
+                const pageName = path.split('/').pop();
+
+                // جلب البيانات القديمة
+                let visited = JSON.parse(localStorage.getItem(courseKey)) || [];
+
+                // إذا لم تكن الصفحة مسجلة مسبقاً، أضفها
+                if (!visited.includes(pageName)) {
+                    visited.push(pageName);
+                    localStorage.setItem(courseKey, JSON.stringify(visited));
+                    console.log(`✅ Progress Saved: ${pageName} in ${courseKey}`);
+                }
+            }
+        });
+    </script>
+	
+
+</body>
+</html>

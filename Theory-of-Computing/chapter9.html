@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch9: TM Extensions & Encoding - Theory of Computing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(147, 51, 234, 0.15); border-color: #9333ea; }
+        .track-cell { border: 1px solid #94a3b8; width: 100%; text-align: center; padding: 2px; font-family: monospace; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-white shadow-lg sticky top-0 z-50 border-b border-purple-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-black text-purple-700 ml-2">TheoryMaster</a>
+                    <span class="text-sm bg-purple-100 text-purple-800 py-1 px-2 rounded-full">Ch 9: TM Extensions</span>
+                </div>
+                <div class="flex items-center space-x-2 space-x-reverse">
+                    <a href="chapter8.html" class="text-slate-600 hover:text-purple-600 px-3 py-2 rounded-md font-medium transition">→ السابق</a>
+                    <a href="index.html" class="text-slate-600 hover:text-purple-600 px-3 py-2 rounded-md font-medium transition">الرئيسية</a>
+                    <a href="chapter10.html" class="bg-purple-600 text-white px-3 py-2 rounded-md font-medium hover:bg-purple-700 transition shadow-md">التالي (ف10) ←</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-white py-12 border-b border-purple-100">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-slate-900">TM Extensions & Encoding</h1>
+            <p class="text-xl text-slate-600 mb-6">الفصل التاسع: تنويعات آلة تورنغ وتمثيل البيانات</p>
+            <div class="inline-flex items-center bg-pink-50 text-pink-700 px-4 py-2 rounded-lg border border-pink-200 shadow-sm">
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                <span>الهدف: إثبات أن "التعقيد" لا يعني "زيادة القوة"، وفهم كيفية ترميز المشاكل.</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">1</div>
+                <h2 class="text-3xl font-bold text-slate-800">Variations of Turing Machines</h2>
+            </div>
+            
+            <p class="text-slate-600 mb-6">هل يمكننا تحسين آلة تورنغ لجعلها تحل مشاكل لا تستطيع الآلة العادية حلها؟</p>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-hover">
+                    <h3 class="font-bold text-purple-700 mb-3 text-lg">1. Multi-track TM</h3>
+                    <div class="flex mb-4">
+                        <div class="w-12 flex flex-col justify-center items-center mr-2">
+                            <div class="h-full w-1 bg-gray-300"></div>
+                            <div class="w-4 h-4 bg-purple-600 rounded-full"></div>
+                        </div>
+                        <div class="flex-1">
+                            <div class="grid grid-cols-5 gap-0 border border-gray-400 mb-1 bg-gray-50">
+                                <div class="track-cell">1</div><div class="track-cell">0</div><div class="track-cell">1</div><div class="track-cell">B</div><div class="track-cell">...</div>
+                            </div>
+                            <div class="grid grid-cols-5 gap-0 border border-gray-400 bg-gray-50">
+                                <div class="track-cell text-red-500">$</div><div class="track-cell">X</div><div class="track-cell">Y</div><div class="track-cell">B</div><div class="track-cell">...</div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-600">
+                        شريط واحد مقسم لعدة "مسارات" (Tracks). رأس قراءة واحد يقرأ كل المسارات في نفس الوقت.
+                        <br><strong>الفائدة:</strong> تخزين معلومات إضافية (مثل العلامات Markers) دون فقدان البيانات الأصلية.
+                    </p>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-hover">
+                    <h3 class="font-bold text-pink-700 mb-3 text-lg">2. Multi-tape TM</h3>
+                    <div class="space-y-2 mb-4 font-mono text-xs">
+                        <div class="flex items-center"><span class="w-16 text-gray-500">Tape 1:</span> <div class="border p-1 flex-1 bg-gray-50">[ Input ]</div></div>
+                        <div class="flex items-center"><span class="w-16 text-gray-500">Tape 2:</span> <div class="border p-1 flex-1 bg-gray-50">[ Scratch ]</div></div>
+                    </div>
+                    <p class="text-sm text-slate-600">
+                        عدة أشرطة، ولكل شريط "رأس" (Head) مستقل يتحرك بحرية.
+                        <br><strong>الفائدة:</strong> تسهيل البرمجة وتسريع العمليات (لكن لا تزيد القوة الحسابية).
+                    </p>
+                </div>
+            </div>
+
+            <div class="mt-6 bg-indigo-50 border-l-4 border-indigo-500 p-4 rounded text-center">
+                <h4 class="font-bold text-indigo-800">The Golden Rule (القاعدة الذهبية)</h4>
+                <p class="text-sm text-indigo-700 mt-1">
+                    Multi-tape TM $\equiv$ Single-tape TM
+                    <br>
+                    أي مشكلة يمكن حلها بآلة متعددة الأشرطة، يمكن حلها بآلة بشريط واحد (وإن كانت أبطأ).
+                </p>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">2</div>
+                <h2 class="text-3xl font-bold text-slate-800">Nondeterministic TM (NTM)</h2>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-lg border-r-4 border-pink-500">
+                <div class="flex items-start">
+                    <div class="flex-1">
+                        <h3 class="text-lg font-bold text-slate-700 mb-2">ما هي NTM؟</h3>
+                        <p class="text-sm text-slate-600 mb-4">
+                            في كل خطوة، الآلة يمكنها "الاختيار" بين عدة انتقالات ممكنة (Guessing).
+                            <br>تقبل الآلة الكلمة إذا كان هناك <strong>مسار واحد على الأقل</strong> يؤدي للقبول.
+                        </p>
+                        <div class="bg-slate-100 p-3 rounded border text-sm font-mono ltr">
+                            $\delta(q, X) = \{ (q_1, Y_1, R), (q_2, Y_2, L), \dots \}$
+                        </div>
+                    </div>
+                    <div class="hidden md:block w-1/3 text-center text-8xl opacity-20">🎲</div>
+                </div>
+
+                <div class="mt-6 border-t pt-4">
+                    <h4 class="font-bold text-purple-700 mb-2">هل NTM أقوى من DTM؟</h4>
+                    <p class="text-sm text-slate-700">
+                        <span class="text-red-600 font-bold text-lg">لا!</span>
+                        <br>
+                        أي NTM يمكن محاكاتها بواسطة DTM (عن طريق تجربة كل الاحتمالات بالتسلسل - BFS).
+                        <br>
+                        <strong>النتيجة:</strong> NTM = DTM (في القدرة على الحل، وليس في السرعة).
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">3</div>
+                <h2 class="text-3xl font-bold text-slate-800">Encoding (الترميز)</h2>
+            </div>
+
+            <p class="text-slate-600 mb-6">آلة تورنغ تقبل فقط "سلسلة من الرموز" على الشريط. كيف نعطيها برنامجاً أو صورة أو آلة أخرى؟</p>
+
+            <div class="space-y-4">
+                <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 flex items-center">
+                    <div class="bg-green-100 text-green-800 font-bold px-3 py-1 rounded mr-4">Step 1</div>
+                    <div>
+                        <strong class="block text-slate-700">أي شيء ← نص (String)</strong>
+                        <span class="text-xs text-slate-500">الصور، الموسيقى، البرامج.. كلها يمكن تحويلها لسلسلة من البايتات (Binary String).</span>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 flex items-center">
+                    <div class="bg-blue-100 text-blue-800 font-bold px-3 py-1 rounded mr-4">Step 2</div>
+                    <div>
+                        <strong class="block text-slate-700">نص ← عدد صحيح (Integer)</strong>
+                        <span class="text-xs text-slate-500">كل سلسلة ثنائية يمكن اعتبارها رقماً. إذن، كل برنامج هو في الحقيقة "رقم"!</span>
+                    </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 flex items-center">
+                    <div class="bg-purple-100 text-purple-800 font-bold px-3 py-1 rounded mr-4">Step 3</div>
+                    <div>
+                        <strong class="block text-slate-700">آلة تورنغ كمدخل (TM as Input)</strong>
+                        <span class="text-xs text-slate-500">بما أن آلة تورنغ يمكن وصفها بجدول انتقالات، يمكننا تحويل هذا الجدول لسلسلة، وإدخالها لآلة تورنغ أخرى!</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">4</div>
+                <h2 class="text-3xl font-bold text-slate-800">Universal Turing Machine (UTM)</h2>
+            </div>
+            
+            <div class="bg-slate-900 text-white p-6 rounded-xl text-center shadow-2xl relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-24 h-24 bg-purple-500 rounded-full blur-3xl opacity-20"></div>
+                
+                <h3 class="text-2xl font-bold text-yellow-400 mb-4">The "Computer" Concept</h3>
+                <p class="text-lg text-slate-300 mb-6 leading-relaxed">
+                    هي آلة تورنغ $U$ تأخذ كمدخل: <br>
+                    1. وصف لآلة تورنغ أخرى $M$ (مرمزة).<br>
+                    2. مدخل $w$.
+                </p>
+                <div class="bg-slate-800 p-4 rounded-lg inline-block border border-slate-700 font-mono text-sm mb-4">
+                    Run $U( < M, w > )$ $\equiv$ Run $M(w)$
+                </div>
+                <p class="text-sm text-slate-400">
+                    هذا هو مبدأ <strong>الكمبيوتر المخزن للبرامج (Stored-Program Computer)</strong>. السوفتوير (M) هو مجرد بيانات مدخلة للهاردوير (U).
+                </p>
+            </div>
+        </section>
+
+        <section class="mt-16 mb-10">
+            <div class="bg-purple-700 text-white py-3 px-6 rounded-t-xl font-bold text-xl flex items-center shadow-lg">
+                <span class="mr-2">🛡️</span> EXAM VAULT (خزنة الاختبار)
+            </div>
+            <div class="bg-white border-2 border-purple-700 rounded-b-xl p-6 shadow-xl">
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                        <span class="bg-red-200 text-red-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">TRAP / فخ القوة</span>
+                        <p class="font-bold text-slate-800 mb-1">Do extensions increase power؟</p>
+                        <p class="text-sm text-slate-600">
+                            هل إضافة أشرطة (Tapes) أو رؤوس (Heads) أو عدم حتمية (Nondeterminism) تجعل الآلة تحل مشاكل كانت "مستحيلة" سابقاً؟
+                            <br><span class="text-red-600 font-bold">لا!</span>
+                            <br>تزيد <strong>الكفاءة (Efficiency)</strong> فقط، لكنها لا تزيد <strong>القدرة (Computability)</strong>.
+                        </p>
+                    </div>
+
+                    <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-100">
+                        <span class="bg-indigo-200 text-indigo-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">CONCEPT / مفهوم</span>
+                        <p class="font-bold text-slate-800 mb-1">Programs are Countable</p>
+                        <p class="text-sm text-slate-600">
+                            بما أن كل برنامج يمكن تحويله لعدد صحيح (Integer)، فإن مجموعة البرامج <strong>معدودة (Countable)</strong>.
+                            <br>لكن مجموعة "المشاكل/اللغات" غير معدودة (Uncountable - Real Numbers).
+                            <br><strong>النتيجة المرعبة:</strong> هناك مشاكل لا يوجد لها برامج!
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="flex justify-between mt-12 mb-8">
+            <a href="chapter8.html" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-lg font-bold shadow-sm transition transform hover:scale-105">→ السابق (Ch 8)</a>
+            <a href="chapter10.html" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-bold shadow-lg transition transform hover:scale-105">الفصل التالي (Ch 10) ←</a>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center border-t border-slate-800">
+        <p>© 2024 TheoryMaster Study Guide. Crafted for Excellence.</p>
+    </footer>
+
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. تحديد مفتاح التخزين بناءً على اسم المجلد
+            const path = window.location.pathname;
+            let courseKey = null;
+
+            // التحقق من اسم المجلد لتحديد المادة
+            if (path.includes('Computer-Architecture')) courseKey = 'arch_progress';
+            else if (path.includes('Theory-of-Computing')) courseKey = 'theory_progress';
+            else if (path.includes('Data-Structures')) courseKey = 'data_struct_progress';
+            else if (path.includes('Discrete-Mathematics')) courseKey = 'discrete_progress';
+
+            // 2. إذا تم التعرف على المادة، سجل الصفحة الحالية
+            if (courseKey) {
+                // استخراج اسم الملف فقط (مثلاً chapter5.html)
+                const pageName = path.split('/').pop();
+
+                // جلب البيانات القديمة
+                let visited = JSON.parse(localStorage.getItem(courseKey)) || [];
+
+                // إذا لم تكن الصفحة مسجلة مسبقاً، أضفها
+                if (!visited.includes(pageName)) {
+                    visited.push(pageName);
+                    localStorage.setItem(courseKey, JSON.stringify(visited));
+                    console.log(`✅ Progress Saved: ${pageName} in ${courseKey}`);
+                }
+            }
+        });
+    </script>
+	
+
+</body>
+</html>

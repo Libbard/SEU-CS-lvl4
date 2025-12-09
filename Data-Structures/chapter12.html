@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch12: Algorithm Design - Data Structures</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .emerald-gradient { background: linear-gradient(135deg, #059669 0%, #10b981 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.15); border-color: #10b981; }
+        .strategy-box { border-left: 4px solid; padding: 1rem; border-radius: 0 0.5rem 0.5rem 0; background: #fff; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-white shadow-lg sticky top-0 z-50 border-b border-emerald-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-black text-emerald-700 ml-2">DataMaster</a>
+                    <span class="text-sm bg-emerald-100 text-emerald-800 py-1 px-2 rounded-full">Ch 12: Design</span>
+                </div>
+                <div class="flex items-center space-x-2 space-x-reverse">
+                    <a href="chapter11.html" class="text-slate-600 hover:text-emerald-600 px-3 py-2 rounded-md font-medium transition">→ السابق</a>
+                    <a href="index.html" class="text-slate-600 hover:text-emerald-600 px-3 py-2 rounded-md font-medium transition">الرئيسية</a>
+                    <a href="chapter13.html" class="bg-emerald-600 text-white px-3 py-2 rounded-md font-medium hover:bg-emerald-700 transition shadow-md">التالي (ف13) ←</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-white py-12 border-b border-emerald-100">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-slate-900">Algorithm Design Techniques</h1>
+            <p class="text-xl text-slate-600 mb-6">الفصل الثاني عشر: استراتيجيات تصميم الخوارزميات</p>
+            <div class="inline-flex items-center bg-green-50 text-green-700 px-4 py-2 rounded-lg border border-green-200 shadow-sm">
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                <span>الهدف: تعلم كيف تفكر كمهندس برمجيات لحل المشاكل المعقدة بذكاء.</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">1</div>
+                <h2 class="text-3xl font-bold text-slate-800">Greedy Algorithms (الخوارزميات الجشعة)</h2>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-hover">
+                <div class="strategy-box border-emerald-500 bg-emerald-50 mb-4">
+                    <h3 class="font-bold text-emerald-800 text-lg">المبدأ:</h3>
+                    <p class="text-sm text-slate-700">
+                        اتخذ القرار الذي يبدو <strong>أفضل حالياً (Locally Optimal)</strong> في كل خطوة، على أمل أن يؤدي ذلك إلى الحل الأفضل كلياً (Globally Optimal).
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-bold text-slate-700 mb-2">أمثلة ناجحة:</h4>
+                        <ul class="text-sm text-slate-600 list-disc list-inside space-y-1">
+                            <li><strong>Change Making Problem:</strong> (في معظم العملات) لإعطاء باقي، اختر أكبر قطعة نقدية ممكنة أولاً.</li>
+                            <li><strong>Huffman Coding:</strong> لضغط الملفات.</li>
+                            <li><strong>Dijkstra & Prim:</strong> خوارزميات الرسوم البيانية تعتمد على مبدأ الجشع.</li>
+                        </ul>
+                    </div>
+                    <div class="bg-red-50 p-3 rounded border border-red-100">
+                        <strong class="text-red-700 text-sm block mb-1">متى تفشل؟</strong>
+                        <p class="text-xs text-slate-600">
+                            في بعض أنظمة العملات (مثلاً عملات 1، 3، 4). لجمع 6:
+                            <br>Greedy: 4 + 1 + 1 (3 قطع).
+                            <br>Optimal: 3 + 3 (قطعتان!).
+                            [cite_start]<br>هنا الجشع لا يعطي الحل الأمثل [cite: 16-19].
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">2</div>
+                <h2 class="text-3xl font-bold text-slate-800">Divide and Conquer (فرق تسد)</h2>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-hover">
+                <div class="strategy-box border-blue-500 bg-blue-50 mb-4">
+                    <h3 class="font-bold text-blue-800 text-lg">المبدأ:</h3>
+                    <p class="text-sm text-slate-700">
+                        قسّم المشكلة إلى مشاكل فرعية (Subproblems) أصغر، حلها (عادةً بالاستدعاء الذاتي Recursion)، ثم <strong>ادمج (Combine)</strong> الحلول.
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-4 text-center text-sm font-mono">
+                    <div class="p-3 bg-gray-100 rounded">
+                        <strong class="block text-slate-700">Mergesort</strong>
+                        $T(N) = 2T(N/2) + O(N)$
+                    </div>
+                    <div class="p-3 bg-gray-100 rounded">
+                        <strong class="block text-slate-700">Quicksort</strong>
+                        $T(N) = 2T(N/2) + O(N)$
+                    </div>
+                    <div class="p-3 bg-gray-100 rounded">
+                        <strong class="block text-slate-700">Binary Search</strong>
+                        $T(N) = T(N/2) + O(1)$
+                    </div>
+                </div>
+                [cite_start]<p class="text-xs text-center text-slate-400 mt-2">معادلات التكرار (Recurrence Relations) تحدد التعقيد الزمني [cite: 23-26].</p>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">3</div>
+                <h2 class="text-3xl font-bold text-slate-800">Dynamic Programming (البرمجة الديناميكية)</h2>
+            </div>
+            
+            <div class="bg-slate-900 text-white p-6 rounded-xl shadow-lg relative overflow-hidden">
+                <div class="strategy-box border-purple-500 bg-slate-800 mb-6 border-l-4">
+                    <h3 class="font-bold text-purple-400 text-lg">المبدأ:</h3>
+                    <p class="text-sm text-slate-300">
+                        حل المشاكل الفرعية <strong>مرة واحدة فقط</strong>، واحفظ نتيجتها في جدول (Table) لاستخدامها لاحقاً.
+                        <br>تستخدم عندما تكون المشاكل الفرعية <strong>متداخلة (Overlapping Subproblems)</strong>.
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h4 class="text-yellow-400 font-bold mb-2">مثال: فيبوناتشي (Fibonacci)</h4>
+                        <ul class="space-y-2 text-sm text-slate-300 list-disc list-inside">
+                            <li><strong class="text-red-400">Recursion (Naive):</strong> يحسب $Fib(3)$ عدة مرات. التعقيد $O(2^N)$.</li>
+                            <li><strong class="text-green-400">DP (Smart):</strong> يحسب $Fib(0), Fib(1), \dots$ بالترتيب ويخزنهم في مصفوفة. التعقيد $O(N)$ فقط!</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-700 p-3 rounded font-mono text-xs text-emerald-300">
+                        int[] memo = new int[N+1];<br>
+                        memo[0] = 0; memo[1] = 1;<br>
+                        for(i=2; i<=N; i++)<br>
+                        &nbsp;&nbsp;memo[i] = memo[i-1] + memo[i-2];
+                    </div>
+                </div>
+                [cite_start]<p class="text-xs text-center text-slate-500 mt-4 [cite: 37-43]">هذا يحول خوارزمية أسية (مستحيلة) إلى خوارزمية خطية (سريعة جداً).</p>
+            </div>
+        </section>
+
+        <section class="mt-16 mb-10">
+            <div class="bg-emerald-700 text-white py-3 px-6 rounded-t-xl font-bold text-xl flex items-center shadow-lg">
+                <span class="mr-2">🛡️</span> EXAM VAULT (خزنة الاختبار)
+            </div>
+            <div class="bg-white border-2 border-emerald-700 rounded-b-xl p-6 shadow-xl">
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-100">
+                        <span class="bg-indigo-200 text-indigo-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">DISTINCTION / فرق جوهري</span>
+                        <p class="font-bold text-slate-800 mb-1">Divide & Conquer vs Dynamic Programming</p>
+                        <p class="text-sm text-slate-600">
+                            <strong>D&C:</strong> المشاكل الفرعية مستقلة (Disjoint). (مثل MergeSort، النصف اليمين لا علاقة له باليسار).
+                            <br><strong>DP:</strong> المشاكل الفرعية متداخلة (Overlapping). (مثل Fibonacci، حساب 5 يحتاج 4 و 3، وحساب 4 يحتاج 3 و 2... الـ 3 تكررت!).
+                        </p>
+                    </div>
+
+                    <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                        <span class="bg-red-200 text-red-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">TRAP / فخ</span>
+                        <p class="font-bold text-slate-800 mb-1">Greedy is not always Optimal</p>
+                        <p class="text-sm text-slate-600">
+                            لا تنجرف لاستخدام الحل الجشع دائماً.
+                            <br>يجب إثبات أن الحل المحلي يؤدي للحل الكلي.
+                            <br>مشكلة <strong>0/1 Knapsack</strong> (حقيبة الظهر) لا يمكن حلها بالجشع، وتتطلب Dynamic Programming للحصول على الحل الأمثل.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="flex justify-between mt-12 mb-8">
+            <a href="chapter11.html" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-lg font-bold shadow-sm transition transform hover:scale-105">→ السابق (Ch 11)</a>
+            <a href="chapter13.html" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg font-bold shadow-lg transition transform hover:scale-105">الفصل التالي (Ch 13) ←</a>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center border-t border-slate-800">
+        <p>© 2024 DataMaster Study Guide. Crafted for Excellence.</p>
+    </footer>
+
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. تحديد مفتاح التخزين بناءً على اسم المجلد
+            const path = window.location.pathname;
+            let courseKey = null;
+
+            // التحقق من اسم المجلد لتحديد المادة
+            if (path.includes('Computer-Architecture')) courseKey = 'arch_progress';
+            else if (path.includes('Theory-of-Computing')) courseKey = 'theory_progress';
+            else if (path.includes('Data-Structures')) courseKey = 'data_struct_progress';
+            else if (path.includes('Discrete-Mathematics')) courseKey = 'discrete_progress';
+
+            // 2. إذا تم التعرف على المادة، سجل الصفحة الحالية
+            if (courseKey) {
+                // استخراج اسم الملف فقط (مثلاً chapter5.html)
+                const pageName = path.split('/').pop();
+
+                // جلب البيانات القديمة
+                let visited = JSON.parse(localStorage.getItem(courseKey)) || [];
+
+                // إذا لم تكن الصفحة مسجلة مسبقاً، أضفها
+                if (!visited.includes(pageName)) {
+                    visited.push(pageName);
+                    localStorage.setItem(courseKey, JSON.stringify(visited));
+                    console.log(`✅ Progress Saved: ${pageName} in ${courseKey}`);
+                }
+            }
+        });
+    </script>
+	
+
+</body>
+</html>

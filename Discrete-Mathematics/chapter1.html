@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch1: Sets & Matrices - Discrete Math</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .amber-gradient { background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.2); border-color: #f59e0b; }
+        .matrix-box { font-family: 'Fira Code', monospace; background: #fffbeb; padding: 10px; border-radius: 8px; border: 1px solid #fcd34d; text-align: center; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-white shadow-lg sticky top-0 z-50 border-b border-amber-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-black text-amber-700 ml-2">DiscreteMaster</a>
+                    <span class="text-sm bg-amber-100 text-amber-800 py-1 px-2 rounded-full">Ch 1: Sets & Matrices</span>
+                </div>
+                <div class="flex items-center space-x-2 space-x-reverse">
+                    <a href="index.html" class="text-slate-600 hover:text-amber-600 px-3 py-2 rounded-md font-medium transition">الرئيسية</a>
+                    <a href="chapter2.html" class="bg-amber-500 text-white px-3 py-2 rounded-md font-medium hover:bg-amber-600 transition shadow-md">التالي (ف2) ←</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-white py-12 border-b border-amber-100">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-slate-900">Sets & Matrices</h1>
+            <p class="text-xl text-slate-600 mb-6">الفصل الأول: المجموعات والمصفوفات</p>
+            <div class="inline-flex items-center bg-orange-50 text-orange-700 px-4 py-2 rounded-lg border border-orange-200 shadow-sm">
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                <span>الهدف: فهم خصائص المجموعات (Cardinality) والعمليات الجبرية على المصفوفات.</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">1</div>
+                <h2 class="text-3xl font-bold text-slate-800">Sets Fundamentals</h2>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-hover">
+                    <h3 class="font-bold text-amber-700 mb-3">وصف المجموعات (Describing Sets)</h3>
+                    <ul class="space-y-4 text-sm text-slate-700">
+                        <li class="border-b pb-2">
+                            <strong>Roster Method (القائمة):</strong> سرد العناصر داخل أقواس.<br>
+                            $S = \{a, b, c, d\}$.
+                        </li>
+                        <li>
+                            <strong>Set-Builder (البناء):</strong> وصف الخصائص.<br>
+                            $O = \{x \mid x \text{ is odd integer} < 10\}$.
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-hover">
+                    <h3 class="font-bold text-orange-700 mb-3">Subsets (المجموعات الجزئية)</h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="bg-orange-50 p-2 rounded">
+                            <strong>Subset ($\subseteq$):</strong><br>
+                            $A \subseteq B$ تعني كل عنصر في A موجود في B.<br>
+                            <span class="text-xs text-slate-500">* ملاحظة: أي مجموعة هي جزئية من نفسها $S \subseteq S$.</span>
+                        </div>
+                        <div class="bg-amber-50 p-2 rounded">
+                            <strong>Proper Subset ($\subset$):</strong><br>
+                            $A \subset B$ تعني $A \subseteq B$ ولكن $A \neq B$ (يوجد عنصر في B ليس في A).
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">2</div>
+                <h2 class="text-3xl font-bold text-slate-800">Cardinality & Countability</h2>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-lg border-r-4 border-amber-500">
+                <p class="text-slate-600 mb-4">
+                    <strong>Cardinality $|A|$:</strong> هو عدد العناصر (غير المكررة) في المجموعة.
+                </p>
+                
+                <div class="grid md:grid-cols-3 gap-4 text-center mb-6">
+                    <div class="p-3 bg-gray-50 rounded border">
+                        <div class="font-bold text-xl mb-1">$|\{1,2,3\}|$</div>
+                        <div class="text-amber-600 font-bold">= 3</div>
+                    </div>
+                    <div class="p-3 bg-gray-50 rounded border">
+                        <div class="font-bold text-xl mb-1">$|\emptyset|$</div>
+                        <div class="text-amber-600 font-bold">= 0</div>
+                    </div>
+                    <div class="p-3 bg-gray-50 rounded border">
+                        <div class="font-bold text-xl mb-1">$|\{\emptyset\}|$</div>
+                        <div class="text-amber-600 font-bold">= 1</div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900 text-white p-4 rounded-lg">
+                    <h4 class="text-yellow-400 font-bold mb-2">Countable Sets (المجموعات القابلة للعد)</h4>
+                    <p class="text-sm text-slate-300 mb-3">
+                        المجموعة تكون "قابلة للعد" إذا كانت منتهية، أو إذا كان لها نفس حجم الأعداد الصحيحة الموجبة ($Z^+$).
+                        <br>نرمز لحجمها بـ $\aleph_0$ (Aleph Null).
+                    </p>
+                    <ul class="text-xs text-gray-400 list-disc list-inside">
+                        <li>الأعداد الصحيحة ($Z$) قابلة للعد.</li>
+                        <li>الأعداد النسبية الموجبة ($Q^+$) قابلة للعد.</li>
+                        <li>الأعداد الحقيقية ($R$) <strong>غير</strong> قابلة للعد (Uncountable).</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">3</div>
+                <h2 class="text-3xl font-bold text-slate-800">Matrix Arithmetic</h2>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-slate-700 mb-2">Matrix Addition ($A + B$)</h3>
+                    <p class="text-sm text-slate-600 mb-2">
+                        بسيطة جداً: نجمع العناصر المتناظرة.
+                        <br><span class="text-red-500 font-bold">شرط:</span> يجب أن يكون للمصفوفتين نفس الأبعاد ($m \times n$).
+                    </p>
+                    <div class="matrix-box text-sm">
+                        [1 2] + [3 4] = [4 6]<br>
+                        [0 1] + [2 1] = [2 2]
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 border-t-4 border-orange-500">
+                    <h3 class="font-bold text-orange-800 mb-2">Matrix Product ($A \times B$) 🔥</h3>
+                    <p class="text-sm text-slate-600 mb-3">
+                        لضرب مصفوفة $A$ (أبعادها $m \times k$) في $B$ (أبعادها $k \times n$):
+                        <br>النتيجة تكون مصفوفة بأبعاد $m \times n$.
+                    </p>
+                    <div class="grid md:grid-cols-2 gap-4 items-center">
+                        <div class="matrix-box text-xs">
+                            A = [1 2]<br>
+                                [3 4]<br><br>
+                            B = [2 0]<br>
+                                [1 2]<br><br>
+                            A×B = [(1*2+2*1) (1*0+2*2)]<br>
+                                  [(3*2+4*1) (3*0+4*2)]
+                        </div>
+                        <div class="text-sm text-slate-700">
+                            <strong>القاعدة:</strong> صف من A $\times$ عمود من B.
+                            <br>$$ c_{ij} = a_{i1}b_{1j} + a_{i2}b_{2j} + \dots $$
+                            <br>.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">4</div>
+                <h2 class="text-3xl font-bold text-slate-800">Special Matrices</h2>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-4">
+                <div class="bg-white p-4 rounded-lg shadow-sm text-center card-hover">
+                    <h4 class="font-bold text-amber-700 mb-2">Identity ($I_n$)</h4>
+                    <div class="matrix-box text-xs mb-2">
+                        [1 0 0]<br>
+                        [0 1 0]<br>
+                        [0 0 1]
+                    </div>
+                    <p class="text-xs text-slate-500">مصفوفة الوحدة: القطر الرئيسي 1 والباقي 0. ($AI = IA = A$).</p>
+                </div>
+
+                <div class="bg-white p-4 rounded-lg shadow-sm text-center card-hover">
+                    <h4 class="font-bold text-orange-700 mb-2">Transpose ($A^t$)</h4>
+                    <div class="matrix-box text-xs mb-2">
+                        [1 2] -> [1 3]<br>
+                        [3 4] -> [2 4]
+                    </div>
+                    <p class="text-xs text-slate-500">قلب الصفوف أعمدة والأعمدة صفوفاً ($a_{ij} \to a_{ji}$).</p>
+                </div>
+
+                <div class="bg-white p-4 rounded-lg shadow-sm text-center card-hover">
+                    <h4 class="font-bold text-yellow-600 mb-2">Symmetric</h4>
+                    <div class="matrix-box text-xs mb-2">
+                        [1 2]<br>
+                        [2 1]
+                    </div>
+                    <p class="text-xs text-slate-500">تكون متماثلة إذا كان $A = A^t$ (مثل المرآة حول القطر).</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-16 mb-10">
+            <div class="bg-amber-700 text-white py-3 px-6 rounded-t-xl font-bold text-xl flex items-center shadow-lg">
+                <span class="mr-2">🛡️</span> EXAM VAULT (خزنة الاختبار)
+            </div>
+            <div class="bg-white border-2 border-amber-700 rounded-b-xl p-6 shadow-xl">
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                        <span class="bg-red-200 text-red-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">TRAP / فخ شائع</span>
+                        <p class="font-bold text-slate-800 mb-1">Matrix Multiplication Order</p>
+                        <p class="text-sm text-slate-600">
+                            هل $AB = BA$؟
+                            <br><span class="text-red-600 font-bold">لا!</span> ضرب المصفوفات <strong>غير إبدالي (Not Commutative)</strong>.
+                            <br>قد تكون $AB$ معرفة و $BA$ غير معرفة أصلاً (بسبب اختلاف الأبعاد).
+                        </p>
+                    </div>
+
+                    <div class="bg-orange-50 p-4 rounded-lg border border-orange-100">
+                        <span class="bg-orange-200 text-orange-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">CONCEPT / مفهوم</span>
+                        <p class="font-bold text-slate-800 mb-1">Cardinality of Empty Set</p>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>$|\emptyset| = 0$ (لا يوجد عناصر).</li>
+                            <li>$|\{\emptyset\}| = 1$ (مجموعة تحتوي على عنصر واحد هو المجموعة الخالية).</li>
+                            <li>$|\{\emptyset, \{\emptyset\}\}| = 2$.</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="flex justify-between mt-12 mb-8">
+            <a href="index.html" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-lg font-bold shadow-sm transition transform hover:scale-105">→ السابق (الفهرس)</a>
+            <a href="chapter2.html" class="bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-lg font-bold shadow-lg transition transform hover:scale-105">الفصل التالي (Ch 2) ←</a>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center border-t border-slate-800">
+        <p>© 2024 DiscreteMaster Study Guide. Crafted for Excellence.</p>
+    </footer>
+
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. تحديد مفتاح التخزين بناءً على اسم المجلد
+            const path = window.location.pathname;
+            let courseKey = null;
+
+            // التحقق من اسم المجلد لتحديد المادة
+            if (path.includes('Computer-Architecture')) courseKey = 'arch_progress';
+            else if (path.includes('Theory-of-Computing')) courseKey = 'theory_progress';
+            else if (path.includes('Data-Structures')) courseKey = 'data_struct_progress';
+            else if (path.includes('Discrete-Mathematics')) courseKey = 'discrete_progress';
+
+            // 2. إذا تم التعرف على المادة، سجل الصفحة الحالية
+            if (courseKey) {
+                // استخراج اسم الملف فقط (مثلاً chapter5.html)
+                const pageName = path.split('/').pop();
+
+                // جلب البيانات القديمة
+                let visited = JSON.parse(localStorage.getItem(courseKey)) || [];
+
+                // إذا لم تكن الصفحة مسجلة مسبقاً، أضفها
+                if (!visited.includes(pageName)) {
+                    visited.push(pageName);
+                    localStorage.setItem(courseKey, JSON.stringify(visited));
+                    console.log(`✅ Progress Saved: ${pageName} in ${courseKey}`);
+                }
+            }
+        });
+    </script>
+	
+
+</body>
+</html>

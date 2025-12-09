@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch7: Trees (Part 2) - Data Structures</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .emerald-gradient { background: linear-gradient(135deg, #059669 0%, #10b981 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.15); border-color: #10b981; }
+        .code-block { font-family: 'Fira Code', monospace; direction: ltr; text-align: left; background: #064e3b; color: #a7f3d0; padding: 15px; border-radius: 8px; font-size: 0.85rem; line-height: 1.6; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-white shadow-lg sticky top-0 z-50 border-b border-emerald-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-black text-emerald-700 ml-2">DataMaster</a>
+                    <span class="text-sm bg-emerald-100 text-emerald-800 py-1 px-2 rounded-full">Ch 7: BST Impl</span>
+                </div>
+                <div class="flex items-center space-x-2 space-x-reverse">
+                    <a href="chapter6.html" class="text-slate-600 hover:text-emerald-600 px-3 py-2 rounded-md font-medium transition">→ السابق</a>
+                    <a href="index.html" class="text-slate-600 hover:text-emerald-600 px-3 py-2 rounded-md font-medium transition">الرئيسية</a>
+                    <a href="chapter8.html" class="bg-emerald-600 text-white px-3 py-2 rounded-md font-medium hover:bg-emerald-700 transition shadow-md">التالي (ف8) ←</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-white py-12 border-b border-emerald-100">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-slate-900">BST Implementation & Operations</h1>
+            <p class="text-xl text-slate-600 mb-6">الفصل السابع: تنفيذ شجرة البحث الثنائية (Java Code)</p>
+            <div class="inline-flex items-center bg-green-50 text-green-700 px-4 py-2 rounded-lg border border-green-200 shadow-sm">
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                <span>الهدف: كتابة دوال الإضافة والحذف (Recursive)، وتطبيق الـ Traversals على شجرة التعبير.</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">1</div>
+                <h2 class="text-3xl font-bold text-slate-800">The BinaryNode Class</h2>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-hover">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="font-bold text-xl text-emerald-800 mb-3">هيكل العقدة (Node Structure)</h3>
+                        <p class="text-slate-600 mb-4 text-sm">
+                            لتمثيل الشجرة في الجافا، نحتاج كلاس بسيط يحتوي على البيانات ومؤشرين (يسار ويمين).
+                        </p>
+                        <ul class="text-sm space-y-2 list-disc list-inside text-slate-700">
+                            <li><code>element</code>: البيانات (AnyType).</li>
+                            <li><code>left</code>: مؤشر للابن الأيسر.</li>
+                            <li><code>right</code>: مؤشر للابن الأيمن.</li>
+                        </ul>
+                    </div>
+                    <div class="code-block text-xs">
+class BinaryNode&lt;AnyType&gt; {
+    AnyType element;
+    BinaryNode&lt;AnyType&gt; left;
+    BinaryNode&lt;AnyType&gt; right;
+
+    // Constructor
+    BinaryNode(AnyType theElement) {
+        this(theElement, null, null);
+    }
+}
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">2</div>
+                <h2 class="text-3xl font-bold text-slate-800">Recursive Insert</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 card-hover">
+                    <h3 class="font-bold text-emerald-700 mb-2">كيف تعمل الإضافة؟</h3>
+                    <p class="text-sm text-slate-600 mb-3">
+                        نستخدم دالة عودية (Recursive) تقارن القيمة الجديدة مع العقدة الحالية:
+                    </p>
+                    <ol class="list-decimal list-inside text-sm text-slate-700 space-y-2">
+                        <li>إذا كانت العقدة <code>null</code> (وصلنا ورقة)، أنشئ عقدة جديدة هنا.</li>
+                        <li>إذا كانت القيمة <strong>أصغر</strong>، اذهب لليسار (Recursive).</li>
+                        <li>إذا كانت القيمة <strong>أكبر</strong>، اذهب لليمين (Recursive).</li>
+                        <li>إذا كانت <strong>مساوية</strong>، لا تفعل شيئاً (تجاهل التكرار).</li>
+                    </ol>
+                </div>
+
+                <div class="code-block text-xs">
+private BinaryNode&lt;AnyType&gt; insert(AnyType x, BinaryNode&lt;AnyType&gt; t) {
+    if (t == null)
+        return new BinaryNode<>(x, null, null);
+    
+    int compareResult = x.compareTo(t.element);
+    
+    if (compareResult < 0)
+        t.left = insert(x, t.left);
+    else if (compareResult > 0)
+        t.right = insert(x, t.right);
+    else
+        ; // Duplicate; do nothing
+    return t;
+[cite_start]} [cite: 13]
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">3</div>
+                <h2 class="text-3xl font-bold text-slate-800">The Remove Operation</h2>
+            </div>
+            
+            <p class="text-slate-600 mb-6">الحذف معقد لأنه قد يقطع الشجرة. لدينا 3 حالات:</p>
+
+            <div class="space-y-4">
+                <div class="bg-white p-4 rounded-lg shadow-sm border-r-4 border-green-400">
+                    <h4 class="font-bold text-slate-700">1. Node is a Leaf (لا أطفال)</h4>
+                    <p class="text-sm text-slate-600">ببساطة، اجعل مؤشر الأب يشير إلى <code>null</code>. العقدة تختفي.</p>
+                </div>
+
+                <div class="bg-white p-4 rounded-lg shadow-sm border-r-4 border-blue-400">
+                    <h4 class="font-bold text-slate-700">2. Node has One Child (طفل واحد)</h4>
+                    <p class="text-sm text-slate-600">تجاوز العقدة! [cite_start]اجعل مؤشر الأب يشير مباشرة إلى الطفل (الجد)[cite: 14].</p>
+                </div>
+
+                <div class="bg-white p-4 rounded-lg shadow-sm border-r-4 border-red-500">
+                    <h4 class="font-bold text-red-700">3. Node has Two Children (طفلان) 🔥</h4>
+                    <p class="text-sm text-slate-600 mb-2">هنا تكمن الصعوبة. لا يمكننا الحذف مباشرة.</p>
+                    <div class="bg-red-50 p-3 rounded text-xs font-bold text-red-800">
+                        الخوارزمية:
+                        <br>1. ابحث عن <strong>أصغر قيمة في الشجرة اليمنى</strong> (Min of Right Subtree).
+                        <br>2. انسخ تلك القيمة إلى العقدة المراد حذفها (استبدال البيانات).
+                        <br>3. [cite_start]احذف العقدة الأصلية لتلك القيمة الصغيرة (التي بالتأكيد ليس لها طفل أيسر، أي حالة 1 أو 2) [cite: 15-16].
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">4</div>
+                <h2 class="text-3xl font-bold text-slate-800">Expression Trees (تطبيق عملي)</h2>
+            </div>
+
+            <div class="bg-slate-900 text-white p-6 rounded-xl shadow-lg">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+                    <div class="flex-1">
+                        <h4 class="text-yellow-400 font-bold mb-4">مثال: $(a + (b * c)) + (((d * e) + f) * g)$</h4>
+                        <ul class="space-y-3 text-sm text-slate-300">
+                            <li><strong class="text-white">Inorder:</strong> يعطي التعبير الأصلي (مع الحاجة لأقواس).</li>
+                            [cite_start]<li><strong class="text-white">Postorder:</strong> يعطي صيغة <strong>Postfix</strong> (جاهزة للحساب بالمكدس)[cite: 21].</li>
+                            <li><strong class="text-white">Preorder:</strong> يعطي صيغة Prefix.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-slate-800 p-4 rounded-lg border border-slate-600 text-center">
+                        <p class="text-xs text-gray-400 mb-2">شجرة بسيطة لـ: 3 + 4 * 5</p>
+                        <div class="font-mono text-sm">
+                              (+)
+                             /   \
+                           (3)   (*)
+                                /   \
+                              (4)   (5)
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-slate-700 text-xs text-emerald-400">
+                            Postorder: 3 4 5 * +
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-16 mb-10">
+            <div class="bg-emerald-700 text-white py-3 px-6 rounded-t-xl font-bold text-xl flex items-center shadow-lg">
+                <span class="mr-2">🛡️</span> EXAM VAULT (خزنة الاختبار)
+            </div>
+            <div class="bg-white border-2 border-emerald-700 rounded-b-xl p-6 shadow-xl">
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                        <span class="bg-red-200 text-red-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">TRAP / فخ التعقيد</span>
+                        <p class="font-bold text-slate-800 mb-1">BST Time Complexity</p>
+                        <p class="text-sm text-slate-600">
+                            ما هو تعقيد الإضافة والحذف؟
+                            <br>المتوسط: $O(\log N)$ (إذا كانت الشجرة متوازنة).
+                            <br>الأسوأ: $O(N)$ (إذا كانت الشجرة خطية كالعمود).
+                            <br><strong>انتبه:</strong> ليست دائماً Log N!
+                        </p>
+                    </div>
+
+                    <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-100">
+                        <span class="bg-yellow-200 text-yellow-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">CODING / كود متوقع</span>
+                        <p class="font-bold text-slate-800 mb-1">findMin() Logic</p>
+                        <p class="text-sm text-slate-600 mb-2">لإيجاد أصغر عنصر، اتجه <strong>لليسار</strong> دائماً حتى تصل للنهاية.</p>
+                        <div class="code-block text-[10px] p-2 bg-slate-800 text-yellow-100">
+                            if (t == null) return null;<br>
+                            while (t.left != null)<br>
+                            &nbsp;&nbsp;t = t.left;<br>
+                            return t;
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="flex justify-between mt-12 mb-8">
+            <a href="chapter6.html" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-lg font-bold shadow-sm transition transform hover:scale-105">→ السابق (Ch 6)</a>
+            <a href="chapter8.html" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg font-bold shadow-lg transition transform hover:scale-105">الفصل التالي (Ch 8) ←</a>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center border-t border-slate-800">
+        <p>© 2024 DataMaster Study Guide. Crafted for Excellence.</p>
+    </footer>
+
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. تحديد مفتاح التخزين بناءً على اسم المجلد
+            const path = window.location.pathname;
+            let courseKey = null;
+
+            // التحقق من اسم المجلد لتحديد المادة
+            if (path.includes('Computer-Architecture')) courseKey = 'arch_progress';
+            else if (path.includes('Theory-of-Computing')) courseKey = 'theory_progress';
+            else if (path.includes('Data-Structures')) courseKey = 'data_struct_progress';
+            else if (path.includes('Discrete-Mathematics')) courseKey = 'discrete_progress';
+
+            // 2. إذا تم التعرف على المادة، سجل الصفحة الحالية
+            if (courseKey) {
+                // استخراج اسم الملف فقط (مثلاً chapter5.html)
+                const pageName = path.split('/').pop();
+
+                // جلب البيانات القديمة
+                let visited = JSON.parse(localStorage.getItem(courseKey)) || [];
+
+                // إذا لم تكن الصفحة مسجلة مسبقاً، أضفها
+                if (!visited.includes(pageName)) {
+                    visited.push(pageName);
+                    localStorage.setItem(courseKey, JSON.stringify(visited));
+                    console.log(`✅ Progress Saved: ${pageName} in ${courseKey}`);
+                }
+            }
+        });
+    </script>
+	
+
+</body>
+</html>

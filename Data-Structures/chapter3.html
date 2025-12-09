@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch3: Lists, Stacks, Queues - Data Structures</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .emerald-gradient { background: linear-gradient(135deg, #059669 0%, #10b981 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.15); border-color: #10b981; }
+        .node-box { border: 2px solid #34d399; border-radius: 8px; padding: 10px; display: inline-flex; align-items: center; background: white; }
+        .pointer-arrow { font-size: 24px; color: #059669; margin: 0 5px; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-white shadow-lg sticky top-0 z-50 border-b border-emerald-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-black text-emerald-700 ml-2">DataMaster</a>
+                    <span class="text-sm bg-emerald-100 text-emerald-800 py-1 px-2 rounded-full">Ch 3: Lists</span>
+                </div>
+                <div class="flex items-center space-x-2 space-x-reverse">
+                    <a href="chapter2.html" class="text-slate-600 hover:text-emerald-600 px-3 py-2 rounded-md font-medium transition">→ السابق</a>
+                    <a href="index.html" class="text-slate-600 hover:text-emerald-600 px-3 py-2 rounded-md font-medium transition">الرئيسية</a>
+                    <a href="chapter4.html" class="bg-emerald-600 text-white px-3 py-2 rounded-md font-medium hover:bg-emerald-700 transition shadow-md">التالي (ف4) ←</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-white py-12 border-b border-emerald-100">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-slate-900">The List ADT</h1>
+            <p class="text-xl text-slate-600 mb-6">الفصل الثالث: القوائم (Arrays vs Linked Lists)</p>
+            <div class="inline-flex items-center bg-green-50 text-green-700 px-4 py-2 rounded-lg border border-green-200 shadow-sm">
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
+                <span>الهدف: فهم الفرق بين التخزين المتصل (Contiguous) والتخزين المترابط (Linked)، واستخدام الـ Iterators.</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">1</div>
+                <h2 class="text-3xl font-bold text-slate-800">ADT: What vs How</h2>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-hover">
+                <p class="text-slate-600 mb-4">
+                    <strong>ADT (نوع البيانات المجرد):</strong> يحدد العمليات (Operations) المتاحة (مثل add, remove, get) دون تحديد كيفية تنفيذها.
+                </p>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-slate-50 p-4 rounded-lg">
+                        <h3 class="font-bold text-slate-800 mb-2">The List ADT</h3>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li>مجموعة مرتبة من العناصر.</li>
+                            <li>عمليات: insert, delete, find, printList.</li>
+                            <li>يمكن تنفيذها بطريقتين رئيسيتين: Array أو Linked List.</li>
+                        </ul>
+                    </div>
+                    <div class="bg-emerald-50 p-4 rounded-lg border border-emerald-100">
+                        <h3 class="font-bold text-emerald-800 mb-2">Java Collections API</h3>
+                        <p class="text-sm text-slate-700">
+                            في جافا، <code>List</code> هي الـ Interface (ADT)، بينما <code>ArrayList</code> و <code>LinkedList</code> هي الـ Implementation (التطبيق الفعلي).
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">2</div>
+                <h2 class="text-3xl font-bold text-slate-800">ArrayList vs LinkedList</h2>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-center bg-white rounded-lg shadow-sm border border-slate-200">
+                    <thead class="bg-slate-800 text-white">
+                        <tr>
+                            <th class="p-3">العملية (Operation)</th>
+                            <th class="p-3 bg-blue-600">ArrayList (مصفوفة)</th>
+                            <th class="p-3 bg-green-600">LinkedList (مؤشرات)</th>
+                            <th class="p-3">التعليل</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 font-mono text-slate-700">
+                        <tr>
+                            <td class="p-3 font-sans font-bold">get(index)</td>
+                            <td class="p-3 text-green-600 font-bold">$O(1)$</td>
+                            <td class="p-3 text-red-600 font-bold">$O(N)$</td>
+                            <td class="p-3 font-sans text-xs">المصفوفة وصول مباشر، القائمة تحتاج للمرور عقدة عقدة.</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-sans font-bold">add(end)</td>
+                            <td class="p-3 text-green-600">$O(1)$ Amortized</td>
+                            <td class="p-3 text-green-600">$O(1)$</td>
+                            <td class="p-3 font-sans text-xs">كلاهما سريع في الإضافة للنهاية.</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-sans font-bold">add(front)</td>
+                            <td class="p-3 text-red-600">$O(N)$</td>
+                            <td class="p-3 text-green-600 font-bold">$O(1)$</td>
+                            <td class="p-3 font-sans text-xs">المصفوفة تحتاج لإزاحة كل العناصر (Shift).</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-sans font-bold">Storage</td>
+                            <td class="p-3 text-xs font-sans">متصلة (Contiguous)</td>
+                            <td class="p-3 text-xs font-sans">مبعثرة (Dispersed)</td>
+                            <td class="p-3 font-sans text-xs">المصفوفة صديقة للكاش (Cache Friendly).</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">3</div>
+                <h2 class="text-3xl font-bold text-slate-800">Under the Hood: Nodes</h2>
+            </div>
+            
+            <div class="bg-slate-100 p-6 rounded-xl border border-slate-200">
+                <h4 class="font-bold text-slate-700 mb-4 text-center">Doubly Linked List Structure</h4>
+                
+                <div class="flex justify-center items-center overflow-x-auto py-4">
+                    <div class="node-box flex-col">
+                        <div class="text-xs text-gray-400">Node</div>
+                        <div class="font-bold text-lg">12</div>
+                        <div class="flex w-full justify-between text-[10px] text-gray-500 mt-1">
+                            <span>Prev</span><span>Next</span>
+                        </div>
+                    </div>
+                    <div class="pointer-arrow">⇄</div>
+                    <div class="node-box flex-col border-emerald-500 bg-emerald-50">
+                        <div class="text-xs text-gray-400">Node</div>
+                        <div class="font-bold text-lg text-emerald-700">99</div>
+                        <div class="flex w-full justify-between text-[10px] text-gray-500 mt-1">
+                            <span>Prev</span><span>Next</span>
+                        </div>
+                    </div>
+                    <div class="pointer-arrow">⇄</div>
+                    <div class="node-box flex-col">
+                        <div class="text-xs text-gray-400">Node</div>
+                        <div class="font-bold text-lg">37</div>
+                        <div class="flex w-full justify-between text-[10px] text-gray-500 mt-1">
+                            <span>Prev</span><span>Next</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <p class="text-center text-sm text-slate-600 mt-4">
+                    كل عقدة تحتوي على: البيانات (Data)، مؤشر للسابق (Prev)، ومؤشر للتالي (Next).
+                </p>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">4</div>
+                <h2 class="text-3xl font-bold text-slate-800">The Power of Iterators</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-emerald-700 mb-2">لماذا نستخدم Iterator؟</h3>
+                    <p class="text-sm text-slate-600 mb-3">
+                        عند استخدام حلقة <code>for</code> مع LinkedList والوصول بـ <code>get(i)</code>، يصبح التعقيد $O(N^2)$ (كارثة!).
+                        <br>الـ <strong>Iterator</strong> يحتفظ بموقع العنصر الحالي، مما يجعل المرور على القائمة $O(N)$ فقط.
+                    </p>
+                </div>
+                <div class="bg-slate-900 text-white p-5 rounded-xl shadow-sm font-mono text-xs ltr">
+                    Iterator&lt;Integer&gt; itr = list.iterator();<br>
+                    while(itr.hasNext()) {<br>
+                    &nbsp;&nbsp;Integer x = itr.next();<br>
+                    &nbsp;&nbsp;if(x % 2 == 0) itr.remove();<br>
+                    }
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-16 mb-10">
+            <div class="bg-emerald-700 text-white py-3 px-6 rounded-t-xl font-bold text-xl flex items-center shadow-lg">
+                <span class="mr-2">🛡️</span> EXAM VAULT (خزنة الاختبار)
+            </div>
+            <div class="bg-white border-2 border-emerald-700 rounded-b-xl p-6 shadow-xl">
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                        <span class="bg-red-200 text-red-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">EXCEPTION / خطأ شهير</span>
+                        <p class="font-bold text-slate-800 mb-1">ConcurrentModificationException</p>
+                        <p class="text-sm text-slate-600">
+                            إذا قمت بحذف عنصر من القائمة (<code>list.remove</code>) أثناء استخدام حلقة (<code>for-each</code>)، سيحدث هذا الخطأ.
+                            <br><strong>الحل:</strong> استخدم <code>iterator.remove()</code>.
+                        </p>
+                    </div>
+
+                    <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-100">
+                        <span class="bg-yellow-200 text-yellow-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">CONCEPT / مفهوم</span>
+                        <p class="font-bold text-slate-800 mb-1">ArrayList Resizing</p>
+                        <p class="text-sm text-slate-600">
+                            عندما تمتلئ المصفوفة في ArrayList، يتم إنشاء مصفوفة جديدة <strong>بضعف الحجم (2x)</strong> ونسخ العناصر.
+                            <br>هذه العملية مكلفة $O(N)$، لكنها تحدث نادراً، لذا نقول أن الإضافة هي $O(1)$ Amortized.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="flex justify-between mt-12 mb-8">
+            <a href="chapter2.html" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-lg font-bold shadow-sm transition transform hover:scale-105">→ السابق (Ch 2)</a>
+            <a href="chapter4.html" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg font-bold shadow-lg transition transform hover:scale-105">الفصل التالي (Ch 4) ←</a>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center border-t border-slate-800">
+        <p>© 2024 DataMaster Study Guide. Crafted for Excellence.</p>
+    </footer>
+
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. تحديد مفتاح التخزين بناءً على اسم المجلد
+            const path = window.location.pathname;
+            let courseKey = null;
+
+            // التحقق من اسم المجلد لتحديد المادة
+            if (path.includes('Computer-Architecture')) courseKey = 'arch_progress';
+            else if (path.includes('Theory-of-Computing')) courseKey = 'theory_progress';
+            else if (path.includes('Data-Structures')) courseKey = 'data_struct_progress';
+            else if (path.includes('Discrete-Mathematics')) courseKey = 'discrete_progress';
+
+            // 2. إذا تم التعرف على المادة، سجل الصفحة الحالية
+            if (courseKey) {
+                // استخراج اسم الملف فقط (مثلاً chapter5.html)
+                const pageName = path.split('/').pop();
+
+                // جلب البيانات القديمة
+                let visited = JSON.parse(localStorage.getItem(courseKey)) || [];
+
+                // إذا لم تكن الصفحة مسجلة مسبقاً، أضفها
+                if (!visited.includes(pageName)) {
+                    visited.push(pageName);
+                    localStorage.setItem(courseKey, JSON.stringify(visited));
+                    console.log(`✅ Progress Saved: ${pageName} in ${courseKey}`);
+                }
+            }
+        });
+    </script>
+	
+
+</body>
+</html>

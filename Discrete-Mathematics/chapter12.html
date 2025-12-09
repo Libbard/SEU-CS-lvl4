@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch12: Modeling Computation - Discrete Math</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .amber-gradient { background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.2); border-color: #f59e0b; }
+        .grammar-rule { font-family: 'Fira Code', monospace; background: #fff7ed; padding: 5px 10px; border-radius: 4px; border-left: 3px solid #f97316; display: inline-block; direction: ltr; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-white shadow-lg sticky top-0 z-50 border-b border-amber-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-black text-amber-700 ml-2">DiscreteMaster</a>
+                    <span class="text-sm bg-amber-100 text-amber-800 py-1 px-2 rounded-full">Ch 12: Computation</span>
+                </div>
+                <div class="flex items-center space-x-2 space-x-reverse">
+                    <a href="chapter11.html" class="text-slate-600 hover:text-amber-600 px-3 py-2 rounded-md font-medium transition">→ السابق</a>
+                    <a href="index.html" class="text-slate-600 hover:text-amber-600 px-3 py-2 rounded-md font-medium transition">الرئيسية</a>
+                    <a href="chapter13.html" class="bg-amber-500 text-white px-3 py-2 rounded-md font-medium hover:bg-amber-600 transition shadow-md">التالي (ف13) ←</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-white py-12 border-b border-amber-100">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-slate-900">Modeling Computation</h1>
+            <p class="text-xl text-slate-600 mb-6">الفصل الثاني عشر: القواعد، اللغات، والآلات</p>
+            <div class="inline-flex items-center bg-orange-50 text-orange-700 px-4 py-2 rounded-lg border border-orange-200 shadow-sm">
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                <span>الهدف: تعريف اللغات رسمياً باستخدام القواعد (Phrase-Structure Grammars) وتصنيفها.</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">1</div>
+                <h2 class="text-3xl font-bold text-slate-800">Phrase-Structure Grammars</h2>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-hover">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="font-bold text-amber-700 mb-3">المكونات الأربعة $G=(V, T, S, P)$</h3>
+                        <ul class="space-y-3 text-sm text-slate-700">
+                            <li><strong>$V$ (Vocabulary):</strong> المجموعة الكلية للرموز (المتغيرات + النهائية).</li>
+                            <li><strong>$T$ (Terminals):</strong> الرموز النهائية التي لا يمكن استبدالها (حروف صغيرة، أرقام).</li>
+                            <li><strong>$S$ (Start Symbol):</strong> رمز البداية (من $V$).</li>
+                            <li><strong>$P$ (Productions):</strong> قواعد الاستبدال. شكلها: $\alpha \to \beta$. </li>
+                        </ul>
+                    </div>
+                    <div class="bg-orange-50 p-4 rounded-lg border border-orange-100">
+                        <strong class="block text-orange-800 mb-2">Example: Derivation</strong>
+                        <p class="text-xs text-slate-600 mb-2">القواعد: $S \to 0S1, S \to \lambda$</p>
+                        <div class="bg-white p-2 rounded text-center font-mono ltr text-sm">
+                            $S \Rightarrow 0S1 \Rightarrow 00S11 \Rightarrow 00\lambda11 = 0011$
+                        </div>
+                        <p class="text-xs text-slate-500 mt-2 text-right">Language $L(G) = \{0^n 1^n \mid n \ge 0\}$</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">2</div>
+                <h2 class="text-3xl font-bold text-slate-800">Types of Grammars</h2>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-right bg-white rounded-lg shadow-sm border border-slate-200">
+                    <thead class="bg-slate-800 text-white">
+                        <tr>
+                            <th class="p-3">Type</th>
+                            <th class="p-3">Name</th>
+                            <th class="p-3">Rule Constraints ($\alpha \to \beta$)</th>
+                            <th class="p-3">Machine</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 text-slate-700">
+                        <tr>
+                            <td class="p-3 font-bold text-red-600">Type 0</td>
+                            <td class="p-3">Unrestricted</td>
+                            <td class="p-3 ltr font-mono">No constraints</td>
+                            <td class="p-3">Turing Machine</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold text-orange-600">Type 1</td>
+                            <td class="p-3">Context-Sensitive</td>
+                            <td class="p-3 ltr font-mono">$|\alpha| \le |\beta|$ (No shrinking)</td>
+                            <td class="p-3">Linear Bounded</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold text-blue-600">Type 2</td>
+                            <td class="p-3">Context-Free</td>
+                            <td class="p-3 ltr font-mono">$\alpha = A$ (Single Non-terminal)</td>
+                            <td class="p-3">Pushdown Automata</td>
+                        </tr>
+                        <tr class="bg-amber-50">
+                            <td class="p-3 font-bold text-green-600">Type 3</td>
+                            <td class="p-3">Regular</td>
+                            <td class="p-3 ltr font-mono">$A \to aB$ or $A \to a$</td>
+                            <td class="p-3">Finite Automata</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-xs text-center text-slate-500 mt-2"></p>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">3</div>
+                <h2 class="text-3xl font-bold text-slate-800">Finite-State Machines</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 card-hover">
+                    <h3 class="font-bold text-amber-700 mb-2">FSM with Output (Mealy)</h3>
+                    <p class="text-sm text-slate-600 mb-3">
+                        آلة تنتج مخرجات بناءً على الانتقال.
+                        <br>$M = (S, I, O, f, g, s_0)$
+                    </p>
+                    <ul class="text-xs text-slate-500 list-disc list-inside">
+                        <li>$f$: Transition function (State $\times$ Input $\to$ State).</li>
+                        <li>$g$: Output function (State $\times$ Input $\to$ Output).</li>
+                    </ul>
+                    <p class="text-xs text-right mt-2 text-amber-600 font-bold"></p>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 card-hover">
+                    <h3 class="font-bold text-orange-700 mb-2">FSM without Output (DFA)</h3>
+                    <p class="text-sm text-slate-600 mb-3">
+                        آلة للقبول أو الرفض فقط (Language Recognition).
+                        <br>$M = (S, I, f, s_0, F)$
+                    </p>
+                    <ul class="text-xs text-slate-500 list-disc list-inside">
+                        <li>$F$: مجموعة الحالات النهائية (Final States).</li>
+                        <li>تقبل الكلمة إذا انتهت في حالة $s \in F$.</li>
+                    </ul>
+                    <p class="text-xs text-right mt-2 text-orange-600 font-bold"></p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-16 mb-10">
+            <div class="bg-amber-700 text-white py-3 px-6 rounded-t-xl font-bold text-xl flex items-center shadow-lg">
+                <span class="mr-2">🛡️</span> EXAM VAULT (خزنة الاختبار)
+            </div>
+            <div class="bg-white border-2 border-amber-700 rounded-b-xl p-6 shadow-xl">
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                        <span class="bg-red-200 text-red-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">TRAP / التمييز</span>
+                        <p class="font-bold text-slate-800 mb-1">Regular Grammar Constraint</p>
+                        <p class="text-sm text-slate-600">
+                            في القواعد المنتظمة (Type 3)، يجب أن يكون الرمز المتغير (Non-terminal) في الطرف الأيمن دائماً في <strong>أقصى اليمين</strong> (Right-Linear) أو أقصى اليسار.
+                            <br>مثال صحيح: $A \to 0B$.
+                            <br>مثال خطأ (Context-Free): $A \to 0B1$ (المتغير في الوسط أو محاط برموز).
+                        </p>
+                    </div>
+
+                    <div class="bg-orange-50 p-4 rounded-lg border border-orange-100">
+                        <span class="bg-orange-200 text-orange-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">CONCEPT / المفهوم</span>
+                        <p class="font-bold text-slate-800 mb-1">Language of a Grammar $L(G)$</p>
+                        <p class="text-sm text-slate-600">
+                            هي مجموعة كل السلاسل المكونة من <strong>رموز نهائية فقط (Terminals)</strong> التي يمكن اشتقاقها من رمز البداية $S$.
+                            <br>أي سلسلة تحتوي على متغير (Variable) ليست في اللغة بعد.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="flex justify-between mt-12 mb-8">
+            <a href="chapter11.html" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-lg font-bold shadow-sm transition transform hover:scale-105">→ السابق (Ch 11)</a>
+            <a href="chapter13.html" class="bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-lg font-bold shadow-lg transition transform hover:scale-105">الفصل التالي (Ch 13) ←</a>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center border-t border-slate-800">
+        <p>© 2024 DiscreteMaster Study Guide. Crafted for Excellence.</p>
+    </footer>
+
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. تحديد مفتاح التخزين بناءً على اسم المجلد
+            const path = window.location.pathname;
+            let courseKey = null;
+
+            // التحقق من اسم المجلد لتحديد المادة
+            if (path.includes('Computer-Architecture')) courseKey = 'arch_progress';
+            else if (path.includes('Theory-of-Computing')) courseKey = 'theory_progress';
+            else if (path.includes('Data-Structures')) courseKey = 'data_struct_progress';
+            else if (path.includes('Discrete-Mathematics')) courseKey = 'discrete_progress';
+
+            // 2. إذا تم التعرف على المادة، سجل الصفحة الحالية
+            if (courseKey) {
+                // استخراج اسم الملف فقط (مثلاً chapter5.html)
+                const pageName = path.split('/').pop();
+
+                // جلب البيانات القديمة
+                let visited = JSON.parse(localStorage.getItem(courseKey)) || [];
+
+                // إذا لم تكن الصفحة مسجلة مسبقاً، أضفها
+                if (!visited.includes(pageName)) {
+                    visited.push(pageName);
+                    localStorage.setItem(courseKey, JSON.stringify(visited));
+                    console.log(`✅ Progress Saved: ${pageName} in ${courseKey}`);
+                }
+            }
+        });
+    </script>
+	
+
+</body>
+</html>

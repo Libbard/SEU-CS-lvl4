@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch2: Algorithms & Complexity - Discrete Math</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .amber-gradient { background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.2); border-color: #f59e0b; }
+        .algo-step { border-right: 3px solid #f59e0b; padding-right: 10px; margin-bottom: 5px; background: #fff7ed; padding: 5px 10px; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-white shadow-lg sticky top-0 z-50 border-b border-amber-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-black text-amber-700 ml-2">DiscreteMaster</a>
+                    <span class="text-sm bg-amber-100 text-amber-800 py-1 px-2 rounded-full">Ch 2: Algorithms</span>
+                </div>
+                <div class="flex items-center space-x-2 space-x-reverse">
+                    <a href="chapter1.html" class="text-slate-600 hover:text-amber-600 px-3 py-2 rounded-md font-medium transition">→ السابق</a>
+                    <a href="index.html" class="text-slate-600 hover:text-amber-600 px-3 py-2 rounded-md font-medium transition">الرئيسية</a>
+                    <a href="chapter3.html" class="bg-amber-500 text-white px-3 py-2 rounded-md font-medium hover:bg-amber-600 transition shadow-md">التالي (ف3) ←</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-white py-12 border-b border-amber-100">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-slate-900">Algorithms & Complexity</h1>
+            <p class="text-xl text-slate-600 mb-6">الفصل الثاني: الخوارزميات وتعقيدها الحسابي</p>
+            <div class="inline-flex items-center bg-orange-50 text-orange-700 px-4 py-2 rounded-lg border border-orange-200 shadow-sm">
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                <span>الهدف: كتابة Pseudocode، البحث والترتيب، وفهم الـ Big-O رياضياً.</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">1</div>
+                <h2 class="text-3xl font-bold text-slate-800">What is an Algorithm؟</h2>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-hover">
+                <p class="text-slate-600 mb-4 text-sm">
+                    ليست أي خطوات تسمى "خوارزمية". يجب أن تتوفر فيها 7 شروط :
+                </p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-xs">
+                    <div class="bg-orange-50 p-2 rounded border border-orange-100">
+                        <strong class="block text-orange-800 mb-1">Input</strong>
+                        لها مدخلات.
+                    </div>
+                    <div class="bg-orange-50 p-2 rounded border border-orange-100">
+                        <strong class="block text-orange-800 mb-1">Output</strong>
+                        تنتج مخرجات.
+                    </div>
+                    <div class="bg-orange-50 p-2 rounded border border-orange-100">
+                        <strong class="block text-orange-800 mb-1">Definiteness</strong>
+                        الخطوات واضحة بدقة.
+                    </div>
+                    <div class="bg-orange-50 p-2 rounded border border-orange-100">
+                        <strong class="block text-orange-800 mb-1">Correctness</strong>
+                        تعطي الناتج الصحيح.
+                    </div>
+                    <div class="bg-orange-50 p-2 rounded border border-orange-100">
+                        <strong class="block text-orange-800 mb-1">Finiteness</strong>
+                        تنتهي بعد عدد محدود من الخطوات.
+                    </div>
+                    <div class="bg-orange-50 p-2 rounded border border-orange-100">
+                        <strong class="block text-orange-800 mb-1">Effectiveness</strong>
+                        كل خطوة يمكن تنفيذها.
+                    </div>
+                    <div class="bg-orange-50 p-2 rounded border border-orange-100 col-span-2 md:col-span-2">
+                        <strong class="block text-orange-800 mb-1">Generality</strong>
+                        تعمل على أي مدخلات من نفس النوع.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">2</div>
+                <h2 class="text-3xl font-bold text-slate-800">Searching Algorithms</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 card-hover">
+                    <h3 class="font-bold text-amber-700 mb-2">Linear Search (البحث الخطي)</h3>
+                    <p class="text-sm text-slate-600 mb-3">ابحث عن العنصر $x$ بالمرور على القائمة واحداً تلو الآخر.</p>
+                    <div class="algo-step text-xs font-mono">For i = 1 to n:</div>
+                    <div class="algo-step text-xs font-mono">&nbsp;&nbsp;If a[i] == x then return i</div>
+                    <div class="algo-step text-xs font-mono">Return "Not Found"</div>
+                    <div class="mt-3 text-right">
+                        <span class="bg-red-100 text-red-800 text-xs font-bold px-2 py-1 rounded">Complexity: $O(n)$</span>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 card-hover border-t-4 border-green-500">
+                    <h3 class="font-bold text-green-700 mb-2">Binary Search (البحث الثنائي)</h3>
+                    <p class="text-sm text-slate-600 mb-3">اقسم القائمة لنصفين في كل مرة. <span class="text-red-500 font-bold">(يشرط أن تكون القائمة مرتبة!)</span>.</p>
+                    <div class="algo-step text-xs font-mono">While i <= j:</div>
+                    <div class="algo-step text-xs font-mono">&nbsp;&nbsp;m = (i+j)/2</div>
+                    <div class="algo-step text-xs font-mono">&nbsp;&nbsp;If x > a[m] then i = m+1</div>
+                    <div class="algo-step text-xs font-mono">&nbsp;&nbsp;Else j = m-1</div>
+                    <div class="mt-3 text-right">
+                        <span class="bg-green-100 text-green-800 text-xs font-bold px-2 py-1 rounded">Complexity: $O(\log n)$</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">3</div>
+                <h2 class="text-3xl font-bold text-slate-800">Sorting Algorithms</h2>
+            </div>
+
+            <div class="space-y-4">
+                <div class="bg-white p-4 rounded-lg shadow-sm border-r-4 border-orange-500">
+                    <h4 class="font-bold text-slate-700">Bubble Sort (ترتيب الفقاعة)</h4>
+                    <p class="text-sm text-slate-600">
+                        قارن كل عنصرين متجاورين وبدل بينهما إذا كانا في ترتيب خاطئ. كرر العملية $n$ مرة.
+                        <br><strong>التعقيد:</strong> $O(n^2)$. (بطيء جداً).
+                    </p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-sm border-r-4 border-amber-500">
+                    <h4 class="font-bold text-slate-700">Insertion Sort (الترتيب بالإدراج)</h4>
+                    <p class="text-sm text-slate-600">
+                        ابدأ بالعنصر الثاني، وقارنه بما قبله وضعه في مكانه الصحيح.
+                        <br><strong>التعقيد:</strong> $O(n^2)$ (أسوأ حالة)، ولكنه سريع إذا كانت القائمة شبه مرتبة.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">4</div>
+                <h2 class="text-3xl font-bold text-slate-800">Growth of Functions</h2>
+            </div>
+            
+            <div class="bg-slate-900 text-white p-6 rounded-xl shadow-lg">
+                <div class="grid md:grid-cols-3 gap-6 text-center">
+                    <div>
+                        <h4 class="text-yellow-400 font-bold mb-2 text-xl">Big-O ($O$)</h4>
+                        <p class="text-xs text-gray-400 mb-2">Upper Bound (أسوأ حالة)</p>
+                        <div class="bg-slate-800 p-2 rounded text-sm font-mono ltr">
+                            $f(x) \le C \cdot g(x)$
+                            <br>for $x > k$
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-green-400 font-bold mb-2 text-xl">Big-Omega ($\Omega$)</h4>
+                        <p class="text-xs text-gray-400 mb-2">Lower Bound (أفضل حالة)</p>
+                        <div class="bg-slate-800 p-2 rounded text-sm font-mono ltr">
+                            $f(x) \ge C \cdot g(x)$
+                            <br>for $x > k$
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-blue-400 font-bold mb-2 text-xl">Big-Theta ($\Theta$)</h4>
+                        <p class="text-xs text-gray-400 mb-2">Tight Bound (بالضبط)</p>
+                        <div class="bg-slate-800 p-2 rounded text-sm font-mono ltr">
+                            $C_1 g(x) \le f(x) \le C_2 g(x)$
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-6 pt-4 border-t border-slate-700 text-center">
+                    <p class="text-sm font-bold text-slate-300 mb-2">Hierarchy of Complexity</p>
+                    <div class="flex justify-center space-x-2 space-x-reverse font-mono text-xs md:text-sm text-amber-300">
+                        <span>$1$</span> < <span>$\log n$</span> < <span>$n$</span> < <span>$n \log n$</span> < <span>$n^2$</span> < <span>$2^n$</span> < <span>$n!$</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-16 mb-10">
+            <div class="bg-amber-700 text-white py-3 px-6 rounded-t-xl font-bold text-xl flex items-center shadow-lg">
+                <span class="mr-2">🛡️</span> EXAM VAULT (خزنة الاختبار)
+            </div>
+            <div class="bg-white border-2 border-amber-700 rounded-b-xl p-6 shadow-xl">
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                        <span class="bg-red-200 text-red-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">TRAP / شرط هام</span>
+                        <p class="font-bold text-slate-800 mb-1">Binary Search Input</p>
+                        <p class="text-sm text-slate-600">
+                            هل يعمل البحث الثنائي على أي قائمة؟
+                            <br><span class="text-red-600 font-bold">لا!</span> يجب أن تكون القائمة <strong>مرتبة (Sorted)</strong> أولاً.
+                            <br>إذا لم تكن مرتبة، يجب ترتيبها أولاً (وهذا يكلف وقتاً) أو استخدام Linear Search.
+                        </p>
+                    </div>
+
+                    <div class="bg-orange-50 p-4 rounded-lg border border-orange-100">
+                        <span class="bg-orange-200 text-orange-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">PROOF / إثبات</span>
+                        <p class="font-bold text-slate-800 mb-1">Showing $x^2 + 2x + 1$ is $O(x^2)$</p>
+                        <p class="text-sm text-slate-600 ltr text-left">
+                            We need $C, k$ such that $x^2 + 2x + 1 \le C x^2$.
+                            <br>Let $k=1$. Since $x \ge 1$:
+                            <br>$x^2 + 2x + 1 \le x^2 + 2x^2 + x^2 = 4x^2$.
+                            <br>So, $C=4, k=1$. Done!
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="flex justify-between mt-12 mb-8">
+            <a href="chapter1.html" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-lg font-bold shadow-sm transition transform hover:scale-105">→ السابق (Ch 1)</a>
+            <a href="chapter3.html" class="bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-lg font-bold shadow-lg transition transform hover:scale-105">الفصل التالي (Ch 3) ←</a>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center border-t border-slate-800">
+        <p>© 2024 DiscreteMaster Study Guide. Crafted for Excellence.</p>
+    </footer>
+
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. تحديد مفتاح التخزين بناءً على اسم المجلد
+            const path = window.location.pathname;
+            let courseKey = null;
+
+            // التحقق من اسم المجلد لتحديد المادة
+            if (path.includes('Computer-Architecture')) courseKey = 'arch_progress';
+            else if (path.includes('Theory-of-Computing')) courseKey = 'theory_progress';
+            else if (path.includes('Data-Structures')) courseKey = 'data_struct_progress';
+            else if (path.includes('Discrete-Mathematics')) courseKey = 'discrete_progress';
+
+            // 2. إذا تم التعرف على المادة، سجل الصفحة الحالية
+            if (courseKey) {
+                // استخراج اسم الملف فقط (مثلاً chapter5.html)
+                const pageName = path.split('/').pop();
+
+                // جلب البيانات القديمة
+                let visited = JSON.parse(localStorage.getItem(courseKey)) || [];
+
+                // إذا لم تكن الصفحة مسجلة مسبقاً، أضفها
+                if (!visited.includes(pageName)) {
+                    visited.push(pageName);
+                    localStorage.setItem(courseKey, JSON.stringify(visited));
+                    console.log(`✅ Progress Saved: ${pageName} in ${courseKey}`);
+                }
+            }
+        });
+    </script>
+	
+
+</body>
+</html>

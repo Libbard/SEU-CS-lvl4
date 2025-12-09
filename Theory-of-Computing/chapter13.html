@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch13: Logic & Propositions - Theory of Computing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .logic-table th, .logic-table td { border: 1px solid #e2e8f0; padding: 8px; text-align: center; }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(147, 51, 234, 0.15); border-color: #9333ea; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-white shadow-lg sticky top-0 z-50 border-b border-purple-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-black text-purple-700 ml-2">TheoryMaster</a>
+                    <span class="text-sm bg-purple-100 text-purple-800 py-1 px-2 rounded-full">Ch 13: Logic</span>
+                </div>
+                <div class="flex items-center space-x-2 space-x-reverse">
+                    <a href="chapter12.html" class="text-slate-600 hover:text-purple-600 px-3 py-2 rounded-md font-medium transition">→ السابق</a>
+                    <a href="index.html" class="bg-green-600 text-white px-3 py-2 rounded-md font-medium hover:bg-green-700 transition shadow-md">إنهاء (الفهرس) ✓</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-white py-12 border-b border-purple-100">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-slate-900">Propositions & Predicates</h1>
+            <p class="text-xl text-slate-600 mb-6">الفصل الثالث عشر: المنطق الرياضي وقواعد الاستنتاج</p>
+            <div class="inline-flex items-center bg-pink-50 text-pink-700 px-4 py-2 rounded-lg border border-pink-200 shadow-sm">
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                <span>الهدف: فهم العمليات المنطقية، الأشكال القياسية (Normal Forms)، والمكممات (Quantifiers).</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">1</div>
+                <h2 class="text-3xl font-bold text-slate-800">Propositional Logic (منطق القضايا)</h2>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-hover">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="font-bold text-purple-700 mb-4">Logical Connectives</h3>
+                        <ul class="space-y-3 text-sm">
+                            <li class="flex justify-between border-b pb-2"><span>Negation ($\neg p$)</span> <span class="font-mono text-slate-500">NOT</span></li>
+                            <li class="flex justify-between border-b pb-2"><span>Conjunction ($p \land q$)</span> <span class="font-mono text-slate-500">AND</span></li>
+                            <li class="flex justify-between border-b pb-2"><span>Disjunction ($p \lor q$)</span> <span class="font-mono text-slate-500">OR</span></li>
+                            <li class="flex justify-between border-b pb-2"><span>Implication ($p \to q$)</span> <span class="font-mono text-slate-500">IF..THEN</span></li>
+                            <li class="flex justify-between"><span>Bi-conditional ($p \leftrightarrow q$)</span> <span class="font-mono text-slate-500">IF AND ONLY IF</span></li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-lg">
+                        <h3 class="font-bold text-pink-700 mb-2">Important Definitions</h3>
+                        <ul class="list-disc list-inside text-sm text-slate-600 space-y-2">
+                            <li><strong>Tautology:</strong> عبارة صحيحة دائماً (Always True).</li>
+                            <li><strong>Contradiction:</strong> عبارة خاطئة دائماً (Always False).</li>
+                            <li><strong>Satisfiable:</strong> يمكن أن تكون صحيحة لتعويض واحد على الأقل.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">2</div>
+                <h2 class="text-3xl font-bold text-slate-800">Normal Forms (الأشكال القياسية)</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-5 rounded-xl border-t-4 border-indigo-500 shadow-sm card-hover">
+                    <h3 class="font-bold text-lg text-indigo-700 mb-2">Conjunctive Normal Form (CNF)</h3>
+                    <p class="text-xs text-slate-500 mb-3">Product of Sums (AND of ORs)</p>
+                    <div class="bg-indigo-50 p-3 rounded font-mono text-sm text-center ltr">
+                        $(A \lor B) \land (\neg B \lor C \lor D) \land (\neg A)$
+                    </div>
+                    <p class="text-xs text-slate-600 mt-2">مهم جداً لحل مشاكل الـ SAT ولخوارزميات الإثبات الآلي.</p>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl border-t-4 border-pink-500 shadow-sm card-hover">
+                    <h3 class="font-bold text-lg text-pink-700 mb-2">Disjunctive Normal Form (DNF)</h3>
+                    <p class="text-xs text-slate-500 mb-3">Sum of Products (OR of ANDs)</p>
+                    <div class="bg-pink-50 p-3 rounded font-mono text-sm text-center ltr">
+                        $(A \land B) \lor (\neg B \land C) \lor (\neg A \land D)$
+                    </div>
+                    <p class="text-xs text-slate-600 mt-2">سهل جداً للتحقق من الـ Satisfiability (يكفي أن يكون قوس واحد صحيحاً).</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">3</div>
+                <h2 class="text-3xl font-bold text-slate-800">Rules of Inference (قواعد الاستنتاج)</h2>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm logic-table bg-white rounded-lg shadow-sm">
+                    <thead class="bg-slate-800 text-white">
+                        <tr>
+                            <th>القاعدة</th>
+                            <th>الشكل المنطقي</th>
+                            <th>الوصف</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-slate-700">
+                        <tr>
+                            <td class="font-bold text-purple-700">Modus Ponens</td>
+                            <td class="font-mono ltr">$p \to q, p \vdash q$</td>
+                            <td>إذا تحقق الشرط والسبب، تتحقق النتيجة.</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold text-pink-700">Modus Tollens</td>
+                            <td class="font-mono ltr">$p \to q, \neg q \vdash \neg p$</td>
+                            <td>إذا انتفت النتيجة، ينتفي السبب.</td>
+                        </tr>
+                        <tr>
+                            <td class="font-bold text-indigo-700">Hypothetical Syllogism</td>
+                            <td class="font-mono ltr">$p \to q, q \to r \vdash p \to r$</td>
+                            <td>التعدي (Transitive).</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">4</div>
+                <h2 class="text-3xl font-bold text-slate-800">Quantifiers (المكممات)</h2>
+            </div>
+
+            <div class="bg-slate-900 text-white p-6 rounded-xl shadow-lg relative overflow-hidden text-center">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h4 class="text-2xl text-yellow-400 mb-2 font-bold">$\forall$</h4>
+                        <p class="text-sm font-bold">Universal Quantifier</p>
+                        <p class="text-xs text-slate-400 mt-1">"For all" (لكل).</p>
+                        <div class="mt-2 bg-slate-800 p-2 rounded text-xs font-mono">$\forall x, P(x)$ is true if P(x) is true for every x.</div>
+                    </div>
+                    <div>
+                        <h4 class="text-2xl text-green-400 mb-2 font-bold">$\exists$</h4>
+                        <p class="text-sm font-bold">Existential Quantifier</p>
+                        <p class="text-xs text-slate-400 mt-1">"There exists" (يوجد).</p>
+                        <div class="mt-2 bg-slate-800 p-2 rounded text-xs font-mono">$\exists x, P(x)$ is true if P(x) is true for at least one x.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-16 mb-10">
+            <div class="bg-purple-700 text-white py-3 px-6 rounded-t-xl font-bold text-xl flex items-center shadow-lg">
+                <span class="mr-2">🛡️</span> EXAM VAULT (خزنة الاختبار)
+            </div>
+            <div class="bg-white border-2 border-purple-700 rounded-b-xl p-6 shadow-xl">
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                        <span class="bg-red-200 text-red-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">TRAP / فخ النفي</span>
+                        <p class="font-bold text-slate-800 mb-1">DeMorgan's Laws for Quantifiers</p>
+                        <p class="text-sm text-slate-600">
+                            عندما يدخل النفي ($\neg$) على المكمم، فإنه يقلبه:
+                            <br>$\neg (\forall x, P(x)) \equiv \exists x, \neg P(x)$
+                            <br>$\neg (\exists x, P(x)) \equiv \forall x, \neg P(x)$
+                            <br><strong>لا تنسَ نفي الدالة $P(x)$ أيضاً!</strong>
+                        </p>
+                    </div>
+
+                    <div class="bg-green-50 p-4 rounded-lg border border-green-100">
+                        <span class="bg-green-200 text-green-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">RULE / قاعدة</span>
+                        <p class="font-bold text-slate-800 mb-1">Universal Instantiation</p>
+                        <p class="text-sm text-slate-600">
+                            إذا كانت $\forall x, P(x)$ صحيحة، فيمكنك استنتاج $P(c)$ لأي عنصر $c$ في المجال.
+                            <br>هذه القاعدة هي التي تسمح لنا بتطبيق القوانين العامة على الحالات الخاصة.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="flex justify-between mt-12 mb-8">
+            <a href="chapter12.html" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-lg font-bold shadow-sm transition transform hover:scale-105">→ السابق (Ch 12)</a>
+            <a href="index.html" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-bold shadow-lg transition transform hover:scale-105">العودة للفهرس الرئيسي ✓</a>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center border-t border-slate-800">
+        <p>© 2024 TheoryMaster Study Guide. Crafted for Excellence.</p>
+    </footer>
+
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. تحديد مفتاح التخزين بناءً على اسم المجلد
+            const path = window.location.pathname;
+            let courseKey = null;
+
+            // التحقق من اسم المجلد لتحديد المادة
+            if (path.includes('Computer-Architecture')) courseKey = 'arch_progress';
+            else if (path.includes('Theory-of-Computing')) courseKey = 'theory_progress';
+            else if (path.includes('Data-Structures')) courseKey = 'data_struct_progress';
+            else if (path.includes('Discrete-Mathematics')) courseKey = 'discrete_progress';
+
+            // 2. إذا تم التعرف على المادة، سجل الصفحة الحالية
+            if (courseKey) {
+                // استخراج اسم الملف فقط (مثلاً chapter5.html)
+                const pageName = path.split('/').pop();
+
+                // جلب البيانات القديمة
+                let visited = JSON.parse(localStorage.getItem(courseKey)) || [];
+
+                // إذا لم تكن الصفحة مسجلة مسبقاً، أضفها
+                if (!visited.includes(pageName)) {
+                    visited.push(pageName);
+                    localStorage.setItem(courseKey, JSON.stringify(visited));
+                    console.log(`✅ Progress Saved: ${pageName} in ${courseKey}`);
+                }
+            }
+        });
+    </script>
+	
+
+</body>
+</html>

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch10: Sorting II - Data Structures</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .emerald-gradient { background: linear-gradient(135deg, #059669 0%, #10b981 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.15); border-color: #10b981; }
+        .sort-step { border-left: 2px solid #34d399; padding-left: 10px; margin-bottom: 5px; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-white shadow-lg sticky top-0 z-50 border-b border-emerald-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-black text-emerald-700 ml-2">DataMaster</a>
+                    <span class="text-sm bg-emerald-100 text-emerald-800 py-1 px-2 rounded-full">Ch 10: Sorting II</span>
+                </div>
+                <div class="flex items-center space-x-2 space-x-reverse">
+                    <a href="chapter9.html" class="text-slate-600 hover:text-emerald-600 px-3 py-2 rounded-md font-medium transition">→ السابق</a>
+                    <a href="index.html" class="text-slate-600 hover:text-emerald-600 px-3 py-2 rounded-md font-medium transition">الرئيسية</a>
+                    <a href="chapter11.html" class="bg-emerald-600 text-white px-3 py-2 rounded-md font-medium hover:bg-emerald-700 transition shadow-md">التالي (ف11) ←</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-white py-12 border-b border-emerald-100">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-slate-900">Advanced Sorting</h1>
+            <p class="text-xl text-slate-600 mb-6">الفصل العاشر: خوارزميات الترتيب المتقدمة (Divide & Conquer)</p>
+            <div class="inline-flex items-center bg-green-50 text-green-700 px-4 py-2 rounded-lg border border-green-200 shadow-sm">
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                <span>الهدف: كسر حاجز $O(N^2)$ والتعامل مع البيانات الضخمة (External Sorting).</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">1</div>
+                <h2 class="text-3xl font-bold text-slate-800">Mergesort (ترتيب الدمج)</h2>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-hover">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="font-bold text-xl text-emerald-800 mb-3">الاستراتيجية</h3>
+                        <p class="text-slate-600 mb-4 text-sm">
+                            تعتمد على مبدأ "فرق تسد".
+                            <br>1. اقسم المصفوفة إلى نصفين.
+                            <br>2. رتب كل نصف (بشكل عودي Recursive).
+                            <br>3. [cite_start]<strong>ادمج (Merge)</strong> النصفين المرتبين في مصفوفة واحدة[cite: 8].
+                        </p>
+                        <div class="bg-emerald-50 p-3 rounded border border-emerald-100 text-sm">
+                            <strong>التحليل:</strong>
+                            <ul class="list-disc list-inside mt-2 space-y-1 text-slate-700">
+                                [cite_start]<li><strong>الوقت:</strong> $O(N \log N)$ في جميع الحالات (الأفضل والأسوأ)[cite: 8].</li>
+                                <li><strong>المساحة:</strong> $O(N)$ (يحتاج مصفوفة إضافية للدمج). وهذا هو عيبه الوحيد.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col justify-center items-center text-xs font-mono">
+                        <div class="bg-gray-100 px-4 py-2 rounded mb-2">[38, 27, 43, 3]</div>
+                        <div class="flex gap-4 mb-2">
+                            <div class="bg-blue-50 px-2 py-1 rounded">[38, 27]</div>
+                            <div class="bg-blue-50 px-2 py-1 rounded">[43, 3]</div>
+                        </div>
+                        <div class="flex gap-2 mb-2 text-[10px]">
+                            <span class="bg-white border px-1">[38]</span><span class="bg-white border px-1">[27]</span>
+                            <span class="bg-white border px-1">[43]</span><span class="bg-white border px-1">[3]</span>
+                        </div>
+                        <div class="flex gap-4 mb-2">
+                            <div class="bg-green-100 px-2 py-1 rounded text-green-800">[27, 38]</div>
+                            <div class="bg-green-100 px-2 py-1 rounded text-green-800">[3, 43]</div>
+                        </div>
+                        <div class="bg-green-200 px-4 py-2 rounded text-green-900 font-bold">[3, 27, 38, 43]</div>
+                        <p class="mt-2 text-slate-400">Merge Step</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">2</div>
+                <h2 class="text-3xl font-bold text-slate-800">Quicksort (الترتيب السريع)</h2>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-hover">
+                <h3 class="font-bold text-lg text-slate-700 mb-2">الأسرع عملياً (Practically Fastest)</h3>
+                <p class="text-sm text-slate-600 mb-4">
+                    [cite_start]أيضاً "فرق تسد"، لكن التقسيم هنا ليس بالنصف، بل بناءً على قيمة محددة تسمى <strong>المحور (Pivot)</strong>[cite: 20].
+                </p>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="space-y-3">
+                        <div class="sort-step">
+                            <strong class="text-indigo-700">1. Pick Pivot:</strong> اختر عنصراً (مثلاً الوسيط Median).
+                        </div>
+                        <div class="sort-step">
+                            <strong class="text-indigo-700">2. Partition:</strong> أعد ترتيب المصفوفة بحيث:
+                            <br>- العناصر الأصغر من Pivot تذهب لليسار.
+                            <br>- العناصر الأكبر تذهب لليمين.
+                        </div>
+                        <div class="sort-step">
+                            <strong class="text-indigo-700">3. [cite_start]Recurse:</strong> رتب الجزء الأيسر والأيمن بنفس الطريقة[cite: 20].
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 text-sm">
+                        <strong class="text-red-600 block mb-2">مشكلة اختيار الـ Pivot:</strong>
+                        <ul class="list-disc list-inside text-slate-600 space-y-1">
+                            <li>إذا اخترت أول عنصر وكان المصفوفة مرتبة، يصبح الأداء $O(N^2)$ (كارثة!).</li>
+                            [cite_start]<li><strong>أفضل استراتيجية:</strong> Median-of-Three (اختر الأول، الأخير، والوسط، وخذ وسيطهم) [cite: 24-25].</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">3</div>
+                <h2 class="text-3xl font-bold text-slate-800">External Sorting (ترتيب الملفات)</h2>
+            </div>
+            
+            <div class="bg-slate-900 text-white p-6 rounded-xl shadow-lg relative overflow-hidden">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h4 class="text-yellow-400 font-bold mb-4">المشكلة</h4>
+                        <p class="text-sm text-slate-300 mb-4">
+                            ماذا لو كانت البيانات أكبر من الذاكرة (RAM)؟ (مثلاً 10GB بيانات في 2GB رام).
+                            [cite_start]<br>لا يمكننا استخدام Quicksort لأنه يتطلب وصولاً عشوائياً (Random Access)، والقرص بطيء جداً في ذلك[cite: 38].
+                        </p>
+                        <h4 class="text-emerald-400 font-bold mb-4">الحل: K-Way Merge Sort</h4>
+                        <ol class="list-decimal list-inside space-y-2 text-sm text-slate-300">
+                            <li>اقرأ جزءاً بحجم الذاكرة (Chunk).</li>
+                            <li>رتبه في الذاكرة واحفظه كملف مؤقت (Run).</li>
+                            <li>كرر حتى تنتهي البيانات.</li>
+                            [cite_start]<li>ادمج الملفات المؤقتة معاً (Merge Pass)[cite: 39].</li>
+                        </ol>
+                    </div>
+                    <div class="bg-slate-800 p-4 rounded-lg border border-slate-700 text-center flex flex-col justify-center">
+                        <div class="text-6xl mb-4">📼</div>
+                        <p class="text-sm font-bold text-white">Tape Drives Logic</p>
+                        <p class="text-xs text-gray-400 mt-2">
+                            نستخدم أشرطة (أو ملفات) لأننا نقرأها بالتسلسل (Sequentially) فقط، وهو ما يبرع فيه الـ Merge Sort.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-16 mb-10">
+            <div class="bg-emerald-700 text-white py-3 px-6 rounded-t-xl font-bold text-xl flex items-center shadow-lg">
+                <span class="mr-2">🛡️</span> EXAM VAULT (خزنة الاختبار)
+            </div>
+            <div class="bg-white border-2 border-emerald-700 rounded-b-xl p-6 shadow-xl">
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                        <span class="bg-red-200 text-red-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">TRAP / فخ شائع</span>
+                        <p class="font-bold text-slate-800 mb-1">Quicksort Complexity</p>
+                        <p class="text-sm text-slate-600">
+                            <strong>Average:</strong> $O(N \log N)$.
+                            <br><strong>Worst Case:</strong> $O(N^2)$ (يحدث إذا كان الـ Pivot سيئاً جداً، مثل اختيار أصغر عنصر دائماً).
+                            <br>على عكس Mergesort الذي يضمن $O(N \log N)$ دائماً.
+                        </p>
+                    </div>
+
+                    <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-100">
+                        <span class="bg-yellow-200 text-yellow-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">COMPARISON / مقارنة المساحة</span>
+                        <p class="font-bold text-slate-800 mb-1">Memory Usage</p>
+                        <p class="text-sm text-slate-600">
+                            <strong>Mergesort:</strong> $O(N)$ (يحتاج مصفوفة إضافية).
+                            <br><strong>Quicksort:</strong> $O(\log N)$ (للمكدس في الاستدعاء العودي).
+                            <br><strong>Heapsort:</strong> $O(1)$ (In-place).
+                            <br>لذلك Quicksort هو المفضل في الذاكرة (In-place تقريباً) وأسرع بسبب الكاش.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="flex justify-between mt-12 mb-8">
+            <a href="chapter9.html" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-lg font-bold shadow-sm transition transform hover:scale-105">→ السابق (Ch 9)</a>
+            <a href="chapter11.html" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg font-bold shadow-lg transition transform hover:scale-105">الفصل التالي (Ch 11) ←</a>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center border-t border-slate-800">
+        <p>© 2024 DataMaster Study Guide. Crafted for Excellence.</p>
+    </footer>
+
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. تحديد مفتاح التخزين بناءً على اسم المجلد
+            const path = window.location.pathname;
+            let courseKey = null;
+
+            // التحقق من اسم المجلد لتحديد المادة
+            if (path.includes('Computer-Architecture')) courseKey = 'arch_progress';
+            else if (path.includes('Theory-of-Computing')) courseKey = 'theory_progress';
+            else if (path.includes('Data-Structures')) courseKey = 'data_struct_progress';
+            else if (path.includes('Discrete-Mathematics')) courseKey = 'discrete_progress';
+
+            // 2. إذا تم التعرف على المادة، سجل الصفحة الحالية
+            if (courseKey) {
+                // استخراج اسم الملف فقط (مثلاً chapter5.html)
+                const pageName = path.split('/').pop();
+
+                // جلب البيانات القديمة
+                let visited = JSON.parse(localStorage.getItem(courseKey)) || [];
+
+                // إذا لم تكن الصفحة مسجلة مسبقاً، أضفها
+                if (!visited.includes(pageName)) {
+                    visited.push(pageName);
+                    localStorage.setItem(courseKey, JSON.stringify(visited));
+                    console.log(`✅ Progress Saved: ${pageName} in ${courseKey}`);
+                }
+            }
+        });
+    </script>
+	
+
+</body>
+</html>

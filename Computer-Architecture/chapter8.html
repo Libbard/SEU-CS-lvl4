@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch6-Part2: Virtual Memory - Computer Architecture</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .process-step { position: relative; padding-right: 20px; border-right: 2px solid #cbd5e1; }
+        .process-step::before { content: ''; position: absolute; right: -6px; top: 0; width: 10px; height: 10px; border-radius: 50%; background-color: #3b82f6; }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-white shadow-lg sticky top-0 z-50 border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-black text-blue-600 ml-2">ArchMaster</a>
+                    <span class="text-sm bg-blue-100 text-blue-800 py-1 px-2 rounded-full">المشروع الشامل</span>
+                </div>
+                <div class="flex items-center space-x-2 space-x-reverse">
+                    <a href="chapter7.html" class="text-slate-600 hover:text-blue-600 px-3 py-2 rounded-md font-medium transition">→ السابق</a>
+                    <a href="index.html" class="text-slate-600 hover:text-blue-600 px-3 py-2 rounded-md font-medium transition">الرئيسية</a>
+                    <a href="chapter9.html" class="bg-blue-600 text-white px-3 py-2 rounded-md font-medium hover:bg-blue-700 transition">التالي ←</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-white py-12 border-b border-slate-200">
+        <div class="max-w-5xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-slate-900">Virtual Memory</h1>
+            <p class="text-xl text-slate-600 mb-6">الفصل الثامن: الذاكرة الافتراضية وإدارة الصفحات</p>
+            <div class="inline-flex items-center bg-cyan-50 text-cyan-700 px-4 py-2 rounded-lg border border-cyan-200">
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                <span>الهدف: فهم كيفية توسيع الذاكرة باستخدام القرص (Paging)، وجداول الصفحات (Page Tables)، والـ TLB.</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3">1</div>
+                <h2 class="text-3xl font-bold text-slate-800">What is Virtual Memory?</h2>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <p class="text-lg mb-4 text-slate-700">
+                    هي تقنية تستخدم جزءاً من القرص الصلب (Hard Disk) ليعمل كامتداد للذاكرة الرئيسية (RAM).
+                </p>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-cyan-50 p-4 rounded-lg">
+                        <h3 class="font-bold text-cyan-800 mb-2">الفائدة الرئيسية</h3>
+                        <p class="text-sm text-slate-600">زيادة سعة الذاكرة الظاهرية (Capacity) دون شراء RAM إضافية، مما يسمح بتشغيل برامج أكبر من حجم الذاكرة الفيزيائية.</p>
+                    </div>
+                    <div class="bg-amber-50 p-4 rounded-lg">
+                        <h3 class="font-bold text-amber-800 mb-2">المصطلحات الأساسية</h3>
+                        <ul class="text-sm text-slate-600 list-disc list-inside">
+                            <li><strong>Virtual Address:</strong> العنوان الذي ينشئه البرنامج (وهمي).</li>
+                            <li><strong>Physical Address:</strong> العنوان الحقيقي في الـ RAM.</li>
+                            <li><strong>Page Fault:</strong> عندما تكون البيانات المطلوبة ليست في RAM بل في القرص.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3">2</div>
+                <h2 class="text-3xl font-bold text-slate-800">Paging & Address Translation</h2>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 relative overflow-hidden">
+                <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4 md:space-x-reverse mb-8">
+                    
+                    <div class="border-2 border-dashed border-blue-300 p-4 rounded bg-blue-50 text-center w-full md:w-1/3">
+                        <h4 class="font-bold text-blue-700 mb-2">Virtual Address</h4>
+                        <div class="flex justify-center font-mono text-sm">
+                            <div class="bg-white border border-slate-400 px-2 py-1 rounded-r">Page #</div>
+                            <div class="bg-slate-200 border border-slate-400 px-2 py-1 rounded-l">Offset</div>
+                        </div>
+                    </div>
+
+                    <div class="text-2xl text-slate-400">➜</div>
+
+                    <div class="bg-slate-800 text-white p-4 rounded w-full md:w-1/4 text-center shadow-lg">
+                        <h4 class="font-bold text-yellow-400 mb-2">Page Table</h4>
+                        <p class="text-xs mb-2">Mapping Center</p>
+                        <div class="text-xs font-mono space-y-1 text-left bg-slate-700 p-2 rounded">
+                            <div>Page 0 -> Frame 5</div>
+                            <div>Page 1 -> Disk (X)</div>
+                            <div>Page 2 -> Frame 1</div>
+                        </div>
+                    </div>
+
+                    <div class="text-2xl text-slate-400">➜</div>
+
+                    <div class="border-2 border-dashed border-green-300 p-4 rounded bg-green-50 text-center w-full md:w-1/3">
+                        <h4 class="font-bold text-green-700 mb-2">Physical Address</h4>
+                        <div class="flex justify-center font-mono text-sm">
+                            <div class="bg-white border border-slate-400 px-2 py-1 rounded-r">Frame #</div>
+                            <div class="bg-slate-200 border border-slate-400 px-2 py-1 rounded-l">Offset</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-sm text-slate-600 text-center">
+                    <span class="font-bold text-red-500">ملاحظة هامة:</span> الـ Offset (الإزاحة) لا يتغير. نحن فقط نترجم رقم الصفحة (Page) إلى رقم إطار (Frame).
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3">3</div>
+                <h2 class="text-3xl font-bold text-slate-800">TLB: Speeding Things Up</h2>
+            </div>
+            
+            <div class="bg-indigo-50 p-6 rounded-xl border-l-8 border-indigo-600">
+                <h3 class="font-bold text-xl text-indigo-800 mb-3">لماذا نحتاج الـ TLB؟</h3>
+                <p class="mb-4 text-slate-700">
+                    جدول الصفحات (Page Table) مخزن في الذاكرة (RAM). هذا يعني أن كل عملية وصول للبيانات تتطلب <strong>عمليتين</strong> قراءة من الذاكرة (واحدة للجدول، وواحدة للبيانات). هذا بطيء جداً!
+                </p>
+                <div class="bg-white p-4 rounded shadow-sm">
+                    <h4 class="font-bold text-indigo-600">الحل (TLB):</h4>
+                    <p class="text-sm text-slate-600">
+                        هو "كاش خاص" وسريع جداً داخل المعالج، يخزن آخر التحويلات (Page -> Frame).
+                        <br>إذا وجدنا العنوان في TLB (Hit) ← لا داعي للذهاب للذاكرة لقراءة الجدول.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3">4</div>
+                <h2 class="text-3xl font-bold text-slate-800">Fragmentation (التجزئة)</h2>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-right border-collapse bg-white rounded-lg shadow-sm">
+                    <thead class="bg-slate-800 text-white">
+                        <tr>
+                            <th class="p-3">الطريقة</th>
+                            <th class="p-3">الوصف</th>
+                            <th class="p-3">نوع التجزئة (المشكلة)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b">
+                            <td class="p-3 font-bold text-blue-700">Paging (التقسيم لصفحات)</td>
+                            <td class="p-3">تقسيم الذاكرة والبرامج لقطع <strong>متساوية</strong> الحجم (Pages/Frames).</td>
+                            <td class="p-3 text-red-600 bg-red-50">
+                                <strong>Internal Fragmentation:</strong><br>
+                                آخر صفحة في البرنامج قد لا تكون ممتلئة، مما يضيع مساحة <em>داخل</em> الصفحة.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold text-purple-700">Segmentation (التقسيم لقطاعات)</td>
+                            <td class="p-3">تقسيم الذاكرة لقطع <strong>متغيرة</strong> الحجم حسب الحاجة (Logical segments).</td>
+                            <td class="p-3 text-orange-600 bg-orange-50">
+                                <strong>External Fragmentation:</strong><br>
+                                ظهور فراغات صغيرة متناثرة <em>بين</em> القطاعات يصعب استغلالها.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="mt-16 mb-10">
+            <div class="bg-red-600 text-white py-3 px-6 rounded-t-xl font-bold text-xl flex items-center">
+                <svg class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                EXAM VAULT (خزنة الاختبار)
+            </div>
+            <div class="bg-white border-2 border-red-600 rounded-b-xl p-6 shadow-xl">
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <span class="bg-blue-200 text-blue-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">CALCULATION / مسألة الـ Page Fault</span>
+                        <p class="font-bold text-slate-800 mb-1">Effective Access Time (EAT)</p>
+                        <p class="text-sm text-slate-600 mb-2">
+                            معطيات: Memory Access = 200ns, Page Fault rate = 1%, Disk access = 10ms.
+                            <br>(انتبه: 10ms = 10,000,000ns).
+                        </p>
+                        <div class="text-xs font-mono bg-white p-2 rounded border border-blue-200 ltr text-left">
+                            EAT = (0.99 * 2 Memory Accesses) + (0.01 * Disk Access)<br>
+                            EAT = 0.99(400ns) + 0.01(10,000,000ns)<br>
+                            EAT = 396 + 100,000 = 100,396 ns
+                        </div>
+                        <p class="text-xs text-red-500 mt-1 font-bold">لاحظ كيف دمر الـ Page Fault الأداء!</p>
+                    </div>
+
+                    <div class="bg-red-50 p-4 rounded-lg">
+                        <span class="bg-red-200 text-red-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">TRAP / فخ</span>
+                        <p class="font-bold text-slate-800 mb-1">The "Valid" Bit</p>
+                        <p class="text-sm text-slate-600">
+                            في جدول الصفحات (Page Table):
+                            <br>إذا كان الـ <strong>Valid Bit = 1</strong>: الصفحة موجودة في RAM (كمل شغلك).
+                            <br>إذا كان الـ <strong>Valid Bit = 0</strong>: الصفحة غير موجودة (Page Fault)، يجب جلبها من القرص.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="flex justify-between mt-12 mb-8">
+            <a href="chapter7.html" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-lg font-bold shadow-sm transition transform hover:scale-105">→ السابق (Ch 7)</a>
+            <a href="chapter9.html" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-bold shadow-lg transition transform hover:scale-105">الفصل التالي (Ch 9) ←</a>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center border-t border-slate-800">
+        <p>© 2024 ArchMaster Study Guide. All chapters curated for excellence.</p>
+    </footer>
+
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. تحديد مفتاح التخزين بناءً على اسم المجلد
+            const path = window.location.pathname;
+            let courseKey = null;
+
+            // التحقق من اسم المجلد لتحديد المادة
+            if (path.includes('Computer-Architecture')) courseKey = 'arch_progress';
+            else if (path.includes('Theory-of-Computing')) courseKey = 'theory_progress';
+            else if (path.includes('Data-Structures')) courseKey = 'data_struct_progress';
+            else if (path.includes('Discrete-Mathematics')) courseKey = 'discrete_progress';
+
+            // 2. إذا تم التعرف على المادة، سجل الصفحة الحالية
+            if (courseKey) {
+                // استخراج اسم الملف فقط (مثلاً chapter5.html)
+                const pageName = path.split('/').pop();
+
+                // جلب البيانات القديمة
+                let visited = JSON.parse(localStorage.getItem(courseKey)) || [];
+
+                // إذا لم تكن الصفحة مسجلة مسبقاً، أضفها
+                if (!visited.includes(pageName)) {
+                    visited.push(pageName);
+                    localStorage.setItem(courseKey, JSON.stringify(visited));
+                    console.log(`✅ Progress Saved: ${pageName} in ${courseKey}`);
+                }
+            }
+        });
+    </script>
+	
+
+</body>
+</html>

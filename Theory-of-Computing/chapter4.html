@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch4: Regular Language Properties - Theory of Computing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(147, 51, 234, 0.15); border-color: #9333ea; }
+        .lemma-box { background: #fdf2f8; border-left: 4px solid #db2777; padding: 1rem; border-radius: 0 0.5rem 0.5rem 0; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-white shadow-lg sticky top-0 z-50 border-b border-purple-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-black text-purple-700 ml-2">TheoryMaster</a>
+                    <span class="text-sm bg-purple-100 text-purple-800 py-1 px-2 rounded-full">Ch 4: Properties</span>
+                </div>
+                <div class="flex items-center space-x-2 space-x-reverse">
+                    <a href="chapter3.html" class="text-slate-600 hover:text-purple-600 px-3 py-2 rounded-md font-medium transition">→ السابق</a>
+                    <a href="index.html" class="text-slate-600 hover:text-purple-600 px-3 py-2 rounded-md font-medium transition">الرئيسية</a>
+                    <a href="chapter5.html" class="bg-purple-600 text-white px-3 py-2 rounded-md font-medium hover:bg-purple-700 transition shadow-md">التالي (ف5) ←</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-white py-12 border-b border-purple-100">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-slate-900">Properties of Regular Languages</h1>
+            <p class="text-xl text-slate-600 mb-6">الفصل الرابع: خصائص اللغات المنتظمة والتبسيط</p>
+            <div class="inline-flex items-center bg-pink-50 text-pink-700 px-4 py-2 rounded-lg border border-pink-200 shadow-sm">
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+                <span>الهدف: إثبات عدم الانتظام (Pumping Lemma) وتبسيط الـ DFA (Minimization).</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">1</div>
+                <h2 class="text-3xl font-bold text-slate-800">The Pumping Lemma (ضخ الكلمات)</h2>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-lg border-r-4 border-pink-500">
+                <p class="text-slate-600 mb-4">أداة رياضية تستخدم لإثبات أن لغة معينة <strong>ليست منتظمة (Not Regular)</strong>.</p>
+                
+                <div class="lemma-box mb-6">
+                    <h4 class="font-bold text-pink-800 mb-2">النص الرسمي:</h4>
+                    <p class="text-sm text-slate-700 leading-relaxed">
+                        لأي لغة منتظمة $L$، يوجد عدد ثابت $n$ (Pumping Length).
+                        <br>أي كلمة $w$ في اللغة طولها $\ge n$ يمكن تقسيمها إلى 3 أجزاء: $w = xyz$ بحيث:
+                    </p>
+                    <ol class="list-decimal list-inside text-sm mt-2 font-bold text-purple-900 space-y-1" dir="ltr">
+                        <li>$|y| > 0$ (الجزء الأوسط ليس فارغاً).</li>
+                        <li>$|xy| \le n$ (التكرار يحدث في البداية).</li>
+                        <li>For all $i \ge 0$, $xy^iz \in L$ (يمكننا تكرار y لأي عدد وتبقى الكلمة في اللغة).</li>
+                    </ol>
+                </div>
+
+                <div class="bg-slate-50 p-4 rounded text-sm text-slate-600 border border-slate-200">
+                    <strong class="text-indigo-600">كيف نستخدمها للإثبات؟ (لعبة التناقض):</strong>
+                    <ol class="list-decimal list-inside mt-2 space-y-1">
+                        <li>افترض أن اللغة $L$ منتظمة (للوصول لتناقض).</li>
+                        <li>الخصم يعطيك $n$.</li>
+                        <li>أنت تختار كلمة ذكية $w$ تعتمد على $n$ (مثل $0^n1^n$).</li>
+                        <li>الخصم يقسمها إلى $xyz$ حسب الشروط.</li>
+                        <li>أنت تختار $i$ (عدد مرات التكرار) لتجعل الكلمة الجديدة $xy^iz$ <strong>خارج</strong> اللغة.</li>
+                        <li>بما أنك وجدت تناقضاً، فالفرضية خاطئة واللغة ليست منتظمة.</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">2</div>
+                <h2 class="text-3xl font-bold text-slate-800">Closure Properties (خصائص الانغلاق)</h2>
+            </div>
+
+            <p class="text-slate-600 mb-4">إذا كان لدينا لغتان منتظمتان $L_1$ و $L_2$، فإن العمليات التالية تنتج لغة منتظمة أيضاً:</p>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                <div class="p-3 bg-white rounded shadow-sm border-t-4 border-purple-500 card-hover">
+                    <strong class="block text-purple-700">Union</strong>
+                    $L_1 \cup L_2$
+                </div>
+                <div class="p-3 bg-white rounded shadow-sm border-t-4 border-purple-500 card-hover">
+                    <strong class="block text-purple-700">Intersection</strong>
+                    $L_1 \cap L_2$
+                </div>
+                <div class="p-3 bg-white rounded shadow-sm border-t-4 border-purple-500 card-hover">
+                    <strong class="block text-purple-700">Concatenation</strong>
+                    $L_1 L_2$
+                </div>
+                <div class="p-3 bg-white rounded shadow-sm border-t-4 border-purple-500 card-hover">
+                    <strong class="block text-purple-700">Star</strong>
+                    $L_1^*$
+                </div>
+                <div class="p-3 bg-white rounded shadow-sm border-t-4 border-pink-500 card-hover">
+                    <strong class="block text-pink-700">Complement</strong>
+                    $\overline{L_1}$
+                </div>
+                <div class="p-3 bg-white rounded shadow-sm border-t-4 border-pink-500 card-hover">
+                    <strong class="block text-pink-700">Difference</strong>
+                    $L_1 - L_2$
+                </div>
+                <div class="p-3 bg-white rounded shadow-sm border-t-4 border-pink-500 card-hover">
+                    <strong class="block text-pink-700">Reversal</strong>
+                    $L_1^R$
+                </div>
+                <div class="p-3 bg-white rounded shadow-sm border-t-4 border-pink-500 card-hover">
+                    <strong class="block text-pink-700">Homomorphism</strong>
+                    $h(L_1)$
+                </div>
+            </div>
+            <div class="mt-4 text-xs text-center text-slate-400">إذا خرجت عن هذه القائمة، فغالباً الخاصية غير محققة.</div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">3</div>
+                <h2 class="text-3xl font-bold text-slate-800">DFA Minimization (تبسيط الآلة)</h2>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h3 class="font-bold text-purple-700 mb-3">Table Filling Algorithm (خوارزمية الجدول)</h3>
+                <p class="text-sm text-slate-600 mb-4">الهدف: دمج الحالات المتكافئة (Equivalent States) لتقليل حجم الـ DFA.</p>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-slate-50 p-4 rounded text-sm">
+                        <strong class="block mb-2 text-indigo-700">خطوات الحل:</strong>
+                        <ol class="list-decimal list-inside space-y-1 text-slate-700">
+                            <li>ارسم جدولاً لكل زوج من الحالات $(p, q)$.</li>
+                            <li>ضع علامة $\times$ للأزواج التي أحدها نهائي والآخر غير نهائي (مميزة فوراً).</li>
+                            <li>للأزواج المتبقية: إذا كان الانتقال برمز ما يؤدي إلى زوج مميز سابقاً، ميز هذا الزوج أيضاً.</li>
+                            <li>كرر الخطوة 3 حتى لا يوجد تغيير.</li>
+                            <li>الأزواج غير المميزة يتم دمجها.</li>
+                        </ol>
+                    </div>
+                    <div class="flex items-center justify-center bg-white p-4 border rounded">
+                        <div class="text-center text-xs font-mono text-slate-400">
+                            <div class="grid grid-cols-4 gap-1">
+                                <div></div><div>B</div><div>C</div><div>D</div>
+                                <div>A</div><div class="bg-red-100">x</div><div class="bg-red-100">x</div><div class="bg-gray-100">؟</div>
+                                <div>B</div><div></div><div class="bg-gray-100">؟</div><div class="bg-red-100">x</div>
+                                <div>C</div><div></div><div></div><div class="bg-red-100">x</div>
+                            </div>
+                            <p class="mt-2">Distinguishable Pairs Table</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-16 mb-10">
+            <div class="bg-purple-700 text-white py-3 px-6 rounded-t-xl font-bold text-xl flex items-center shadow-lg">
+                <span class="mr-2">🛡️</span> EXAM VAULT (خزنة الاختبار)
+            </div>
+            <div class="bg-white border-2 border-purple-700 rounded-b-xl p-6 shadow-xl">
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                        <span class="bg-red-200 text-red-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">TRAP / خطأ قاتل</span>
+                        <p class="font-bold text-slate-800 mb-1">Misusing Pumping Lemma</p>
+                        <p class="text-sm text-slate-600">
+                            الـ Pumping Lemma تستخدم <strong>فقط</strong> لإثبات أن اللغة <span class="text-red-600 font-bold">ليست</span> منتظمة.
+                            <br>لا يمكنك استخدامها لإثبات أن اللغة منتظمة! (قد تنجح الـ Pumping للغة غير منتظمة أحياناً).
+                        </p>
+                    </div>
+
+                    <div class="bg-green-50 p-4 rounded-lg border border-green-100">
+                        <span class="bg-green-200 text-green-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">CLASSIC EXAMPLE</span>
+                        <p class="font-bold text-slate-800 mb-1">$L = \{0^n 1^n | n \ge 0\}$</p>
+                        <p class="text-sm text-slate-600">
+                            هذه أشهر لغة غير منتظمة.
+                            <br>السبب: الـ DFA ذاكرته محدودة ولا يستطيع "العد" للتأكد من أن عدد الأصفار يساوي عدد الآحاد إذا كان العدد كبيراً جداً (أكبر من عدد حالاته).
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="flex justify-between mt-12 mb-8">
+            <a href="chapter3.html" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-lg font-bold shadow-sm transition transform hover:scale-105">→ السابق (Ch 3)</a>
+            <a href="chapter5.html" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-bold shadow-lg transition transform hover:scale-105">الفصل التالي (Ch 5) ←</a>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center border-t border-slate-800">
+        <p>© 2024 TheoryMaster Study Guide. Crafted for Excellence.</p>
+    </footer>
+
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. تحديد مفتاح التخزين بناءً على اسم المجلد
+            const path = window.location.pathname;
+            let courseKey = null;
+
+            // التحقق من اسم المجلد لتحديد المادة
+            if (path.includes('Computer-Architecture')) courseKey = 'arch_progress';
+            else if (path.includes('Theory-of-Computing')) courseKey = 'theory_progress';
+            else if (path.includes('Data-Structures')) courseKey = 'data_struct_progress';
+            else if (path.includes('Discrete-Mathematics')) courseKey = 'discrete_progress';
+
+            // 2. إذا تم التعرف على المادة، سجل الصفحة الحالية
+            if (courseKey) {
+                // استخراج اسم الملف فقط (مثلاً chapter5.html)
+                const pageName = path.split('/').pop();
+
+                // جلب البيانات القديمة
+                let visited = JSON.parse(localStorage.getItem(courseKey)) || [];
+
+                // إذا لم تكن الصفحة مسجلة مسبقاً، أضفها
+                if (!visited.includes(pageName)) {
+                    visited.push(pageName);
+                    localStorage.setItem(courseKey, JSON.stringify(visited));
+                    console.log(`✅ Progress Saved: ${pageName} in ${courseKey}`);
+                }
+            }
+        });
+    </script>
+	
+
+</body>
+</html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch9: Sorting I - Data Structures</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.15); border-color: #10b981; }
+        .sort-bar { height: 20px; background: #34d399; border-radius: 4px; display: inline-block; margin: 0 1px; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-white shadow-lg sticky top-0 z-50 border-b border-emerald-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-black text-emerald-700 ml-2">DataMaster</a>
+                    <span class="text-sm bg-emerald-100 text-emerald-800 py-1 px-2 rounded-full">Ch 9: Sorting I</span>
+                </div>
+                <div class="flex items-center space-x-2 space-x-reverse">
+                    <a href="chapter8.html" class="text-slate-600 hover:text-emerald-600 px-3 py-2 rounded-md font-medium transition">→ السابق</a>
+                    <a href="index.html" class="text-slate-600 hover:text-emerald-600 px-3 py-2 rounded-md font-medium transition">الرئيسية</a>
+                    <a href="chapter10.html" class="bg-emerald-600 text-white px-3 py-2 rounded-md font-medium hover:bg-emerald-700 transition shadow-md">التالي (ف10) ←</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-white py-12 border-b border-emerald-100">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-slate-900">Sorting Algorithms (Part 1)</h1>
+            <p class="text-xl text-slate-600 mb-6">الفصل التاسع: خوارزميات الترتيب (Insertion, Shell, Heap)</p>
+            <div class="inline-flex items-center bg-green-50 text-green-700 px-4 py-2 rounded-lg border border-green-200 shadow-sm">
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"></path></svg>
+                <span>الهدف: فهم الخوارزميات الأساسية $O(N^2)$ وكيفية تحسينها للوصول لـ $O(N \log N)$.</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">1</div>
+                <h2 class="text-3xl font-bold text-slate-800">Insertion Sort (الترتيب بالإدراج)</h2>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-hover">
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <h3 class="font-bold text-xl text-emerald-800 mb-3">آلية العمل</h3>
+                        <p class="text-slate-600 mb-4 text-sm">
+                            تشبه ترتيب أوراق اللعب في يدك.
+                            <br>نبدأ بعنصر واحد (مرتب افتراضياً)، ثم نأخذ العنصر التالي وندخله (Insert) في مكانه الصحيح بين العناصر السابقة.
+                        </p>
+                        <div class="bg-emerald-50 p-3 rounded border border-emerald-100 text-sm font-mono ltr">
+                            for (p = 1; p < a.length; p++) {<br>
+                            &nbsp;&nbsp;tmp = a[p];<br>
+                            &nbsp;&nbsp;for (j = p; j > 0 && tmp < a[j-1]; j--)<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;a[j] = a[j-1];<br>
+                            &nbsp;&nbsp;a[j] = tmp;<br>
+                            }
+                        </div>
+                        [cite_start]<p class="text-xs text-slate-400 mt-2 text-right">[cite: 17-19]</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="bg-gray-100 p-4 rounded-lg">
+                            <h4 class="font-bold text-slate-700 mb-2">Complexity</h4>
+                            <ul class="text-sm space-y-2">
+                                <li class="text-red-600"><strong>Worst Case:</strong> $O(N^2)$ (عكسي الترتيب).</li>
+                                <li class="text-green-600"><strong>Best Case:</strong> $O(N)$ (مرتبة مسبقاً).</li>
+                                <li class="text-blue-600"><strong>ميزة:</strong> ممتاز للمصفوفات الصغيرة جداً.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">2</div>
+                <h2 class="text-3xl font-bold text-slate-800">Shellsort (ترتيب شيل)</h2>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 card-hover">
+                <h3 class="font-bold text-lg text-slate-700 mb-2">الحل لمشكلة $O(N^2)$</h3>
+                <p class="text-sm text-slate-600 mb-4">
+                    Insertion Sort بطيء لأنه يحرك العناصر خطوة واحدة فقط في كل مرة.
+                    <br><strong>Shellsort</strong> يقارن عناصر متباعدة بمسافة (Gap) كبيرة، ثم يقلل المسافة تدريجياً.
+                </p>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-slate-50 p-4 rounded-lg border-l-4 border-indigo-500">
+                        <strong class="text-indigo-800 block mb-1">Gap Sequence (تتابع الفجوات)</strong>
+                        <p class="text-xs text-slate-600">
+                            أداء الخوارزمية يعتمد كلياً على اختيار الفجوات.
+                            <br>• <strong>Shell's ($N/2, N/4...$):</strong> سيء، قد يصل لـ $O(N^2)$.
+                            <br>• <strong>Hibbard's ($2^k - 1$):</strong> أفضل، يضمن $O(N^{3/2})$.
+                        </p>
+                    </div>
+                    <div class="flex items-center justify-center">
+                        <div class="text-center text-sm">
+                            <div class="flex space-x-1 mb-1">
+                                <span class="w-6 h-6 bg-blue-200 rounded">81</span>
+                                <span class="w-6 h-6 bg-gray-200 rounded">...</span>
+                                <span class="w-6 h-6 bg-blue-200 rounded">35</span>
+                                <span class="w-6 h-6 bg-gray-200 rounded">...</span>
+                            </div>
+                            <p class="text-xs text-gray-500">Compare gap elements first</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">3</div>
+                <h2 class="text-3xl font-bold text-slate-800">Heapsort (ترتيب الكومة)</h2>
+            </div>
+            
+            <div class="bg-slate-900 text-white p-6 rounded-xl shadow-lg relative overflow-hidden">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h4 class="text-yellow-400 font-bold mb-4">الاستراتيجية الذكية</h4>
+                        <ol class="list-decimal list-inside space-y-3 text-sm text-slate-300">
+                            [cite_start]<li>حول المصفوفة إلى <strong>Max-Heap</strong> (الأب أكبر من الأبناء)[cite: 37].</li>
+                            <li>احذف أكبر عنصر (الجذر) وضعه في <strong>آخر خانة</strong> في المصفوفة (مكان العنصر المحذوف منطقياً).</li>
+                            <li>قلل حجم الـ Heap بواحد، وأعد الترتيب (Percolate Down).</li>
+                            <li>كرر حتى تنتهي العناصر.</li>
+                        </ol>
+                    </div>
+                    <div class="bg-slate-800 p-4 rounded-lg border border-slate-700 text-center">
+                        <strong class="text-emerald-400 block mb-2 text-lg">Complexity</strong>
+                        <p class="text-2xl font-mono mb-2">$O(N \log N)$</p>
+                        <p class="text-xs text-gray-400">
+                            Build Heap: $O(N)$
+                            <br>Delete N times: $N \times O(\log N)$
+                        </p>
+                        <div class="mt-4 bg-emerald-900/50 p-2 rounded text-xs text-emerald-200">
+                            ميزة: لا يحتاج ذاكرة إضافية (In-place).
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-16 mb-10">
+            <div class="bg-emerald-700 text-white py-3 px-6 rounded-t-xl font-bold text-xl flex items-center shadow-lg">
+                <span class="mr-2">🛡️</span> EXAM VAULT (خزنة الاختبار)
+            </div>
+            <div class="bg-white border-2 border-emerald-700 rounded-b-xl p-6 shadow-xl">
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                        <span class="bg-red-200 text-red-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">TRAP / فخ</span>
+                        <p class="font-bold text-slate-800 mb-1">Min-Heap vs Max-Heap for Sorting</p>
+                        <p class="text-sm text-slate-600">
+                            لترتيب المصفوفة <strong>تصاعدياً</strong> (Ascending)، هل نستخدم Min-Heap أم Max-Heap؟
+                            <br>الجواب: <strong>Max-Heap</strong>.
+                            <br>السبب: نحتاج لسحب أكبر عنصر ووضعه في <em>نهاية</em> المصفوفة الفارغة تدريجياً.
+                        </p>
+                    </div>
+
+                    <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-100">
+                        <span class="bg-yellow-200 text-yellow-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">COMPARISON / مقارنة</span>
+                        <p class="font-bold text-slate-800 mb-1">Insertion Sort Efficiency</p>
+                        <p class="text-sm text-slate-600">
+                            Insertion Sort هو الأفضل في حالة واحدة: عندما تكون البيانات <strong>شبه مرتبة (Almost Sorted)</strong>. في هذه الحالة يقترب أداؤه من $O(N)$.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="flex justify-between mt-12 mb-8">
+            <a href="chapter8.html" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-lg font-bold shadow-sm transition transform hover:scale-105">→ السابق (Ch 8)</a>
+            <a href="chapter10.html" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg font-bold shadow-lg transition transform hover:scale-105">الفصل التالي (Ch 10) ←</a>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center border-t border-slate-800">
+        <p>© 2024 DataMaster Study Guide. Crafted for Excellence.</p>
+    </footer>
+
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. تحديد مفتاح التخزين بناءً على اسم المجلد
+            const path = window.location.pathname;
+            let courseKey = null;
+
+            // التحقق من اسم المجلد لتحديد المادة
+            if (path.includes('Computer-Architecture')) courseKey = 'arch_progress';
+            else if (path.includes('Theory-of-Computing')) courseKey = 'theory_progress';
+            else if (path.includes('Data-Structures')) courseKey = 'data_struct_progress';
+            else if (path.includes('Discrete-Mathematics')) courseKey = 'discrete_progress';
+
+            // 2. إذا تم التعرف على المادة، سجل الصفحة الحالية
+            if (courseKey) {
+                // استخراج اسم الملف فقط (مثلاً chapter5.html)
+                const pageName = path.split('/').pop();
+
+                // جلب البيانات القديمة
+                let visited = JSON.parse(localStorage.getItem(courseKey)) || [];
+
+                // إذا لم تكن الصفحة مسجلة مسبقاً، أضفها
+                if (!visited.includes(pageName)) {
+                    visited.push(pageName);
+                    localStorage.setItem(courseKey, JSON.stringify(visited));
+                    console.log(`✅ Progress Saved: ${pageName} in ${courseKey}`);
+                }
+            }
+        });
+    </script>
+	
+
+</body>
+</html>

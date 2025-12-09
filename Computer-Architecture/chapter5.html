@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch4: MARIE Architecture - Computer Architecture</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .reg-box { border: 2px solid #334155; padding: 10px; border-radius: 8px; text-align: center; font-weight: bold; background: #f1f5f9; transition: all 0.3s; }
+        .reg-box:hover { transform: scale(1.05); border-color: #2563eb; color: #2563eb; }
+        .arrow-down { width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 15px solid #94a3b8; margin: 0 auto; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-white shadow-lg sticky top-0 z-50 border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-black text-blue-600 ml-2">ArchMaster</a>
+                    <span class="text-sm bg-blue-100 text-blue-800 py-1 px-2 rounded-full">المشروع الشامل</span>
+                </div>
+                <div class="flex items-center space-x-2 space-x-reverse">
+                    <a href="chapter4.html" class="text-slate-600 hover:text-blue-600 px-3 py-2 rounded-md font-medium transition">→ السابق</a>
+                    <a href="index.html" class="text-slate-600 hover:text-blue-600 px-3 py-2 rounded-md font-medium transition">الرئيسية</a>
+                    <a href="chapter6.html" class="bg-blue-600 text-white px-3 py-2 rounded-md font-medium hover:bg-blue-700 transition">التالي ←</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-white py-12 border-b border-slate-200">
+        <div class="max-w-5xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-slate-900">MARIE Architecture</h1>
+            <p class="text-xl text-slate-600 mb-6">الفصل الخامس: مقدمة في الحاسب البسيط (MARIE)</p>
+            <div class="inline-flex items-center bg-teal-50 text-teal-700 px-4 py-2 rounded-lg border border-teal-200">
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                <span>الهدف: فهم المسجلات (Registers)، دورة التعليمات (Fetch-Decode-Execute)، و RTL.</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
+
+        <section class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+            <div class="flex items-center mb-4">
+                <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold ml-3">1</div>
+                <h2 class="text-2xl font-bold text-slate-800">CPU Performance Equation</h2>
+            </div>
+            <div class="bg-slate-900 text-white p-4 rounded-lg text-center font-mono text-lg overflow-x-auto" dir="ltr">
+                $$ \text{CPU Time} = \frac{\text{Instructions}}{\text{Program}} \times \frac{\text{Cycles}}{\text{Instruction}} \times \frac{\text{Seconds}}{\text{Cycle}} $$
+            </div>
+            <p class="text-sm text-slate-500 mt-2 text-center">لتحسين الأداء: قلل عدد التعليمات، أو قلل عدد الدورات لكل تعليمة، أو قلل زمن الدورة (زيادة التردد).</p>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold ml-3">2</div>
+                <h2 class="text-2xl font-bold text-slate-800">Memory Interleaving (تنظيم الذاكرة)</h2>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white p-5 rounded-xl border-t-4 border-indigo-500 shadow-sm">
+                    <h3 class="font-bold text-lg text-indigo-700 mb-2">High-Order Interleaving</h3>
+                    <p class="text-sm text-slate-600 mb-2">البتات العليا (Most Significant) تحدد الـ Module (الشريحة).</p>
+                    <ul class="text-xs list-disc list-inside text-slate-500">
+                        <li>العناوين متتالية داخل الشريحة الواحدة.</li>
+                        <li>مثال: Module 0 يحتوي العناوين من 0 إلى 3.</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-5 rounded-xl border-t-4 border-pink-500 shadow-sm">
+                    <h3 class="font-bold text-lg text-pink-700 mb-2">Low-Order Interleaving</h3>
+                    <p class="text-sm text-slate-600 mb-2">البتات الدنيا (Least Significant) تحدد الـ Module.</p>
+                    <ul class="text-xs list-disc list-inside text-slate-500">
+                        <li>العناوين المتتالية تتوزع على شرائح مختلفة (Parallel Access).</li>
+                        <li>مثال: Module 0 يحوي 0, 4, 8...</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold ml-3">3</div>
+                <h2 class="text-2xl font-bold text-slate-800">MARIE Registers (المسجلات)</h2>
+            </div>
+            <p class="mb-6 text-slate-600">جهاز MARIE هو جهاز 16-bit يحتوي على المسجلات التالية:</p>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                <div class="reg-box">
+                    <div class="text-xl text-blue-600">AC</div>
+                    <div class="text-xs text-slate-400">16-bit</div>
+                    <div class="mt-2">Accumulator</div>
+                    <div class="text-xs font-light mt-1">يخزن نتائج العمليات الحسابية والمنطقية.</div>
+                </div>
+                <div class="reg-box">
+                    <div class="text-xl text-green-600">MAR</div>
+                    <div class="text-xs text-slate-400">12-bit</div>
+                    <div class="mt-2">Memory Address Reg</div>
+                    <div class="text-xs font-light mt-1">يحمل "عنوان" الذاكرة المراد الوصول له.</div>
+                </div>
+                <div class="reg-box">
+                    <div class="text-xl text-green-600">MBR</div>
+                    <div class="text-xs text-slate-400">16-bit</div>
+                    <div class="mt-2">Memory Buffer Reg</div>
+                    <div class="text-xs font-light mt-1">يحمل "البيانات" القادمة من أو الذاهبة للذاكرة.</div>
+                </div>
+                <div class="reg-box">
+                    <div class="text-xl text-purple-600">PC</div>
+                    <div class="text-xs text-slate-400">12-bit</div>
+                    <div class="mt-2">Program Counter</div>
+                    <div class="text-xs font-light mt-1">يحمل عنوان التعليمة "التالية".</div>
+                </div>
+                <div class="reg-box">
+                    <div class="text-xl text-purple-600">IR</div>
+                    <div class="text-xs text-slate-400">16-bit</div>
+                    <div class="mt-2">Instruction Register</div>
+                    <div class="text-xs font-light mt-1">يحمل التعليمة الحالية التي يتم تنفيذها.</div>
+                </div>
+                <div class="reg-box col-span-2 md:col-span-1">
+                    <div class="text-xl text-orange-600">In/OutREG</div>
+                    <div class="text-xs text-slate-400">8-bit</div>
+                    <div class="mt-2">I/O Registers</div>
+                    <div class="text-xs font-light mt-1">للتعامل مع وحدات الإدخال والإخراج.</div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold ml-3">4</div>
+                <h2 class="text-2xl font-bold text-slate-800">Fetch-Decode-Execute Cycle</h2>
+            </div>
+
+            <div class="bg-slate-100 p-6 rounded-xl border border-slate-300 relative">
+                <div class="mb-4">
+                    <h4 class="font-bold text-blue-700 mb-2">1. Fetch (جلب التعليمة)</h4>
+                    <div class="bg-white p-3 rounded shadow-sm font-mono text-sm space-y-1 ltr" dir="ltr">
+                        <p>MAR ← PC</p>
+                        <p>IR ← M[MAR]</p>
+                        <p>PC ← PC + 1</p>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-1">انسخ عنوان التعليمة من PC إلى MAR، اجلب التعليمة للـ IR، زد الـ PC.</p>
+                </div>
+                
+                <div class="arrow-down mb-4"></div>
+
+                <div class="mb-4">
+                    <h4 class="font-bold text-purple-700 mb-2">2. Decode (فك التشفير)</h4>
+                    <div class="bg-white p-3 rounded shadow-sm font-mono text-sm ltr" dir="ltr">
+                        <p>Decode IR[15-12]</p>
+                        <p>MAR ← IR[11-0] (If needed)</p>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-1">افهم نوع التعليمة (Opcode)، وجهز العنوان (Address) في الـ MAR إذا لزم الأمر.</p>
+                </div>
+
+                <div class="arrow-down mb-4"></div>
+
+                <div>
+                    <h4 class="font-bold text-green-700 mb-2">3. Execute (التنفيذ)</h4>
+                    <p class="text-sm text-slate-600">تختلف حسب نوع التعليمة (مثال: ADD, LOAD, STORE).</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mt-16 mb-10">
+            <div class="bg-red-600 text-white py-3 px-6 rounded-t-xl font-bold text-xl flex items-center">
+                <svg class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                EXAM VAULT (خزنة الاختبار)
+            </div>
+            <div class="bg-white border-2 border-red-600 rounded-b-xl p-6 shadow-xl">
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-red-50 p-4 rounded-lg">
+                        <span class="bg-red-200 text-red-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">TRAP / فخ RTL</span>
+                        <p class="font-bold text-slate-800 mb-1">MAR vs MBR</p>
+                        <p class="text-sm text-slate-600">
+                            لا يمكنك نقل البيانات من الذاكرة مباشرة إلى AC.
+                            <br><span class="text-red-600 font-mono ltr">Wrong: AC ← M[MAR]</span>
+                            <br>يجب أن تمر عبر MBR أولاً:
+                            <br><span class="text-green-600 font-mono ltr">1. MBR ← M[MAR]</span>
+                            <br><span class="text-green-600 font-mono ltr">2. AC ← MBR</span>
+                        </p>
+                    </div>
+
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <span class="bg-blue-200 text-blue-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">CALCULATION / مسألة</span>
+                        <p class="font-bold text-slate-800 mb-1">Memory Interleaving</p>
+                        <p class="text-sm text-slate-600 mb-2">
+                            لديك ذاكرة 32 كلمة، مقسمة لـ 4 Modules. أين تقع الكلمة رقم 13 (Word 13)؟
+                        </p>
+                        <div class="text-xs font-mono bg-white p-2 rounded border border-blue-200 ltr">
+                            High-Order: 32/4 = 8 words/mod.<br>
+                            13 is in Module 1 (words 8-15).<br>
+                            ----------------<br>
+                            Low-Order: 13 mod 4 = 1.<br>
+                            It is in Module 1.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="flex justify-between mt-12 mb-8">
+            <a href="chapter4.html" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-lg font-bold shadow-sm transition transform hover:scale-105">→ السابق (Ch 4)</a>
+            <a href="chapter6.html" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-bold shadow-lg transition transform hover:scale-105">الفصل التالي (Ch 6) ←</a>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center border-t border-slate-800">
+        <p>© 2024 ArchMaster Study Guide. All chapters curated for excellence.</p>
+    </footer>
+
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. تحديد مفتاح التخزين بناءً على اسم المجلد
+            const path = window.location.pathname;
+            let courseKey = null;
+
+            // التحقق من اسم المجلد لتحديد المادة
+            if (path.includes('Computer-Architecture')) courseKey = 'arch_progress';
+            else if (path.includes('Theory-of-Computing')) courseKey = 'theory_progress';
+            else if (path.includes('Data-Structures')) courseKey = 'data_struct_progress';
+            else if (path.includes('Discrete-Mathematics')) courseKey = 'discrete_progress';
+
+            // 2. إذا تم التعرف على المادة، سجل الصفحة الحالية
+            if (courseKey) {
+                // استخراج اسم الملف فقط (مثلاً chapter5.html)
+                const pageName = path.split('/').pop();
+
+                // جلب البيانات القديمة
+                let visited = JSON.parse(localStorage.getItem(courseKey)) || [];
+
+                // إذا لم تكن الصفحة مسجلة مسبقاً، أضفها
+                if (!visited.includes(pageName)) {
+                    visited.push(pageName);
+                    localStorage.setItem(courseKey, JSON.stringify(visited));
+                    console.log(`✅ Progress Saved: ${pageName} in ${courseKey}`);
+                }
+            }
+        });
+    </script>
+	
+
+</body>
+</html>

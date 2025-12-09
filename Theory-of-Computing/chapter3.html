@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ch3: Regular Expressions & Output Automata</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(147, 51, 234, 0.15); border-color: #9333ea; }
+        .regex-box { font-family: 'Fira Code', monospace; background-color: #faf5ff; padding: 0.5rem; border-radius: 0.25rem; direction: ltr; display: inline-block; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <nav class="bg-white shadow-lg sticky top-0 z-50 border-b border-purple-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-black text-purple-700 ml-2">TheoryMaster</a>
+                    <span class="text-sm bg-purple-100 text-purple-800 py-1 px-2 rounded-full">Ch 3: RegEx & Outputs</span>
+                </div>
+                <div class="flex items-center space-x-2 space-x-reverse">
+                    <a href="chapter2.html" class="text-slate-600 hover:text-purple-600 px-3 py-2 rounded-md font-medium transition">→ السابق</a>
+                    <a href="index.html" class="text-slate-600 hover:text-purple-600 px-3 py-2 rounded-md font-medium transition">الرئيسية</a>
+                    <a href="chapter4.html" class="bg-purple-600 text-white px-3 py-2 rounded-md font-medium hover:bg-purple-700 transition shadow-md">التالي (ف4) ←</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-white py-12 border-b border-purple-100">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 text-slate-900">RegEx & Output Machines</h1>
+            <p class="text-xl text-slate-600 mb-6">الفصل الثالث: التعابير المنتظمة وآلات المخرجات</p>
+            <div class="inline-flex items-center bg-pink-50 text-pink-700 px-4 py-2 rounded-lg border border-pink-200 shadow-sm">
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                <span>الهدف: فهم لغة الآلة (RegEx) وكيفية تصميم آلات تنتج مخرجات (Mealy/Moore).</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-10 space-y-12">
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">1</div>
+                <h2 class="text-3xl font-bold text-slate-800">Finite Automata with Output</h2>
+            </div>
+            
+            <p class="text-slate-600 mb-6">سابقاً، كانت الآلات (DFA/NFA) تقبل أو ترفض فقط. الآن، نريد آلات تعطينا **مخرجات** (مثل طباعة '1' أو '0').</p>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-sm border-t-4 border-purple-600 card-hover">
+                    <h3 class="font-bold text-xl text-purple-800 mb-2">Moore Machine</h3>
+                    <p class="text-sm text-slate-600 mb-4">المخرجات تعتمد على <strong>الحالة (State) فقط</strong>.</p>
+                    <ul class="text-sm space-y-3 bg-purple-50 p-4 rounded border border-purple-100">
+                        <li><strong>المكان:</strong> المخرج يكتب داخل الدائرة (State).</li>
+                        <li><strong>التوقيت:</strong> يتم طباعة المخرج بمجرد دخول الحالة.</li>
+                        <li><strong>الطول:</strong> إذا كان طول المدخل $n$، فإن طول المخرج $n+1$. <span class="text-xs text-red-500 font-bold">(لأن حالة البداية تطبع فوراً!)</span></li>
+                        <li class="font-mono text-purple-700 ltr">Output = $\lambda(q)$</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border-t-4 border-pink-600 card-hover">
+                    <h3 class="font-bold text-xl text-pink-800 mb-2">Mealy Machine</h3>
+                    <p class="text-sm text-slate-600 mb-4">المخرجات تعتمد على <strong>الحالة (State) والمدخل (Input)</strong>.</p>
+                    <ul class="text-sm space-y-3 bg-pink-50 p-4 rounded border border-pink-100">
+                        <li><strong>المكان:</strong> المخرج يكتب على السهم (Transition) بصيغة `Input/Output`.</li>
+                        <li><strong>التوقيت:</strong> يتم طباعة المخرج أثناء الانتقال.</li>
+                        <li><strong>الطول:</strong> إذا كان طول المدخل $n$، فإن طول المخرج $n$.</li>
+                        <li class="font-mono text-pink-700 ltr">Output = $\lambda(q, a)$</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-4 text-center text-sm text-slate-500 bg-white p-2 rounded shadow-sm border border-slate-200">
+                <span class="font-bold text-indigo-600">Equivalence:</span> أي آلة Moore يمكن تحويلها لـ Mealy والعكس صحيح. لهما نفس القوة التعبيرية.
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">2</div>
+                <h2 class="text-3xl font-bold text-slate-800">Regular Expressions (التعابير المنتظمة)</h2>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-lg border-r-4 border-purple-500">
+                <p class="text-slate-600 mb-4">طريقة جبرية لوصف اللغات. تستخدم 3 عمليات أساسية:</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="border p-4 rounded bg-slate-50 text-center">
+                        <div class="text-2xl font-bold text-purple-700 mb-1">+</div>
+                        <div class="font-bold text-slate-700">Union (OR)</div>
+                        <div class="text-xs text-slate-500 mt-2">`0+1` تعني {0, 1}</div>
+                    </div>
+                    <div class="border p-4 rounded bg-slate-50 text-center">
+                        <div class="text-2xl font-bold text-purple-700 mb-1">•</div>
+                        <div class="font-bold text-slate-700">Concatenation</div>
+                        <div class="text-xs text-slate-500 mt-2">`01` تعني {01}</div>
+                    </div>
+                    <div class="border p-4 rounded bg-slate-50 text-center">
+                        <div class="text-2xl font-bold text-pink-600 mb-1">*</div>
+                        <div class="font-bold text-slate-700">Kleene Star</div>
+                        <div class="text-xs text-slate-500 mt-2">`0*` تعني {$\epsilon$, 0, 00, ...}</div>
+                    </div>
+                </div>
+
+                <div class="bg-yellow-50 border border-yellow-200 p-3 rounded text-sm mb-2">
+                    <strong class="text-yellow-800">Order of Precedence (ترتيب العمليات):</strong>
+                    <ol class="list-decimal list-inside inline-block mr-2 text-slate-700">
+                        <li><strong>Star (*)</strong>: الأقوى.</li>
+                        <li><strong>Concatenation (•)</strong>: يليه.</li>
+                        <li><strong>Union (+)</strong>: الأضعف.</li>
+                    </ol>
+                    <div class="mt-1 text-xs text-slate-500">مثال: <span class="regex-box">0+10*</span> تُقرأ كـ <span class="regex-box">0 + (1(0*))</span></div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl ml-3 shadow-lg">3</div>
+                <h2 class="text-3xl font-bold text-slate-800">Algebraic Laws for RegEx</h2>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left bg-white rounded-lg shadow-sm border border-slate-200" dir="ltr">
+                    <thead class="bg-slate-800 text-white text-center">
+                        <tr>
+                            <th class="p-3">Law Name</th>
+                            <th class="p-3">Identity</th>
+                            <th class="p-3">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 font-mono text-slate-700">
+                        <tr>
+                            <td class="p-3 font-bold text-purple-700">Identity (+)</td>
+                            <td class="p-3">$R + \emptyset = R$</td>
+                            <td class="p-3 text-xs">$\emptyset$ is identity for union.</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold text-purple-700">Identity (•)</td>
+                            <td class="p-3">$R \epsilon = \epsilon R = R$</td>
+                            <td class="p-3 text-xs">$\epsilon$ is identity for concat.</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold text-pink-700">Annihilator</td>
+                            <td class="p-3">$R \emptyset = \emptyset R = \emptyset$</td>
+                            <td class="p-3 text-xs">$\emptyset$ destroys concatenation.</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold">Idempotent</td>
+                            <td class="p-3">$R + R = R$</td>
+                            <td class="p-3 text-xs">Repeating OR does nothing.</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold text-indigo-700">Kleene Laws</td>
+                            <td class="p-3">$(R^*)^* = R^*$<br>$\emptyset^* = \epsilon$<br>$\epsilon^* = \epsilon$</td>
+                            <td class="p-3 text-xs">Star properties.</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold text-green-700">Closure</td>
+                            <td class="p-3">$R^* = \epsilon + R R^*$</td>
+                            <td class="p-3 text-xs">Recursive definition.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="mt-16 mb-10">
+            <div class="bg-purple-700 text-white py-3 px-6 rounded-t-xl font-bold text-xl flex items-center shadow-lg">
+                <span class="mr-2">🛡️</span> EXAM VAULT (خزنة الاختبار)
+            </div>
+            <div class="bg-white border-2 border-purple-700 rounded-b-xl p-6 shadow-xl">
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                        <span class="bg-red-200 text-red-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">TRAP / فخ شائع</span>
+                        <p class="font-bold text-slate-800 mb-1">Moore Machine Output Length</p>
+                        <p class="text-sm text-slate-600">
+                            إذا كان المدخل "101" (طوله 3)، فما طول مخرج آلة Moore؟
+                            <br>الجواب: <strong>4</strong>.
+                            <br>السبب: Moore تطبع مخرج حالة البداية (Start State) <strong>قبل</strong> قراءة أي حرف.
+                            <br>Mealy: الطول 3 (نفس المدخل).
+                        </p>
+                    </div>
+
+                    <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-100">
+                        <span class="bg-indigo-200 text-indigo-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">DISTINCTION / فرق دقيق</span>
+                        <p class="font-bold text-slate-800 mb-1">Difference between $\emptyset$ and $\epsilon$</p>
+                        <p class="text-sm text-slate-600 font-mono ltr text-left">
+                            R + $\emptyset$ = R  (Identity)<br>
+                            R + $\epsilon$ $\neq$ R  (Adds empty string)<br>
+                            R$\emptyset$ = $\emptyset$ (Annihilator)<br>
+                            R$\epsilon$ = R (Identity)
+                        </p>
+                        <p class="text-xs text-indigo-600 mt-1 font-bold text-right">انتبه لتأثيرهما المختلف في الجمع والضرب!</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="flex justify-between mt-12 mb-8">
+            <a href="chapter2.html" class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3 rounded-lg font-bold shadow-sm transition transform hover:scale-105">→ السابق (Ch 2)</a>
+            <a href="chapter4.html" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-bold shadow-lg transition transform hover:scale-105">الفصل التالي (Ch 4) ←</a>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center border-t border-slate-800">
+        <p>© 2024 TheoryMaster Study Guide. Crafted for Excellence.</p>
+    </footer>
+
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. تحديد مفتاح التخزين بناءً على اسم المجلد
+            const path = window.location.pathname;
+            let courseKey = null;
+
+            // التحقق من اسم المجلد لتحديد المادة
+            if (path.includes('Computer-Architecture')) courseKey = 'arch_progress';
+            else if (path.includes('Theory-of-Computing')) courseKey = 'theory_progress';
+            else if (path.includes('Data-Structures')) courseKey = 'data_struct_progress';
+            else if (path.includes('Discrete-Mathematics')) courseKey = 'discrete_progress';
+
+            // 2. إذا تم التعرف على المادة، سجل الصفحة الحالية
+            if (courseKey) {
+                // استخراج اسم الملف فقط (مثلاً chapter5.html)
+                const pageName = path.split('/').pop();
+
+                // جلب البيانات القديمة
+                let visited = JSON.parse(localStorage.getItem(courseKey)) || [];
+
+                // إذا لم تكن الصفحة مسجلة مسبقاً، أضفها
+                if (!visited.includes(pageName)) {
+                    visited.push(pageName);
+                    localStorage.setItem(courseKey, JSON.stringify(visited));
+                    console.log(`✅ Progress Saved: ${pageName} in ${courseKey}`);
+                }
+            }
+        });
+    </script>
+	
+
+</body>
+</html>
