@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practice Exam - Theory of Computing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+        svg: { fontCache: 'global' }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; background-color: #faf5ff; } /* بنفسجي فاتح جداً */
+        .purple-gradient { background: linear-gradient(135deg, #581c87 0%, #9333ea 100%); }
+        
+        .question-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e9d5ff;
+            transition: all 0.3s;
+        }
+        
+        .question-card.correct-card { border-right: 5px solid #22c55e; background-color: #f0fdf4; }
+        .question-card.wrong-card { border-right: 5px solid #ef4444; background-color: #fef2f2; }
+
+        .option-btn {
+            display: block;
+            width: 100%;
+            text-align: right;
+            padding: 12px 15px;
+            margin: 8px 0;
+            background-color: #faf5ff;
+            border: 2px solid #f3e8ff;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+        }
+        .option-btn:hover:not(.disabled) { background-color: #e9d5ff; border-color: #9333ea; }
+        
+        .option-btn.correct { background-color: #dcfce7 !important; border-color: #22c55e !important; color: #166534; font-weight: bold; }
+        .option-btn.wrong { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b; }
+        .option-btn.disabled { pointer-events: none; opacity: 0.8; }
+
+        .cheat-box {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #fffbeb;
+            border: 1px solid #fcd34d;
+            border-radius: 8px;
+            color: #92400e;
+            font-size: 0.9rem;
+            animation: fadeIn 0.5s;
+        }
+
+        .essay-answer {
+            display: none;
+            margin-top: 15px;
+            padding: 20px;
+            background-color: #f3e8ff;
+            border-right: 4px solid #9333ea;
+            border-radius: 8px;
+            color: #4c1d95;
+            line-height: 1.8;
+        }
+
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white; }
+            .question-card { break-inside: avoid; border: 1px solid #ccc; box-shadow: none; }
+            .cheat-box, .essay-answer { display: block !important; border: 1px dashed #999; }
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 pb-20">
+
+    <nav class="bg-white shadow-md sticky top-0 z-50 border-b border-purple-100 no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-black text-purple-700 ml-2">TheoryMaster</a>
+                    <span class="text-xs bg-purple-100 text-purple-800 py-1 px-2 rounded-full font-bold border border-purple-200">Exam Mode</span>
+                </div>
+                
+                <div class="flex items-center gap-2 md:gap-3">
+                    <a href="index.html" class="flex items-center gap-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-lg text-sm font-bold transition">
+                        <span>🏠</span> <span class="hidden md:inline">الرئيسية</span>
+                    </a>
+                    <div id="timer" class="bg-slate-800 text-white px-3 py-1.5 rounded-lg font-mono font-bold text-sm md:text-base">90:00</div>
+                    <button onclick="window.print()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-lg text-sm font-bold" title="طباعة">🖨️</button>
+                    <button onclick="resetExam()" class="bg-red-100 hover:bg-red-200 text-red-700 px-3 py-1.5 rounded-lg text-sm font-bold" title="إعادة">🔄</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="purple-gradient text-white py-12 text-center shadow-lg mb-8 no-print">
+        <h1 class="text-3xl md:text-4xl font-black mb-2">CS-242 Final Practice Exam</h1>
+        <p class="text-purple-100 text-lg">40 سؤال شامل + 5 أسئلة مقالية (تغطية كاملة للمنهج)</p>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4">
+        
+        <div class="flex justify-end mb-6 no-print">
+            <button onclick="revealAll()" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-full font-bold shadow-lg transition transform hover:scale-105 flex items-center gap-2">
+                <span>👁️</span> كشف جميع الإجابات
+            </button>
+        </div>
+
+        <div id="quiz-container" class="space-y-6"></div>
+
+    </main>
+
+    <script>
+        // ==========================================
+        // 1. BANK DATA (Theory)
+        // ==========================================
+        const mcqData = [
+            // Part 1: Modules 1-5
+            { section: "الجزء الأول: مراجعة ما قبل الميد (Modules 1-5)", q: "إذا كانت المجموعة $A = \\{1, 2\\}$، فما هو عدد عناصر مجموعة القوة $P(A)$؟", options: ["2", "3", "4", "8"], a: 2, cheat: "القانون هو $2^n$. عدد العناصر 2، إذن $2^2 = 4$." },
+            { q: "أي قانون يمثله التعبير $A \\cup \\emptyset = A$؟", options: ["Commutative", "Identity", "Domination", "Idempotent"], a: 1, cheat: "دمجت 'شيء' مع 'ولا شيء' وبقي 'الشيء' نفسه = هوية (Identity)." },
+            { q: "في المنطق، العبارة الشرطية $P \\to Q$ تكون خاطئة (False) في حالة واحدة فقط وهي:", options: ["$P$ صحيحة و $Q$ صحيحة", "$P$ خاطئة و $Q$ صحيحة", "$P$ صحيحة و $Q$ خاطئة", "كلاهما خاطئ"], a: 2, cheat: "تذكر 'الوعد الكاذب': وعدتك تنجح ($T$) ورسبت ($F$) -> أنا كذبت." },
+            { q: "عدد الحواف (Edges) في شجرة تحتوي على $n$ من العقد يساوي:", options: ["$n$", "$n - 1$", "$2n$", "$n + 1$"], a: 1, cheat: "دائماً الحواف أقل من الرؤوس بواحد في الشجرة." },
+            { q: "اللغة $\\{a^n b^n \\mid n \\ge 1\\}$ هي لغة:", options: ["Regular", "Context-Free", "Finite", "لا شيء مما سبق"], a: 1, cheat: "أي لغة فيها 'عد' ومقارنة ($n=n$) تحتاج ذاكرة (Stack)، لذا ليست Regular." },
+            { q: "التعبير النمطي للغة التي تحتوي على النص الفرعي '01' هو:", options: ["$(0+1)^* 01$", "$01 (0+1)^*$", "$(0+1)^* 01 (0+1)^*$", "$(01)^*$"], a: 2, cheat: "'تحتوي' تعني قد يأتي قبلها أي شيء $(0+1)^*$ وبعدها أي شيء." },
+            { q: "العلاقة بين NFA و DFA من حيث القوة (Power):", options: ["NFA أقوى", "DFA أقوى", "متساويان", "لا يمكن المقارنة"], a: 2, cheat: "في العالم المحدود (Finite)، التخمين لا يعطي قوة إضافية، فقط يسهل الرسم." },
+            { q: "لإثبات أن لغة معينة 'ليست Regular'، نستخدم:", options: ["Pumping Lemma", "Chomsky Normal Form", "CYK Algorithm", "Turing Machine"], a: 0, cheat: "كلمة 'ليست' (Not Regular) مرتبطة دائماً بـ Pumping Lemma." },
+            { q: "في الرسم البياني، المسار الذي يبدأ وينتهي بنفس العقدة يسمى:", options: ["Path", "Cycle", "Tree", "Edge"], a: 1, cheat: "مثل الدائرة، تلف وترجع لنفس المكان." },
+            { q: "أي من العمليات التالية 'ليست' مغلقة (Not Closed) للغات الـ Regular؟", options: ["Union", "Intersection", "Subset", "Star"], a: 2, cheat: "الـ Regular قوية مع كل العمليات الرياضية ما عدا أخذ 'جزء عشوائي' (Subset)." },
+
+            // Part 2: Final Material
+            { section: "الجزء الثاني: مادة الفاينل (Modules 6-12)", q: "المكون الإضافي الذي يميز PDA عن Finite Automata هو:", options: ["Tape", "Stack", "Two heads", "RAM"], a: 1, cheat: "الـ PDA تحتاج ذاكرة لترتيب الأقواس، وهي المكدس (Stack)." },
+            { q: "لغة الباليندروم $\\{ww^R\\}$ تعتبر:", options: ["Deterministic CFL", "Non-deterministic CFL", "Regular", "Undecidable"], a: 1, cheat: "لأن الآلة يجب أن تخمن منتصف الكلمة. التخمين = Non-deterministic." },
+            { q: "أي القواعد التالية مكتوبة بصيغة Chomsky Normal Form (CNF)؟", options: ["$A \\to BC$", "$A \\to B$", "$A \\to aB$", "$A \\to \\epsilon$"], a: 0, cheat: "قانون CNF: يا 'كبيرين' ($BC$) يا 'صغير لوحده' ($a$)." },
+            { q: "خوارزمية CYK تستخدم للتحقق من:", options: ["هل اللغة Regular؟", "Membership (الانتماء)", "هل اللغة فارغة؟", "التوقف"], a: 1, cheat: "CYK وظيفته يقول لك: 'نعم الكلمة مقبولة في اللغة' أو 'لا'." },
+            { q: "اللغات حرة السياق (CFL) 'غير مغلقة' تحت عملية:", options: ["Union", "Intersection", "Concatenation", "Star"], a: 1, cheat: "الـ CFL تكره التقاطع والمتممة." },
+            { q: "الهدف الأساسي من Pumping Lemma للـ CFL هو:", options: ["إثبات أنها CFL", "إثبات أنها ليست CFL", "تحويل PDA", "تبسيط القواعد"], a: 1, cheat: "هي أداة النفي دائماً." },
+            { q: "في تحويل القواعد (Simplification)، ما هو الترتيب الصحيح للحذف؟", options: ["Unit $\\to$ Null $\\to$ Useless", "Useless $\\to$ Unit", "$\\epsilon \\to$ Unit $\\to$ Useless", "الترتيب لا يهم"], a: 2, cheat: "تذكر EUU: إبسيلون، ثم Unit، ثم Useless." },
+            { q: "الفرق الرئيسي بين TM و PDA هو:", options: ["TM لديها مكدس", "TM تتحرك يميناً ويساراً وتكتب", "TM أضعف", "TM لا تتوقف"], a: 1, cheat: "الـ TM لديها حرية مطلقة في الحركة والكتابة." },
+            { q: "المشكلة التي 'لا توجد خوارزمية لحلها' تسمى:", options: ["Intractable", "Undecidable", "NP-Complete", "Decidable"], a: 1, cheat: "لا خوارزمية = لا قرار (Undecidable)." },
+            { q: "مشكلة التوقف (Halting Problem) هي مثال على:", options: ["Decidable", "RE but not Recursive", "Regular", "CFL"], a: 1, cheat: "يمكننا معرفة التوقف، لكن لا يمكننا معرفة التعليق (Loop)." },
+            { q: "اللغة القطرية ($L_d$) تعتبر:", options: ["Recursive", "RE", "Not RE", "Finite"], a: 2, cheat: "هي اللغة الوحيدة 'خارج الصندوق'. لا يوجد آلة تقبلها." },
+            { q: "كل لغة Recursive هي بالضرورة Recursively Enumerable. هذه العبارة:", options: ["صحيحة دائماً", "خاطئة دائماً", "تعتمد على اللغة", "للغات المنتهية فقط"], a: 0, cheat: "الـ Recursive (الابن البار) جزء من عائلة RE الكبيرة." },
+            { q: "آلة تورنغ متعددة الأشرطة مقارنة بآلة الشريط الواحد:", options: ["أقوى", "Equivalent Power (متكافئة)", "أضعف", "لا علاقة"], a: 1, cheat: "في عالم الحلول (Decidability)، كل أنواع التورنغ متساوية." },
+            { q: "الفئة P تحتوي على المشاكل التي:", options: ["لا تحل", "تحل في وقت Polynomial بآلة Deterministic", "تحل بآلة Non-deterministic", "وقت Exponential"], a: 1, cheat: "$P$ = Polynomial (سهلة الحل)." },
+            { q: "الفئة NP تعني:", options: ["Not Polynomial", "Non-deterministic Polynomial", "New Problem", "No Problem"], a: 1, cheat: "الـ N تعني Non-deterministic (سهلة التحقق)." },
+            { q: "إذا كانت المشكلة $X$ هي NP-Complete، وتم حلها بـ Polynomial time، فهذا يعني:", options: ["$P = NP$", "$P \\neq NP$", "$NP = PSPACE$", "لا شيء"], a: 0, cheat: "إذا سقط الزعيم (NPC)، تسقط كل المشاكل وتصبح سهلة." },
+            { q: "مشكلة SAT هي أول مشكلة أثبت أنها:", options: ["Undecidable", "NP-Complete", "P", "CFL"], a: 1, cheat: "نظرية كوك (Cook's Theorem) = SAT is NPC." },
+            { q: "مشكلة 2-SAT تنتمي لفئة:", options: ["P", "NP-Complete", "Undecidable", "NP-Hard"], a: 0, cheat: "رقم 2 سهل (P)، رقم 3 صعب (NPC)." },
+            { q: "مشكلة البائع المتجول (TSP) تنتمي لفئة:", options: ["P", "NP-Complete", "Regular", "Linear"], a: 1, cheat: "أي مشكلة 'أفضل طريق يمر بالكل' هي معقدة (NPC)." },
+            { q: "العلاقة الصحيحة بين فئات التعقيد هي:", options: ["$P \\subseteq NP \\subseteq PSPACE$", "$NP \\subseteq P$", "$PSPACE \\subseteq P$", "$P=NP=PSPACE$"], a: 0, cheat: "دائرة $P$ صغيرة، داخل $NP$، داخل الوحش $PSPACE$." },
+            { q: "نظرية سافيتش (Savitch) تنص على أن:", options: ["$P=NP$", "$PS = NPS$", "$P=PSPACE$", "$NP=NPS$"], a: 1, cheat: "في عالم المساحة (Space)، المحدد وغير المحدد متساويان." },
+            { q: "مشكلة QBF (Quantified Boolean Formula) هي:", options: ["NP-Complete", "PSPACE-Complete", "P", "Undecidable"], a: 1, cheat: "الـ SAT ملكة NP، والـ QBF ملكة PSPACE." },
+            { q: "المشكلة المستخدمة لإثبات Undecidability لمشاكل أخرى عبر التحويل هي:", options: ["3-SAT", "PCP", "TSP", "Sorting"], a: 1, cheat: "PCP هي الجوكر، تربط التورنغ بالقواعد." },
+            { q: "الترتيب الصحيح لإثبات أن 3-SAT هي NP-Complete:", options: ["$3-SAT \\to SAT$", "$SAT \\to 3-SAT$", "$3-SAT \\to P$", "$TSP \\to 3-SAT$"], a: 1, cheat: "ننقل العدوى من القديم (الأصل SAT) إلى الجديد (3-SAT)." },
+            { q: "أي من التالي يعتبر آلة 'غير عملية' (Intractable)؟", options: ["$O(n^2)$", "$O(n \\log n)$", "$O(2^n)$", "$O(n^{100})$"], a: 2, cheat: "أي شيء فيه أُس (Exponential) يعتبر كارثة." },
+            { q: "الـ Universal Turing Machine تستطيع:", options: ["حل التوقف", "محاكاة أي آلة أخرى", "العمل بسرعة الضوء", "حل Undecidable"], a: 1, cheat: "هي المحاكي (Simulator)." },
+            { q: "الشرط لكي تكون المشكلة NP-Complete:", options: ["في NP فقط", "في P", "في NP وتتحول إليها كل مشاكل NP", "Undecidable"], a: 2, cheat: "لازم تكون 'من الشلة' و 'زعيمة'." },
+            { q: "العلاقة بين $L$ ومتممتها في فئة Recursive:", options: ["المتممة أيضاً Recursive", "المتممة RE", "لا علاقة", "Undecidable"], a: 0, cheat: "الـ Recursive نظيفة؛ تقلب الجواب وتظل نظيفة." },
+            { q: "في إثبات Diagonalization، نستنتج أن:", options: ["اللغات = الآلات", "اللغات > الآلات بكثير", "كل لغة لها آلة", "الآلات لا نهائية"], a: 1, cheat: "المشاكل (اللغات) أكثر من الحلول (البرامج)." },
+            { q: "الرمز $\\vdash$ في سياق آلة تورنغ يعني:", options: ["النهاية", "خطوة انتقال (Move)", "القبول", "المؤشر"], a: 1, cheat: "يشبه الزناد، يعني حركة واحدة." }
+        ];
+
+        const essayData = [
+            { q: "س1: اشرح الفرق بين Decidable و Undecidable problems؟", a: "<strong>Decidable (Recursive):</strong> توجد خوارزمية تضمن التوقف وتعطي إجابة (نعم/لا) لكل المدخلات.<br><strong>Undecidable:</strong> لا توجد خوارزمية تضمن الحل لكل المدخلات (قد تدخل في Loop لا نهائية)." },
+            { q: "س2: عرف P و NP و NP-Complete واذكر العلاقة بينهم؟", a: "<strong>P:</strong> تحل في وقت حدودي بآلة Deterministic.<br><strong>NP:</strong> تحل في وقت حدودي بآلة Non-deterministic (سهلة التحقق).<br><strong>NP-Complete:</strong> أصعب مشاكل NP، إذا حُلت واحدة منها بـ P، حُلت كلها.<br>العلاقة: $P \\subseteq NP$." },
+            { q: "س3: حول القواعد $S \\to aSb \\mid ab$ إلى CNF؟", a: "1. متغيرات للرموز: $X_a \\to a, X_b \\to b$.<br>2. القاعدة: $S \\to X_a S X_b \\mid X_a X_b$.<br>3. كسر الثلاثي: $S \\to X_a Y, Y \\to S X_b$.<br><strong>الناتج:</strong> $S \\to X_a Y \\mid X_a X_b$, $Y \\to S X_b$, $X_a \\to a, X_b \\to b$." },
+            { q: "س4: ما هي فكرة Pumping Lemma for CFL؟", a: "تنص على أنه لأي كلمة طويلة $z$ في اللغة، يمكن تقسيمها لـ 5 أجزاء $z=uvwxy$، بحيث يمكن تكرار $v$ و $x$ معاً ($uv^iwx^iy$) وتبقى الكلمة في اللغة. تستخدم لإثبات أن لغة ما ليست CFL." },
+            { q: "س5: لماذا نعتبر مشكلة SAT مهمة جداً؟", a: "لأنها أول مشكلة أثبتت أنها <strong>NP-Complete</strong> (Cook's Theorem). وهي الأساس الذي تستخدمه جميع المشاكل الأخرى لإثبات صعوبتها عن طريق التحويل (Reduction) منها." }
+        ];
+
+        // ==========================================
+        // 2. ENGINE (No Changes Needed)
+        // ==========================================
+        let timeLeft = localStorage.getItem('theory_exam_time') ? parseInt(localStorage.getItem('theory_exam_time')) : 90 * 60;
+        let timerInterval;
+
+        function initExam() {
+            const container = document.getElementById('quiz-container');
+            
+            // Add Section Headers & Questions
+            mcqData.forEach((item, index) => {
+                if(item.section) {
+                    const secHeader = document.createElement('h2');
+                    secHeader.className = "text-xl font-bold text-purple-800 mt-8 mb-4 border-b-2 border-purple-200 pb-2";
+                    secHeader.innerText = item.section;
+                    container.appendChild(secHeader);
+                }
+
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = `q-${index}`;
+                
+                let opts = '';
+                item.options.forEach((opt, i) => {
+                    opts += `<button class="option-btn" onclick="check(${index}, ${i})">${opt}</button>`;
+                });
+
+                card.innerHTML = `
+                    <h3 class="font-bold text-lg mb-4 text-purple-900">س${index+1}: ${item.q}</h3>
+                    <div class="space-y-2">${opts}</div>
+                    <div class="cheat-box" id="cheat-${index}">
+                        <strong>💡 تلميح:</strong> ${item.cheat}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            // Essay Section
+            const essayHeader = document.createElement('h2');
+            essayHeader.className = "text-2xl font-black text-purple-800 mt-12 mb-6 border-b-4 border-purple-200 pb-2";
+            essayHeader.innerText = "الأسئلة المقالية (Essay Questions)";
+            container.appendChild(essayHeader);
+
+            essayData.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card border-l-4 border-l-purple-500';
+                card.innerHTML = `
+                    <h3 class="font-bold text-lg mb-4 text-purple-900">${item.q}</h3>
+                    <textarea class="w-full p-3 border rounded-lg mb-4 font-sans" rows="3" placeholder="اكتب إجابتك هنا للتدريب..."></textarea>
+                    <button onclick="toggleEssay(${index})" class="text-sm bg-purple-100 text-purple-700 px-3 py-1 rounded hover:bg-purple-200 font-bold transition">عرض الإجابة النموذجية</button>
+                    <div class="essay-answer" id="essay-${index}">${item.a}</div>
+                `;
+                container.appendChild(card);
+            });
+
+            startTimer();
+            restoreProgress();
+            if(window.MathJax) window.MathJax.typesetPromise();
+        }
+
+        function check(qIdx, optIdx) {
+            const card = document.getElementById(`q-${qIdx}`);
+            const btns = card.querySelectorAll('.option-btn');
+            const correctIdx = mcqData[qIdx].a;
+
+            btns.forEach(b => b.classList.add('disabled'));
+
+            if (optIdx === correctIdx) {
+                btns[optIdx].classList.add('correct');
+                card.classList.add('correct-card');
+            } else {
+                btns[optIdx].classList.add('wrong');
+                btns[correctIdx].classList.add('correct');
+                card.classList.add('wrong-card');
+            }
+
+            document.getElementById(`cheat-${qIdx}`).style.display = 'block';
+            saveProgress(qIdx, optIdx);
+        }
+
+        function toggleEssay(idx) {
+            const el = document.getElementById(`essay-${idx}`);
+            el.style.display = el.style.display === 'block' ? 'none' : 'block';
+            if(window.MathJax) window.MathJax.typesetPromise();
+        }
+
+        function revealAll() {
+            if(!confirm("هل أنت متأكد؟ سيتم حل جميع الأسئلة.")) return;
+            mcqData.forEach((item, i) => {
+                check(i, item.a);
+            });
+            essayData.forEach((item, i) => {
+                document.getElementById(`essay-${i}`).style.display = 'block';
+            });
+        }
+
+        function startTimer() {
+            const el = document.getElementById('timer');
+            timerInterval = setInterval(() => {
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    el.innerText = "انتهى الوقت!";
+                    return;
+                }
+                timeLeft--;
+                localStorage.setItem('theory_exam_time', timeLeft);
+                const m = Math.floor(timeLeft / 60);
+                const s = timeLeft % 60;
+                el.innerText = `${m}:${s < 10 ? '0'+s : s}`;
+            }, 1000);
+        }
+
+        function resetExam() {
+            if(confirm("إعادة الاختبار ستحذف كل إجاباتك. موافق؟")) {
+                localStorage.removeItem('theory_exam_progress');
+                localStorage.removeItem('theory_exam_time');
+                location.reload();
+            }
+        }
+
+        function saveProgress(q, a) {
+            let p = JSON.parse(localStorage.getItem('theory_exam_progress') || '{}');
+            p[q] = a;
+            localStorage.setItem('theory_exam_progress', JSON.stringify(p));
+        }
+
+        function restoreProgress() {
+            let p = JSON.parse(localStorage.getItem('theory_exam_progress') || '{}');
+            for (let q in p) {
+                check(parseInt(q), p[q]);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initExam);
+    </script>
+</body>
+</html>
