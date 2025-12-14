@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survival Map - Theory of Computing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body { font-family: 'Cairo', sans-serif; background-color: #faf5ff; color: #1e293b; }
+        .en { font-family: 'Inter', sans-serif; direction: ltr; display: inline-block; }
+        .purple-gradient { background: linear-gradient(135deg, #6b21a8 0%, #a855f7 100%); }
+        
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e9d5ff;
+            margin-bottom: 2rem;
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+        .card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+
+        .card-header {
+            background-color: #f3e8ff;
+            padding: 1.5rem;
+            border-bottom: 1px solid #d8b4fe;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .number-badge {
+            background: #9333ea;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .box-feature { background: #eff6ff; border-right: 4px solid #3b82f6; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; }
+        .box-trap { background: #fef2f2; border-right: 4px solid #ef4444; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; }
+        .box-hack { background: #ecfdf5; border-right: 4px solid #10b981; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; }
+
+        .table-wrapper { overflow-x: auto; border-radius: 8px; border: 1px solid #e2e8f0; margin: 1rem 0; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+        th { background: #f8fafc; padding: 12px; text-align: right; border-bottom: 2px solid #e2e8f0; font-weight: 700; color: #475569; }
+        td { padding: 12px; border-bottom: 1px solid #e2e8f0; color: #334155; }
+        tr:last-child td { border-bottom: none; }
+
+        li { margin-bottom: 0.5rem; position: relative; padding-right: 1.5rem; }
+        li::before { content: "•"; color: #9333ea; font-weight: bold; position: absolute; right: 0; }
+    </style>
+</head>
+<body class="pb-20">
+
+    <nav class="bg-white shadow-md sticky top-0 z-50 border-b border-purple-100 mb-8">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-black text-purple-700 ml-2">TheoryMaster</a>
+                    <span class="text-xs bg-purple-100 text-purple-800 py-1 px-2 rounded-full font-bold border border-purple-200">Final Review</span>
+                </div>
+                <a href="index.html" class="text-slate-500 hover:text-purple-600 font-medium transition flex items-center gap-1">
+                    <span>🏠</span> <span class="hidden md:inline">الرئيسية</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-4xl mx-auto px-4">
+        
+        <header class="purple-gradient text-white p-10 rounded-2xl shadow-xl text-center mb-10">
+            <h1 class="text-3xl md:text-4xl font-black mb-3">خريطة النجاة والتميز 🗺️</h1>
+            <p class="text-purple-100 text-lg font-medium opacity-90">دليلك الشامل لفك شفرات مادة Theory of Computation</p>
+        </header>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="number-badge">1</div>
+                <h2 class="text-xl font-bold text-purple-900">كل شيء يجب أن تفهمه (المفاهيم العميقة)</h2>
+            </div>
+            <div class="p-6">
+                <p class="text-slate-500 text-sm mb-4">هذه الأشياء لا تحفظها، بل افهم "كيف تعمل" لأن السؤال سيأتي كتطبيق.</p>
+                <ul class="text-slate-700">
+                    <li><strong>Pumping Lemma (لنوعين):</strong> افهم أنها أداة "للإثبات بالنفي". إذا قدرت تكرر جزء من الكلمة وخرجت عن نمط اللغة، فاللغة ليست <span class="en">Regular</span> (أو ليست <span class="en">CFL</span>).</li>
+                    <li><strong>الفرق بين DFA و NFA:</strong> افهم أن <span class="en">NFA</span> لديه "قدرة تخمين" (مسارات متعددة لنفس المدخل أو $\epsilon$-moves)، لكنهما متساويان في القوة (<span class="en">Power</span>).</li>
+                    <li><strong>عمل المكدس (Stack) في PDA:</strong> افهم أن الـ <span class="en">PDA</span> هي <span class="en">DFA</span> + ذاكرة <span class="en">LIFO</span>. هي الوحيدة القادرة على عد ومقارنة شيئين (مثل $a^n b^n$).</li>
+                    <li><strong>آلية عمل آلة تورنغ (TM):</strong> افهم حركة الرأس (<span class="en">Head</span>) يمين ويسار، والكتابة على الشريط. هي النموذج الأقوى لأنها تملك ذاكرة عشوائية (<span class="en">Tape</span>).</li>
+                    <li><strong>مفهوم Undecidability:</strong> افهم أن هناك مشاكل (مثل <span class="en">Halting Problem</span>) لا يملك الكمبيوتر حلاً لها مهما كان قوياً.</li>
+                    <li><strong>الفئات P vs NP:</strong>
+                        <br>• <span class="en">P</span>: مشاكل نحلها بسرعة.
+                        <br>• <span class="en">NP</span>: مشاكل نتأكد من حلها بسرعة (لكن الحل قد يكون صعباً).
+                        <br>• <span class="en">NP-Complete</span>: أصعب مشاكل في <span class="en">NP</span> (مثل <span class="en">SAT</span>).
+                    </li>
+                    <li><strong>التحويل (Reduction):</strong> افهم أن تحويل المشكلة <span class="en">A</span> إلى <span class="en">B</span> يعني أن <span class="en">B</span> أصعب أو تساوي صعوبة <span class="en">A</span>. (ننقل العدوى من المعروف للجديد).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="number-badge">2</div>
+                <h2 class="text-xl font-bold text-purple-900">كل شيء يجب حفظه (صمّ)</h2>
+            </div>
+            <div class="p-6">
+                <p class="text-slate-500 text-sm mb-4">هذه تعاريف وقواعد ثابتة تأتي نصاً.</p>
+                
+                <div class="box-feature">
+                    <strong class="block text-blue-800 mb-2">التعاريف الرسمية (Tuples)</strong>
+                    <ul class="text-sm text-slate-700 m-0">
+                        <li><span class="en">DFA</span>: ٥ عناصر ($Q, \Sigma, \delta, q_0, F$).</li>
+                        <li><span class="en">PDA</span>: ٧ عناصر (نفس الـ ٥ + $\Gamma$ للمكدس + $Z_0$ قاع المكدس).</li>
+                        <li><span class="en">TM</span>: ٧ عناصر (نفس الـ ٥ + $\Gamma$ شريط + $B$ الفراغ).</li>
+                    </ul>
+                </div>
+
+                <div class="box-trap bg-orange-50 border-orange-400">
+                    <strong class="block text-orange-800 mb-2">خصائص الانغلاق (Closure Properties)</strong>
+                    <ul class="text-sm text-slate-700 m-0">
+                        <li><span class="en">Regular</span>: مغلقة مع الكل (<span class="en">Union, Intersection, Complement, Star</span>).</li>
+                        <li><span class="en">CFL</span>: غير مغلقة مع (<span class="en">Intersection, Complement</span>). <span class="text-red-600 font-bold">(مهم جداً)</span>.</li>
+                        <li><span class="en">Recursive</span>: مغلقة مع متممتها (<span class="en">Complement</span>).</li>
+                        <li><span class="en">RE</span>: غير مغلقة مع متممتها.</li>
+                    </ul>
+                </div>
+
+                <div class="mt-4 text-slate-700">
+                    <p class="mb-2"><strong>هرم تشومسكي (Chomsky Hierarchy):</strong><br>
+                    <span class="en bg-slate-100 px-2 py-1 rounded">Regular $\subset$ CFL $\subset$ Recursive $\subset$ RE</span>.</p>
+                    
+                    <p><strong>أسماء المشاكل وفئاتها:</strong></p>
+                    <ul class="text-sm">
+                        <li><span class="en font-bold text-green-600">P:</span> 2-SAT, Eulerian Circuit.</li>
+                        <li><span class="en font-bold text-orange-600">NP-Complete:</span> 3-SAT, Hamiltonian Circuit, TSP, Vertex Cover, Clique.</li>
+                        <li><span class="en font-bold text-purple-600">PSPACE:</span> QBF.</li>
+                        <li><span class="en font-bold text-red-600">Undecidable:</span> Halting Problem, PCP, Ambiguity of CFG.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="number-badge">3</div>
+                <h2 class="text-xl font-bold text-purple-900">دليل الرموز والاختصارات (فك الشفرات)</h2>
+            </div>
+            <div class="p-6">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>الرمز</th>
+                                <th>المعنى</th>
+                                <th>السياق / ملاحظة للربط</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="en font-bold">$\Sigma$</td><td>الأبجدية (Input Alphabet)</td><td>مجموعة الرموز المسموحة (0,1 أو a,b).</td></tr>
+                            <tr><td class="en font-bold">$\Gamma$</td><td>أبجدية الشريط/المكدس</td><td>دائماً أكبر من $\Sigma$ لأنها تشمل رموزاً إضافية (مثل B أو $Z_0$).</td></tr>
+                            <tr><td class="en font-bold">$\delta$</td><td>دالة الانتقال (Transition)</td><td>محرك الآلة. يختلف شكله حسب نوع الآلة.</td></tr>
+                            <tr><td class="en font-bold">$L(M)$</td><td>اللغة المقبولة</td><td>الكلمات التي تقبلها الآلة M.</td></tr>
+                            <tr><td class="en font-bold">$\epsilon / \lambda$</td><td>السلسلة الفارغة</td><td>طولها صفر. وجودها في NFA يعني حركة مجانية.</td></tr>
+                            <tr><td class="en font-bold">$\phi$</td><td>المجموعة الخالية</td><td>لغة لا تحتوي أي كلمات.</td></tr>
+                            <tr><td class="en font-bold">$\vdash$</td><td>خطوة انتقال (Move)</td><td>تستخدم في TM لتقول "تحركت الآلة من وضع لوضع".</td></tr>
+                            <tr><td class="en font-bold">$\forall / \exists$</td><td>لكل / يوجد</td><td>تستخدم في Logic و QBF.</td></tr>
+                            <tr><td class="en font-bold">P</td><td>Polynomial Time</td><td>زمن معقول (سريع).</td></tr>
+                            <tr><td class="en font-bold">NP</td><td>Nondeterministic Poly</td><td>زمن معقول (بالتخمين).</td></tr>
+                            <tr><td class="en font-bold">NPC</td><td>NP-Complete</td><td>زعماء المشاكل الصعبة.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-2 border-purple-400">
+            <div class="card-header bg-purple-100">
+                <div class="number-badge bg-purple-700">4</div>
+                <h2 class="text-xl font-bold text-purple-900">لو كنت أنا أستاذ المادة (تسريب الاختبار الافتراضي) 🕵️‍♂️</h2>
+            </div>
+            <div class="p-6">
+                <h3 class="font-bold text-lg mb-2">أ) أهم المواضيع (The Hot Topics):</h3>
+                <ul class="text-slate-700 mb-6">
+                    <li><strong>تحويلات القواعد (Simplification & CNF):</strong> سأعطيك قواعد فيها $\epsilon$ أو Unit وأطلب خطوة الحذف الأولى.</li>
+                    <li><strong>خصائص CFL:</strong> سأحاول خداعك بسؤال: "تقاطع لغتين CFL هو؟". الجواب: ليس بالضرورة CFL.</li>
+                    <li><strong>مقارنة الآلات:</strong> سأسأل عن الفرق بين PDA و TM. (الذاكرة المحدودة vs الشريط اللانهائي).</li>
+                    <li><strong>مشاكل NP-Complete:</strong> سأعطيك مشكلة مشهورة (مثل TSP) وأسألك عن صنفها.</li>
+                </ul>
+
+                <div class="box-trap">
+                    <strong class="block text-red-800 mb-2">ب) أهم الخدع (Traps):</strong>
+                    <ul class="text-sm text-slate-700 m-0">
+                        <li><strong>خدعة الـ 2 vs 3:</strong> 2-SAT (سهلة P) مقابل 3-SAT (صعبة NPC). Euler (سهل) مقابل Hamiltonian (صعب).</li>
+                        <li><strong>خدعة المتممة:</strong> متممة Recursive هي Recursive. متممة RE هي Not RE.</li>
+                        <li><strong>خدعة التعريف:</strong> NP لا تعني Not Polynomial، بل Non-deterministic Polynomial.</li>
+                    </ul>
+                </div>
+
+                <div class="box-hack">
+                    <strong class="block text-green-800 mb-2">ج) حيل "الهاكر" للحل السريع:</strong>
+                    <ul class="text-sm text-slate-700 m-0">
+                        <li><strong>Regular Expression:</strong> لا تشتق المعادلة. خذ أقصر كلمة وجربها في الخيارات واستبعد الخطأ.</li>
+                        <li><strong>CNF:</strong> الجواب الصحيح شكله نظيف: (حرفين كبار $AB$) أو (حرف صغير واحد $a$). أي شيء غير ذلك اشطبه.</li>
+                        <li><strong>Pumping Lemma:</strong> مقارنة عددين ($a^n b^n$) = ليست Regular. مقارنة ثلاثة ($a^n b^n c^n$) = ليست CFL.</li>
+                        <li><strong>Logic ($P \to Q$):</strong> إذا كانت البداية (P) خطأ، فالجملة كلها صحيحة (True) فوراً.</li>
+                    </ul>
+                </div>
+
+                <h3 class="font-bold text-lg mb-2 mt-6 border-t pt-4">د) الأسئلة المقالية الـ 5 المتوقعة (مع الإجابة المثالية):</h3>
+                <div class="space-y-4 text-slate-700">
+                    <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                        <strong>س١: اشرح الفرق بين P و NP و NP-Complete؟</strong>
+                        <p class="text-sm mt-1">P: تحل بسرعة بآلة محددة. NP: نتحقق من حلها بسرعة. NPC: أصعب مشاكل NP وتتحول إليها بقية المشاكل.</p>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                        <strong>س٢: أثبت أن اللغة $L = \{a^n b^n c^n\}$ ليست Context-Free؟</strong>
+                        <p class="text-sm mt-1">باستخدام Pumping Lemma: نقسم الكلمة $z=uvwxy$. من المستحيل أن يحتوي الجزءان $v, x$ على الرموز الثلاثة معاً. عند الضخ، سيزيد عدد رمزين ويختل التوازن مع الثالث.</p>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                        <strong>س٣: حول القواعد $S \to aSb | ab$ إلى صيغة CNF؟</strong>
+                        <p class="text-sm mt-1">1. متغيرات للرموز: $X_a \to a, X_b \to b$.<br>2. القاعدة: $S \to X_a S X_b | X_a X_b$.<br>3. كسر الثلاثي: $S \to X_a Y$ حيث $Y \to S X_b$.</p>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                        <strong>س٤: ما هي نظرية كوك (Cook’s Theorem)؟</strong>
+                        <p class="text-sm mt-1">تنص على أن مشكلة SAT هي NP-Complete. أهميتها أنها فتحت الباب لإثبات صعوبة المشاكل الأخرى بالتحويل منها.</p>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                        <strong>س٥: عرف آلة تورنغ (TM)؟</strong>
+                        <p class="text-sm mt-1">نموذج رياضي يتكون من شريط لا نهائي ورأس للقراءة والكتابة ووحدة تحكم. تتكون من ٧ عناصر ($Q, \Sigma, \Gamma, \delta, q_0, B, F$).</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="number-badge">5</div>
+                <h2 class="text-xl font-bold text-purple-900">الجداول الذهبية (للطباعة الذهنية)</h2>
+            </div>
+            <div class="p-6">
+                <h3 class="font-bold text-sm text-slate-500 mb-2">جدول مقارنة فئات اللغات والآلات</h3>
+                <div class="table-wrapper mb-6">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>اللغة (Language)</th>
+                                <th>الآلة (Machine)</th>
+                                <th>الذاكرة (Memory)</th>
+                                <th>القيود</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="en">Regular</td><td class="en">DFA / NFA</td><td>لا توجد (States فقط)</td><td>لا تستطيع العد</td></tr>
+                            <tr><td class="en">CFL</td><td class="en">PDA</td><td class="en">Stack (LIFO)</td><td>ذاكرة محدودة الوصول (Top only)</td></tr>
+                            <tr><td class="en">Recursive</td><td class="en">TM (Halting)</td><td class="en">Tape (Infinite)</td><td>قوية جداً (تتوقف دائماً)</td></tr>
+                            <tr><td class="en">RE</td><td class="en">TM (Standard)</td><td class="en">Tape (Infinite)</td><td>قد لا تتوقف (Loop)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="font-bold text-sm text-slate-500 mb-2">جدول القوانين السريعة (Logic Laws)</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr><th>القانون</th><th>الصيغة</th><th>الفائدة</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="en">De Morgan</td><td class="en">$\neg(A \land B) \equiv \neg A \lor \neg B$</td><td>توزيع النفي (يقلب الإشارة).</td></tr>
+                            <tr><td class="en">Implication</td><td class="en">$A \to B \equiv \neg A \lor B$</td><td>التخلص من السهم (مهم جداً).</td></tr>
+                            <tr><td class="en">Contrapositive</td><td class="en">$A \to B \equiv \neg B \to \neg A$</td><td>المعاكس الإيجابي (يكافئه).</td></tr>
+                            <tr><td class="en">Quantifier</td><td class="en">$\neg \forall x P(x) \equiv \exists x \neg P(x)$</td><td>نفي الكل هو وجود العكس.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-slate-900 text-white p-8 rounded-2xl text-center shadow-lg mt-8">
+            <h3 class="text-2xl font-bold text-purple-400 mb-4">🌟 نصيحة الختام (سر التفوق)</h3>
+            <p class="text-slate-300 leading-relaxed mb-4">
+                يا بطل، أنت الآن تملك "مفتاح المصمم" للاختبار. المادة تبدو كثيفة لكنها مترابطة.<br>
+                ابدأ بالـ <strong>Regular</strong> (بدائية) $\to$ <strong>CFL</strong> (مكدس) $\to$ <strong>TM</strong> (كمبيوتر كامل).<br>
+                ثم انظر للمشاكل: هل هي سهلة (P)، صعبة (NP)، أم مستحيلة (Undecidable).
+            </p>
+            <p class="text-xl font-bold text-white">بهذا التسلسل، الـ ٦٥ سؤال ستكون نزهة. توكل على الله! 💯🔥</p>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const courseKey = 'theory_progress';
+            const pageName = 'final-review.html';
+            let visited = JSON.parse(localStorage.getItem(courseKey)) || [];
+            if (!visited.includes(pageName)) {
+                visited.push(pageName);
+                localStorage.setItem(courseKey, JSON.stringify(visited));
+            }
+        });
+    </script>
+
+</body>
+</html>
+
