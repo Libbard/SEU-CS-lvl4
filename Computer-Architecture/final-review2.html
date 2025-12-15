@@ -15,135 +15,212 @@
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
     <style>
-        body { font-family: 'Cairo', sans-serif; background-color: #f0f9ff; color: #1e293b; }
+        body { font-family: 'Cairo', sans-serif; background-color: #f0f9ff; color: #1e293b; line-height: 1.6; }
         .en { font-family: 'Inter', sans-serif; direction: ltr; display: inline-block; }
         .blue-gradient { background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%); }
         
+        /* تحسينات الجوال */
         .card {
             background: white;
             border-radius: 16px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             border: 1px solid #dbeafe;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             overflow: hidden;
-            transition: transform 0.2s;
         }
-        .card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
-
+        
         .card-header {
             background-color: #eff6ff;
-            padding: 1.5rem;
+            padding: 1.25rem;
             border-bottom: 1px solid #bfdbfe;
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.75rem;
         }
 
         .number-badge {
             background: #2563eb;
             color: white;
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
+            flex-shrink: 0;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 800;
+            font-size: 0.9rem;
             font-family: 'Inter', sans-serif;
         }
+
+        /* تحسين الجداول للموبايل */
+        .table-container {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            margin: 1rem 0;
+        }
+        
+        table { width: 100%; min-width: 600px; border-collapse: collapse; font-size: 0.9rem; }
+        th { background: #f1f5f9; padding: 10px; text-align: right; border-bottom: 2px solid #cbd5e1; font-weight: 700; color: #334155; white-space: nowrap; }
+        td { padding: 10px; border-bottom: 1px solid #e2e8f0; color: #334155; }
+        tr:last-child td { border-bottom: none; }
+        tr:nth-child(even) { background-color: #f8fafc; }
 
         .box-feature { background: #f0fdf4; border-right: 4px solid #22c55e; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; }
         .box-trap { background: #fef2f2; border-right: 4px solid #ef4444; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; }
         .box-hack { background: #fffbeb; border-right: 4px solid #f59e0b; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; }
 
-        .table-wrapper { overflow-x: auto; border-radius: 8px; border: 1px solid #e2e8f0; margin: 1rem 0; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
-        th { background: #f8fafc; padding: 12px; text-align: right; border-bottom: 2px solid #e2e8f0; font-weight: 700; color: #475569; }
-        td { padding: 12px; border-bottom: 1px solid #e2e8f0; color: #334155; }
-        tr:last-child td { border-bottom: none; }
-
-        li { margin-bottom: 0.5rem; position: relative; padding-right: 1.5rem; }
-        li::before { content: "•"; color: #2563eb; font-weight: bold; position: absolute; right: 0; }
+        li { margin-bottom: 0.5rem; position: relative; padding-right: 1.2rem; }
+        li::before { content: "•"; color: #2563eb; font-weight: bold; position: absolute; right: 0; font-size: 1.2rem; line-height: 1; top: 2px; }
         
-        .math-block { direction: ltr; font-family: 'Inter', sans-serif; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; }
+        /* كود responsive */
+        @media (max-width: 640px) {
+            h1 { font-size: 1.75rem !important; }
+            .card-header h2 { font-size: 1.1rem; }
+            td, th { padding: 8px; font-size: 0.85rem; }
+        }
     </style>
 </head>
-<body class="pb-20">
+<body class="pb-24">
 
-    <nav class="bg-white shadow-md sticky top-0 z-50 border-b border-blue-100 mb-8">
+    <nav class="bg-white shadow-md sticky top-0 z-50 border-b border-blue-100 mb-6">
         <div class="max-w-7xl mx-auto px-4">
             <div class="flex justify-between h-16 items-center">
                 <div class="flex items-center">
-                    <a href="index.html" class="text-2xl font-black text-blue-700 ml-2">ArchMaster</a>
-                    <span class="text-xs bg-blue-100 text-blue-800 py-1 px-2 rounded-full font-bold border border-blue-200">Final Review</span>
+                    <a href="index.html" class="text-xl md:text-2xl font-black text-blue-700 ml-2">ArchMaster</a>
+                    <span class="text-[10px] md:text-xs bg-blue-100 text-blue-800 py-1 px-2 rounded-full font-bold border border-blue-200">Final Review</span>
                 </div>
-                <a href="index.html" class="text-slate-500 hover:text-blue-600 font-medium transition flex items-center gap-1">
+                <a href="index.html" class="text-slate-500 hover:text-blue-600 font-medium transition flex items-center gap-1 text-sm md:text-base">
                     <span>🏠</span> <span class="hidden md:inline">الرئيسية</span>
                 </a>
             </div>
         </div>
     </nav>
 
-    <div class="max-w-4xl mx-auto px-4">
+    <div class="max-w-5xl mx-auto px-4">
         
-        <header class="blue-gradient text-white p-10 rounded-2xl shadow-xl text-center mb-10">
-            <h1 class="text-3xl md:text-4xl font-black mb-3">خريطة النجاة والتميز 🗺️</h1>
-            <p class="text-blue-100 text-lg font-medium opacity-90">دليلك الشامل لفك شفرات مادة Computer Architecture</p>
+        <header class="blue-gradient text-white p-8 rounded-2xl shadow-xl text-center mb-8">
+            <h1 class="text-3xl md:text-5xl font-black mb-3">خريطة النجاة والتميز 🗺️</h1>
+            <p class="text-blue-100 text-base md:text-lg font-medium opacity-90">الدليل النهائي الشامل (The Ultimate Guide) لاجتياز CS-241</p>
+            <div class="mt-4 inline-flex bg-white/20 px-3 py-1 rounded-full text-sm">
+                <span>🎯 التركيز: 70% (Modules 6-13) | 30% (Modules 1-5)</span>
+            </div>
         </header>
 
         <div class="card">
             <div class="card-header">
                 <div class="number-badge">1</div>
-                <h2 class="text-xl font-bold text-blue-900">الفهم العميق (كيف ولماذا؟)</h2>
+                <h2 class="text-lg md:text-xl font-bold text-blue-900">أولاً: الفهم العميق (كيف ولماذا؟)</h2>
             </div>
-            <div class="p-6">
-                <p class="text-slate-500 text-sm mb-4">هذه المفاهيم لو حفظتها ستنساها، افهم السيناريو والقصة.</p>
-                
-                <h3 class="font-bold text-blue-800 mb-2">أ. الجزء الأول (30%):</h3>
-                <ul class="text-slate-700 mb-4">
-                    <li><strong>دورة حياة التعليمة (Fetch-Decode-Execute):</strong> تخيل نفسك مكان البيانات وهي تنتقل: <span class="en text-xs bg-slate-100 p-1 rounded">RAM → MBR → IR → Control Unit</span>.</li>
-                    <li><strong>أنظمة العنونة:</strong> الفرق بين "Direct" (خذ المفتاح) و "Indirect" (خذ ورقة فيها مكان المفتاح).</li>
-                    <li><strong>المكدس (Stack):</strong> لماذا نستخدمه في المعادلات (Postfix) ولماذا هو <span class="en">LIFO</span>.</li>
-                </ul>
-
-                <h3 class="font-bold text-blue-800 mb-2 border-t pt-4">ب. الجزء الثاني (70% - التركيز هنا):</h3>
-                <ul class="text-slate-700">
-                    <li><strong>هرمية الذاكرة:</strong> لعبة التوازن بين السرعة والحجم. المعالج يبحث دائماً في الأقرب.</li>
-                    <li><strong>رسم الخرائط في الكاش (Mapping):</strong>
-                        <br>• <span class="en font-bold">Direct:</span> مقعد واحد محدد (مثل الامتحان).
-                        <br>• <span class="en font-bold">Fully Associative:</span> أي مقعد فارغ (مثل السينما).
-                        <br>• <span class="en font-bold">Set Associative:</span> أي مقعد داخل صف محدد (حل وسط).
-                    </li>
-                    <li><strong>ترجمة العناوين (VM):</strong> كيف يخدع النظام البرامج ويحول العنوان الوهمي (Virtual) إلى حقيقي (Physical) باستخدام <span class="en">Page Table</span>.</li>
-                    <li><strong>Pipelining:</strong> خط التجميع في المصنع. الهدف: خروج تعليمة (منتج) كل دورة ساعة.</li>
-                </ul>
+            <div class="p-5">
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="font-bold text-blue-800 mb-2 border-b pb-1">الجزء الأول (الأساسيات)</h3>
+                        <ul class="text-slate-700 text-sm">
+                            <li><strong>دورة التعليمة (Fetch-Decode-Execute):</strong> تخيل نفسك البيانات: تخرج من الذاكرة (RAM) $\to$ MBR $\to$ IR $\to$ يفهمها الـ Control Unit $\to$ ينفذها الـ ALU.</li>
+                            <li><strong>أنظمة العنونة (Addressing Modes):</strong>
+                                <br>- <span class="en">Immediate:</span> القيمة موجودة فوراً.
+                                <br>- <span class="en">Direct:</span> مفتاح الخزنة معك.
+                                <br>- <span class="en">Indirect:</span> ورقة مكتوب فيها مكان المفتاح.
+                            </li>
+                            <li><strong>المكدس (Stack):</strong> مبدأ <span class="en">LIFO</span> ولماذا نستخدمه في المعادلات (<span class="en">Postfix</span>) وإدارة استدعاء الدوال.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-blue-800 mb-2 border-b pb-1">الجزء الثاني (التركيز 70%)</h3>
+                        <ul class="text-slate-700 text-sm">
+                            <li><strong>هرمية الذاكرة:</strong> المعالج يريد السرعة (Cache) والسعة (Disk). النظام يخدعه ليعتقد أن لديه الاثنين.</li>
+                            <li><strong>خط الأنابيب (Pipelining):</strong> مثل خط تجميع السيارات. الهدف: خروج سيارة (تعليمة) كل ثانية، وليس تصنيع السيارة بالكامل في ثانية.</li>
+                            <li><strong>مشاكل الـ Pipeline (Hazards):</strong>
+                                <br>- <span class="en">Data Hazard:</span> تعليمة تعتمد على نتيجة سابقة لم تجهز.
+                                <br>- <span class="en">Control Hazard:</span> قفز (JUMP) يغير المسار فجأة.
+                                <br>- <span class="en">Structural Hazard:</span> تعليمتان تطلبان نفس المكون.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="card">
-            <div class="card-header">
-                <div class="number-badge">2</div>
-                <h2 class="text-xl font-bold text-blue-900">الحفظ الصم (ثوابت لا نقاش فيها)</h2>
+        <div class="card border-2 border-indigo-200">
+            <div class="card-header bg-indigo-50">
+                <div class="number-badge bg-indigo-600">2</div>
+                <h2 class="text-lg md:text-xl font-bold text-indigo-900">موسوعة RAID الشاملة (حسب الكتاب) 💾</h2>
             </div>
-            <div class="p-6">
-                <div class="grid md:grid-cols-2 gap-4">
-                    <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
-                        <strong class="block text-blue-800 mb-2">تصنيف Flynn</strong>
-                        <span class="en text-sm">SISD, SIMD, MIMD, MISD</span>
-                    </div>
-                    <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
-                        <strong class="block text-blue-800 mb-2">مراحل المترجم</strong>
-                        <span class="en text-sm">Lexical → Syntax → Semantic...</span>
-                    </div>
-                </div>
-                
-                <div class="mt-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
-                    <strong class="block text-blue-800 mb-2">مستويات RAID</strong>
-                    <ul class="text-sm text-slate-700 m-0">
-                        <li><span class="en font-bold text-green-600">RAID 0:</span> سرعة (Striping).</li>
-                        <li><span class="en font-bold text-blue-600">RAID 1:</span> مرآة/نسخ (Mirroring).</li>
-                        <li><span class="en font-bold text-purple-600">RAID 5:</span> توازن (Distributed Parity).</li>
-                    </ul>
+            <div class="p-5">
+                <p class="text-sm text-slate-500 mb-3">لن يخرج سؤال RAID عن هذا الجدول. افهم "الميزة القاتلة" لكل نوع.</p>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>المستوى (RAID Level)</th>
+                                <th>الاسم / الوصف</th>
+                                <th>المميزات (Pros)</th>
+                                <th>العيوب (Cons)</th>
+                                <th>الاستخدام الأمثل</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="font-bold text-indigo-700">RAID 0</td>
+                                <td>Striping (تقسيم)</td>
+                                <td>أقصى سرعة وأداء. لا ضياع للمساحة.</td>
+                                <td class="text-red-600 font-bold">لا يوجد حماية (فشل قرص = ضياع الكل).</td>
+                                <td>الألعاب، المونتاج (حيث السرعة أهم من البيانات).</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-indigo-700">RAID 1</td>
+                                <td>Mirroring (مرآة)</td>
+                                <td>أمان عالي (نسخة طبق الأصل). قراءة سريعة.</td>
+                                <td>تكلفة عالية (تخسر 50% من المساحة).</td>
+                                <td>أنظمة التشغيل، البيانات الحساسة جداً.</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-indigo-700">RAID 2</td>
+                                <td>Hamming Code</td>
+                                <td>يكتشف ويصحح الأخطاء.</td>
+                                <td>معقد جداً ومكلف (أقراص كثيرة للتصحيح).</td>
+                                <td><span class="text-slate-400">نادر الاستخدام الآن.</span></td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-indigo-700">RAID 3</td>
+                                <td>Byte-level Parity</td>
+                                <td>جيد للملفات الكبيرة المتسلسلة.</td>
+                                <td>أداء سيء للملفات الصغيرة (عنق زجاجة).</td>
+                                <td>بث الفيديو (Video Streaming).</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-indigo-700">RAID 4</td>
+                                <td>Block-level Parity</td>
+                                <td>قراءة سريعة.</td>
+                                <td>الكتابة بطيئة (بسبب قرص البارتي الواحد).</td>
+                                <td><span class="text-slate-400">استبدل بـ RAID 5.</span></td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-indigo-700 bg-yellow-50">RAID 5 🔥</td>
+                                <td class="bg-yellow-50">Distributed Parity</td>
+                                <td class="bg-yellow-50">توازن مثالي بين السرعة، الأمان، والتكلفة.</td>
+                                <td class="bg-yellow-50">استعادة البيانات (Rebuild) بطيئة عند الفشل.</td>
+                                <td class="bg-yellow-50">قواعد البيانات، خوادم الملفات (الأكثر شيوعاً).</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-indigo-700">RAID 6</td>
+                                <td>Dual Parity</td>
+                                <td>يتحمل فشل قرصين في نفس الوقت.</td>
+                                <td>أبطأ في الكتابة من RAID 5 (حسابات معقدة).</td>
+                                <td>البيانات شديدة الأهمية (High Availability).</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-indigo-700">RAID 10 (1+0)</td>
+                                <td>Stripe of Mirrors</td>
+                                <td>يجمع سرعة 0 وأمان 1.</td>
+                                <td>مكلف جداً (يحتاج 4 أقراص على الأقل).</td>
+                                <td>سيرفرات الشركات الكبرى التي تملك ميزانية.</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -151,27 +228,39 @@
         <div class="card">
             <div class="card-header">
                 <div class="number-badge">3</div>
-                <h2 class="text-xl font-bold text-blue-900">قاموس الرموز (The Code Breaker)</h2>
+                <h2 class="text-lg md:text-xl font-bold text-blue-900">ثانياً: الحفظ الصم (الثوابت)</h2>
             </div>
-            <div class="p-6">
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr><th>الرمز</th><th>الاسم الكامل</th><th>الوظيفة بكلمتين</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr><td class="en font-bold">PC</td><td>Program Counter</td><td>عداد التعليمات (البوصلة).</td></tr>
-                            <tr><td class="en font-bold">IR</td><td>Instruction Register</td><td>مسجل التعليمة الحالية.</td></tr>
-                            <tr><td class="en font-bold">MAR</td><td>Memory Address Register</td><td>عنوان الذاكرة المطلوب.</td></tr>
-                            <tr><td class="en font-bold">MBR</td><td>Memory Buffer Register</td><td>البيانات الذاهبة/القادمة.</td></tr>
-                            <tr><td class="en font-bold">AC</td><td>Accumulator</td><td>المخزن المؤقت للعمليات.</td></tr>
-                            <tr><td class="en font-bold">ALU</td><td>Arithmetic Logic Unit</td><td>وحدة الحساب (المخ).</td></tr>
-                            <tr><td class="en font-bold">DMA</td><td>Direct Memory Access</td><td>نقل دون إزعاج المعالج.</td></tr>
-                            <tr><td class="en font-bold">TLB</td><td>Translation Look-aside Buffer</td><td>كاش سريع للعناوين.</td></tr>
-                            <tr><td class="en font-bold">RISC</td><td>Reduced Instruction Set</td><td>تعليمات بسيطة وسريعة.</td></tr>
-                            <tr><td class="en font-bold">CISC</td><td>Complex Instruction Set</td><td>تعليمات معقدة وقوية.</td></tr>
-                        </tbody>
-                    </table>
+            <div class="p-5">
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                        <strong class="block text-blue-800 mb-2">تصنيف Flynn (مهم!)</strong>
+                        <ul class="text-sm space-y-1">
+                            <li><span class="en font-bold">SISD:</span> كمبيوتر عادي (تعليمة وحدة، بيان واحد).</li>
+                            <li><span class="en font-bold">SIMD:</span> معالج الرسوميات GPU (تعليمة وحدة، بيانات كثيرة).</li>
+                            <li><span class="en font-bold">MIMD:</span> السوبر كمبيوتر (تعليمات كثيرة، بيانات كثيرة).</li>
+                            <li><span class="en font-bold">MISD:</span> نادر جداً (للتشفير أو الأمان).</li>
+                        </ul>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                        <strong class="block text-blue-800 mb-2">مراحل المترجم (Compiler)</strong>
+                        <ol class="text-sm list-decimal list-inside space-y-1">
+                            <li><span class="en">Lexical Analysis</span> (تقطيع الكلمات).</li>
+                            <li><span class="en">Syntax Analysis</span> (القواعد).</li>
+                            <li><span class="en">Semantic Analysis</span> (المعنى).</li>
+                            <li><span class="en">Intermediate Code</span>.</li>
+                            <li><span class="en">Optimization</span>.</li>
+                            <li><span class="en">Code Generation</span>.</li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <div class="mt-4 p-4 bg-orange-50 border border-orange-200 rounded-lg">
+                    <strong class="block text-orange-800 mb-2">مصطلحات I/O (الفرق الجوهري)</strong>
+                    <ul class="text-sm">
+                        <li><span class="en font-bold text-slate-800">Polling:</span> المعالج يسأل الجهاز كل شوي "خلصت؟". (مضيعة وقت).</li>
+                        <li><span class="en font-bold text-slate-800">Interrupt:</span> الجهاز يرسل تنبيه للمعالج "خلصت!". (كفاءة عالية).</li>
+                        <li><span class="en font-bold text-slate-800">DMA:</span> وحدة خاصة تنقل البيانات للذاكرة دون إشغال المعالج. (للأحجام الكبيرة).</li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -179,45 +268,59 @@
         <div class="card border-2 border-blue-400">
             <div class="card-header bg-blue-100">
                 <div class="number-badge bg-blue-700">4</div>
-                <h2 class="text-xl font-bold text-blue-900">عقلية واضع الاختبار (تسريبات افتراضية) 🕵️‍♂️</h2>
+                <h2 class="text-lg md:text-xl font-bold text-blue-900">عقلية واضع الاختبار (تسريبات افتراضية) 🕵️‍♂️</h2>
             </div>
-            <div class="p-6">
+            <div class="p-5">
                 
                 <div class="box-feature">
-                    <strong class="block text-green-800 mb-2">أ) أهم المواضيع (The Hot Zones):</strong>
+                    <strong class="block text-green-800 mb-2">أ) أهم المسائل الحسابية (The Hot Zones):</strong>
                     <ul class="text-sm text-slate-700 m-0">
-                        <li><strong>Cache Math:</strong> حساب حجم <span class="en">Tag, Block, Offset</span>. (سؤال يفرق بين الفاهم والحافظ).</li>
-                        <li><strong>Amdahl's Law:</strong> تحسين جزء لا يستخدم كثيراً = تحسين كلي طفيف.</li>
-                        <li><strong>RAID Scenarios:</strong> بنك (بيانات) vs ألعاب (سرعة). اختر الـ RAID المناسب.</li>
-                        <li><strong>Pipeline:</strong> حساب عدد دورات الساعة (<span class="en">Cycles</span>) لعدد من التعليمات.</li>
+                        <li><strong>Cache Mapping:</strong> سيعطيك حجم الذاكرة (مثلاً 4GB) وحجم الكاش (512KB). احسب <span class="en">Tag, Set, Offset</span>.
+                            <br><span class="text-xs bg-white px-2 py-1 rounded border">القانون: Address Bits = Tag + Set + Offset</span>
+                        </li>
+                        <li><strong>Amdahl's Law:</strong> احذر! إذا قال "حسنّا جزء يستخدم 10% من الوقت"، فالتحسين الكلي سيكون تافهاً.</li>
+                        <li><strong>Disk Access:</strong> اجمع الثلاثة: <span class="en">Seek + Rotation + Transfer</span>.</li>
                     </ul>
                 </div>
 
                 <div class="box-trap">
                     <strong class="block text-red-800 mb-2">ب) الفخاخ والخدع (Traps):</strong>
                     <ul class="text-sm text-slate-700 m-0">
-                        <li><strong>فخ الوحدات:</strong> سرعة نقل بـ <span class="en">Bytes</span> وسرعة شبكة بـ <span class="en">Bits</span>. (حول قبل الحل!).</li>
-                        <li><strong>فخ VM:</strong> عند حساب عدد الصفحات، اقسم على حجم الصفحة، وليس حجم الذاكرة.</li>
-                        <li><strong>فخ الكيلو:</strong> في التخزين <span class="en">1K=1000</span>، في الذاكرة <span class="en">1K=1024</span>.</li>
+                        <li><strong>فخ الوحدات:</strong> سرعة نقل بـ <span class="en">Bytes</span> وسرعة شبكة بـ <span class="en">Bits</span>. (اضرب أو اقسم على 8).</li>
+                        <li><strong>فخ VM:</strong> عند حساب عدد الصفحات، اقسم حجم الذاكرة على <strong>حجم الصفحة (Page Size)</strong> وليس العكس.</li>
+                        <li><strong>فخ الكيلو:</strong> في التخزين (HDD) <span class="en">1K=1000</span>، في الذاكرة (RAM) <span class="en">1K=1024</span>. انتبه للسياق!</li>
                     </ul>
                 </div>
 
                 <div class="box-hack">
-                    <strong class="block text-orange-800 mb-2">ج) حيل الإجابة الذكية (Hacks):</strong>
+                    <strong class="block text-orange-800 mb-2">ج) حيل "الهاكر" للإجابة:</strong>
                     <ul class="text-sm text-slate-700 m-0">
-                        <li><strong>RAID:</strong> كلمة "Speed" فقط -> لا تختر RAID 1. كلمة "Mirror/Backup" -> اختر RAID 1. كلمة "Balanced" -> اختر RAID 5.</li>
-                        <li><strong>Amdahl:</strong> إذا نسبة الاستخدام صغيرة (10%)، الجواب سيكون أصغر رقم (قريب من 1). لا تضيع وقتك بالحساب.</li>
-                        <li><strong>العناوين:</strong> الـ Offset في العنوان الافتراضي هو نفسه في الفيزيائي. ابحث عن الخيار الذي ينتهي بنفس الرقم.</li>
+                        <li><strong>RAID:</strong> كلمة "Speed" $\to$ RAID 0. كلمة "Backup/Mirror" $\to$ RAID 1. كلمة "Balanced/Database" $\to$ RAID 5.</li>
+                        <li><strong>أمدال:</strong> إذا نسبة التحسين (f) صغيرة، اختر أصغر رقم في الخيارات أكبر من 1 بقليل.</li>
+                        <li><strong>تحويل العناوين:</strong> الـ Offset في العنوان الافتراضي = الـ Offset في الفيزيائي دائماً. انسخ آخر أرقام وابحث عنها في الخيارات.</li>
                     </ul>
                 </div>
 
-                <h3 class="font-bold text-lg mb-2 mt-6 border-t pt-4">د) الأسئلة المقالية الـ 5 المتوقعة:</h3>
-                <div class="space-y-4 text-slate-700 text-sm">
-                    <div class="bg-slate-50 p-3 rounded border"><strong>1. قارن بين RISC و CISC؟</strong><br>CISC: تقليل عدد التعليمات (معقدة). RISC: تقليل الدورات لكل تعليمة (بسيطة وسريعة).</div>
-                    <div class="bg-slate-50 p-3 rounded border"><strong>2. اشرح مبدأ المحلية (Locality)؟</strong><br>البرامج تكرر استخدام نفس البيانات (Temporal) أو المجاورة (Spatial). الكاش يستغل هذا لنقل بلوك كامل.</div>
-                    <div class="bg-slate-50 p-3 rounded border"><strong>3. مكونات زمن الوصول للقرص؟</strong><br>Seek Time (الأبطأ) + Rotational Delay + Transfer Time.</div>
-                    <div class="bg-slate-50 p-3 rounded border"><strong>4. الفرق بين Volatile و Non-volatile؟</strong><br>Volatile (مثل RAM) تفقد البيانات بلا كهرباء. Non-volatile (مثل HDD) تحتفظ بها.</div>
-                    <div class="bg-slate-50 p-3 rounded border"><strong>5. ماذا يحدث عند Page Fault؟</strong><br>نظام التشغيل يوقف البرنامج، يجلب الصفحة من القرص إلى الرام، يحدث الجدول، ويعيد التشغيل.</div>
+                <h3 class="font-bold text-lg mb-2 mt-6 border-t pt-4 text-blue-900">د) الأسئلة المقالية الـ 5 المتوقعة (مع الإجابة المثالية):</h3>
+                <div class="space-y-3 text-slate-700 text-sm">
+                    <div class="bg-slate-50 p-3 rounded border"><strong>1. قارن بين RISC و CISC؟</strong><br>
+                    <span class="en font-bold">CISC:</span> تعليمات معقدة وقوية، هاردوير معقد، كود قصير. (مثل Intel x86).<br>
+                    <span class="en font-bold">RISC:</span> تعليمات بسيطة وسريعة، هاردوير بسيط، كود أطول. (مثل ARM, MIPS).</div>
+                    
+                    <div class="bg-slate-50 p-3 rounded border"><strong>2. اشرح مبدأ المحلية (Locality of Reference)؟</strong><br>
+                    البرامج تميل لتكرار استخدام نفس البيانات (<span class="en">Temporal</span>) أو البيانات المجاورة لها (<span class="en">Spatial</span>). الكاش يستفيد من ذلك بنقل "بلوك" كامل.</div>
+                    
+                    <div class="bg-slate-50 p-3 rounded border"><strong>3. مكونات زمن الوصول للقرص (Disk Access Time)؟</strong><br>
+                    1. <span class="en">Seek Time:</span> تحريك الذراع للمسار (الأبطأ).<br>
+                    2. <span class="en">Rotational Delay:</span> دوران القرص للقطاع.<br>
+                    3. <span class="en">Transfer Time:</span> القراءة الفعلية.</div>
+                    
+                    <div class="bg-slate-50 p-3 rounded border"><strong>4. الفرق بين Volatile و Non-volatile؟</strong><br>
+                    <span class="en">Volatile:</span> تفقد البيانات بلا كهرباء (RAM). للسرعة.<br>
+                    <span class="en">Non-volatile:</span> تحتفظ بالبيانات (HDD, ROM). للتخزين.</div>
+                    
+                    <div class="bg-slate-50 p-3 rounded border"><strong>5. ماذا يحدث عند Page Fault؟</strong><br>
+                    يطلب المعالج صفحة غير موجودة في الرام $\to$ يوقف النظام البرنامج $\to$ يذهب للقرص الصلب $\to$ يجلب الصفحة للرام $\to$ يحدث الجدول $\to$ يعيد التشغيل.</div>
                 </div>
             </div>
         </div>
@@ -225,30 +328,31 @@
         <div class="card">
             <div class="card-header">
                 <div class="number-badge">5</div>
-                <h2 class="text-xl font-bold text-blue-900">جدول القوانين (Formula Sheet)</h2>
+                <h2 class="text-lg md:text-xl font-bold text-blue-900">جدول القوانين (Formula Sheet)</h2>
             </div>
-            <div class="p-6">
-                <div class="table-wrapper">
+            <div class="p-5">
+                <div class="table-container">
                     <table>
                         <thead><tr><th>القانون</th><th>الصيغة</th><th>الاستخدام</th></tr></thead>
                         <tbody>
-                            <tr><td class="en font-bold">Amdahl's Law</td><td class="en">$S = \frac{1}{(1-f) + (f/k)}$</td><td>التسريع الكلي عند تحسين جزء.</td></tr>
+                            <tr><td class="en font-bold">Amdahl's Law</td><td class="en">$S = \frac{1}{(1-f) + (f/k)}$</td><td>حساب التسريع الكلي.</td></tr>
                             <tr><td class="en font-bold">CPU Time</td><td class="en">$IC \times CPI \times CycleTime$</td><td>وقت تنفيذ البرنامج.</td></tr>
-                            <tr><td class="en font-bold">Disk Access</td><td class="en">$Seek + Rotation + Transfer$</td><td>سرعة القرص الصلب.</td></tr>
+                            <tr><td class="en font-bold">Disk Access</td><td class="en">$Seek + Rotation + Transfer$</td><td>زمن قراءة القرص.</td></tr>
                             <tr><td class="en font-bold">EAT (Cache)</td><td class="en">$H \times T_c + (1-H) \times T_m$</td><td>متوسط زمن الوصول للذاكرة.</td></tr>
+                            <tr><td class="en font-bold">Cache Lines</td><td class="en">$\frac{\text{Cache Size}}{\text{Block Size}}$</td><td>حساب عدد الأسطر في الكاش.</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <div class="bg-slate-900 text-white p-8 rounded-2xl text-center shadow-lg mt-8">
-            <h3 class="text-2xl font-bold text-blue-400 mb-4">🌟 نصيحة الختام</h3>
-            <p class="text-slate-300 leading-relaxed mb-4">
+        <div class="bg-slate-900 text-white p-6 md:p-8 rounded-2xl text-center shadow-lg mt-8">
+            <h3 class="text-xl md:text-2xl font-bold text-blue-400 mb-4">🌟 نصيحة الختام</h3>
+            <p class="text-slate-300 leading-relaxed mb-4 text-sm md:text-base">
                 المادة تبدو ضخمة، لكن مفاتيحها قليلة: (الهرمية، السرعة مقابل التكلفة، التبسيط مقابل التعقيد).<br>
-                ركز على <strong>الفصل 6 (Memory)</strong> و <strong>الفصل 7 (I/O)</strong> فهما "منجم الدرجات".
+                ركز على <strong>الفصل 6 (Memory)</strong> و <strong>الفصل 7 (I/O)</strong> فهما "منجم الدرجات" في هذا الاختبار.
             </p>
-            <p class="text-xl font-bold text-white">انطلق يا بطل، العلامة الكاملة بانتظارك! 🚀💯</p>
+            <p class="text-lg md:text-xl font-bold text-white">انطلق يا بطل، العلامة الكاملة بانتظارك! 🚀💯</p>
         </div>
 
     </div>
