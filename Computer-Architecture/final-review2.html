@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survival Map - Computer Architecture</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body { font-family: 'Cairo', sans-serif; background-color: #f0f9ff; color: #1e293b; }
+        .en { font-family: 'Inter', sans-serif; direction: ltr; display: inline-block; }
+        .blue-gradient { background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%); }
+        
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid #dbeafe;
+            margin-bottom: 2rem;
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+        .card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+
+        .card-header {
+            background-color: #eff6ff;
+            padding: 1.5rem;
+            border-bottom: 1px solid #bfdbfe;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .number-badge {
+            background: #2563eb;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .box-feature { background: #f0fdf4; border-right: 4px solid #22c55e; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; }
+        .box-trap { background: #fef2f2; border-right: 4px solid #ef4444; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; }
+        .box-hack { background: #fffbeb; border-right: 4px solid #f59e0b; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; }
+
+        .table-wrapper { overflow-x: auto; border-radius: 8px; border: 1px solid #e2e8f0; margin: 1rem 0; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+        th { background: #f8fafc; padding: 12px; text-align: right; border-bottom: 2px solid #e2e8f0; font-weight: 700; color: #475569; }
+        td { padding: 12px; border-bottom: 1px solid #e2e8f0; color: #334155; }
+        tr:last-child td { border-bottom: none; }
+
+        li { margin-bottom: 0.5rem; position: relative; padding-right: 1.5rem; }
+        li::before { content: "•"; color: #2563eb; font-weight: bold; position: absolute; right: 0; }
+        
+        .math-block { direction: ltr; font-family: 'Inter', sans-serif; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; }
+    </style>
+</head>
+<body class="pb-20">
+
+    <nav class="bg-white shadow-md sticky top-0 z-50 border-b border-blue-100 mb-8">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-black text-blue-700 ml-2">ArchMaster</a>
+                    <span class="text-xs bg-blue-100 text-blue-800 py-1 px-2 rounded-full font-bold border border-blue-200">Final Review</span>
+                </div>
+                <a href="index.html" class="text-slate-500 hover:text-blue-600 font-medium transition flex items-center gap-1">
+                    <span>🏠</span> <span class="hidden md:inline">الرئيسية</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-4xl mx-auto px-4">
+        
+        <header class="blue-gradient text-white p-10 rounded-2xl shadow-xl text-center mb-10">
+            <h1 class="text-3xl md:text-4xl font-black mb-3">خريطة النجاة والتميز 🗺️</h1>
+            <p class="text-blue-100 text-lg font-medium opacity-90">دليلك الشامل لفك شفرات مادة Computer Architecture</p>
+        </header>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="number-badge">1</div>
+                <h2 class="text-xl font-bold text-blue-900">الفهم العميق (كيف ولماذا؟)</h2>
+            </div>
+            <div class="p-6">
+                <p class="text-slate-500 text-sm mb-4">هذه المفاهيم لو حفظتها ستنساها، افهم السيناريو والقصة.</p>
+                
+                <h3 class="font-bold text-blue-800 mb-2">أ. الجزء الأول (30%):</h3>
+                <ul class="text-slate-700 mb-4">
+                    <li><strong>دورة حياة التعليمة (Fetch-Decode-Execute):</strong> تخيل نفسك مكان البيانات وهي تنتقل: <span class="en text-xs bg-slate-100 p-1 rounded">RAM → MBR → IR → Control Unit</span>.</li>
+                    <li><strong>أنظمة العنونة:</strong> الفرق بين "Direct" (خذ المفتاح) و "Indirect" (خذ ورقة فيها مكان المفتاح).</li>
+                    <li><strong>المكدس (Stack):</strong> لماذا نستخدمه في المعادلات (Postfix) ولماذا هو <span class="en">LIFO</span>.</li>
+                </ul>
+
+                <h3 class="font-bold text-blue-800 mb-2 border-t pt-4">ب. الجزء الثاني (70% - التركيز هنا):</h3>
+                <ul class="text-slate-700">
+                    <li><strong>هرمية الذاكرة:</strong> لعبة التوازن بين السرعة والحجم. المعالج يبحث دائماً في الأقرب.</li>
+                    <li><strong>رسم الخرائط في الكاش (Mapping):</strong>
+                        <br>• <span class="en font-bold">Direct:</span> مقعد واحد محدد (مثل الامتحان).
+                        <br>• <span class="en font-bold">Fully Associative:</span> أي مقعد فارغ (مثل السينما).
+                        <br>• <span class="en font-bold">Set Associative:</span> أي مقعد داخل صف محدد (حل وسط).
+                    </li>
+                    <li><strong>ترجمة العناوين (VM):</strong> كيف يخدع النظام البرامج ويحول العنوان الوهمي (Virtual) إلى حقيقي (Physical) باستخدام <span class="en">Page Table</span>.</li>
+                    <li><strong>Pipelining:</strong> خط التجميع في المصنع. الهدف: خروج تعليمة (منتج) كل دورة ساعة.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="number-badge">2</div>
+                <h2 class="text-xl font-bold text-blue-900">الحفظ الصم (ثوابت لا نقاش فيها)</h2>
+            </div>
+            <div class="p-6">
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                        <strong class="block text-blue-800 mb-2">تصنيف Flynn</strong>
+                        <span class="en text-sm">SISD, SIMD, MIMD, MISD</span>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                        <strong class="block text-blue-800 mb-2">مراحل المترجم</strong>
+                        <span class="en text-sm">Lexical → Syntax → Semantic...</span>
+                    </div>
+                </div>
+                
+                <div class="mt-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
+                    <strong class="block text-blue-800 mb-2">مستويات RAID</strong>
+                    <ul class="text-sm text-slate-700 m-0">
+                        <li><span class="en font-bold text-green-600">RAID 0:</span> سرعة (Striping).</li>
+                        <li><span class="en font-bold text-blue-600">RAID 1:</span> مرآة/نسخ (Mirroring).</li>
+                        <li><span class="en font-bold text-purple-600">RAID 5:</span> توازن (Distributed Parity).</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="number-badge">3</div>
+                <h2 class="text-xl font-bold text-blue-900">قاموس الرموز (The Code Breaker)</h2>
+            </div>
+            <div class="p-6">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr><th>الرمز</th><th>الاسم الكامل</th><th>الوظيفة بكلمتين</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="en font-bold">PC</td><td>Program Counter</td><td>عداد التعليمات (البوصلة).</td></tr>
+                            <tr><td class="en font-bold">IR</td><td>Instruction Register</td><td>مسجل التعليمة الحالية.</td></tr>
+                            <tr><td class="en font-bold">MAR</td><td>Memory Address Register</td><td>عنوان الذاكرة المطلوب.</td></tr>
+                            <tr><td class="en font-bold">MBR</td><td>Memory Buffer Register</td><td>البيانات الذاهبة/القادمة.</td></tr>
+                            <tr><td class="en font-bold">AC</td><td>Accumulator</td><td>المخزن المؤقت للعمليات.</td></tr>
+                            <tr><td class="en font-bold">ALU</td><td>Arithmetic Logic Unit</td><td>وحدة الحساب (المخ).</td></tr>
+                            <tr><td class="en font-bold">DMA</td><td>Direct Memory Access</td><td>نقل دون إزعاج المعالج.</td></tr>
+                            <tr><td class="en font-bold">TLB</td><td>Translation Look-aside Buffer</td><td>كاش سريع للعناوين.</td></tr>
+                            <tr><td class="en font-bold">RISC</td><td>Reduced Instruction Set</td><td>تعليمات بسيطة وسريعة.</td></tr>
+                            <tr><td class="en font-bold">CISC</td><td>Complex Instruction Set</td><td>تعليمات معقدة وقوية.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-2 border-blue-400">
+            <div class="card-header bg-blue-100">
+                <div class="number-badge bg-blue-700">4</div>
+                <h2 class="text-xl font-bold text-blue-900">عقلية واضع الاختبار (تسريبات افتراضية) 🕵️‍♂️</h2>
+            </div>
+            <div class="p-6">
+                
+                <div class="box-feature">
+                    <strong class="block text-green-800 mb-2">أ) أهم المواضيع (The Hot Zones):</strong>
+                    <ul class="text-sm text-slate-700 m-0">
+                        <li><strong>Cache Math:</strong> حساب حجم <span class="en">Tag, Block, Offset</span>. (سؤال يفرق بين الفاهم والحافظ).</li>
+                        <li><strong>Amdahl's Law:</strong> تحسين جزء لا يستخدم كثيراً = تحسين كلي طفيف.</li>
+                        <li><strong>RAID Scenarios:</strong> بنك (بيانات) vs ألعاب (سرعة). اختر الـ RAID المناسب.</li>
+                        <li><strong>Pipeline:</strong> حساب عدد دورات الساعة (<span class="en">Cycles</span>) لعدد من التعليمات.</li>
+                    </ul>
+                </div>
+
+                <div class="box-trap">
+                    <strong class="block text-red-800 mb-2">ب) الفخاخ والخدع (Traps):</strong>
+                    <ul class="text-sm text-slate-700 m-0">
+                        <li><strong>فخ الوحدات:</strong> سرعة نقل بـ <span class="en">Bytes</span> وسرعة شبكة بـ <span class="en">Bits</span>. (حول قبل الحل!).</li>
+                        <li><strong>فخ VM:</strong> عند حساب عدد الصفحات، اقسم على حجم الصفحة، وليس حجم الذاكرة.</li>
+                        <li><strong>فخ الكيلو:</strong> في التخزين <span class="en">1K=1000</span>، في الذاكرة <span class="en">1K=1024</span>.</li>
+                    </ul>
+                </div>
+
+                <div class="box-hack">
+                    <strong class="block text-orange-800 mb-2">ج) حيل الإجابة الذكية (Hacks):</strong>
+                    <ul class="text-sm text-slate-700 m-0">
+                        <li><strong>RAID:</strong> كلمة "Speed" فقط -> لا تختر RAID 1. كلمة "Mirror/Backup" -> اختر RAID 1. كلمة "Balanced" -> اختر RAID 5.</li>
+                        <li><strong>Amdahl:</strong> إذا نسبة الاستخدام صغيرة (10%)، الجواب سيكون أصغر رقم (قريب من 1). لا تضيع وقتك بالحساب.</li>
+                        <li><strong>العناوين:</strong> الـ Offset في العنوان الافتراضي هو نفسه في الفيزيائي. ابحث عن الخيار الذي ينتهي بنفس الرقم.</li>
+                    </ul>
+                </div>
+
+                <h3 class="font-bold text-lg mb-2 mt-6 border-t pt-4">د) الأسئلة المقالية الـ 5 المتوقعة:</h3>
+                <div class="space-y-4 text-slate-700 text-sm">
+                    <div class="bg-slate-50 p-3 rounded border"><strong>1. قارن بين RISC و CISC؟</strong><br>CISC: تقليل عدد التعليمات (معقدة). RISC: تقليل الدورات لكل تعليمة (بسيطة وسريعة).</div>
+                    <div class="bg-slate-50 p-3 rounded border"><strong>2. اشرح مبدأ المحلية (Locality)؟</strong><br>البرامج تكرر استخدام نفس البيانات (Temporal) أو المجاورة (Spatial). الكاش يستغل هذا لنقل بلوك كامل.</div>
+                    <div class="bg-slate-50 p-3 rounded border"><strong>3. مكونات زمن الوصول للقرص؟</strong><br>Seek Time (الأبطأ) + Rotational Delay + Transfer Time.</div>
+                    <div class="bg-slate-50 p-3 rounded border"><strong>4. الفرق بين Volatile و Non-volatile؟</strong><br>Volatile (مثل RAM) تفقد البيانات بلا كهرباء. Non-volatile (مثل HDD) تحتفظ بها.</div>
+                    <div class="bg-slate-50 p-3 rounded border"><strong>5. ماذا يحدث عند Page Fault؟</strong><br>نظام التشغيل يوقف البرنامج، يجلب الصفحة من القرص إلى الرام، يحدث الجدول، ويعيد التشغيل.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="number-badge">5</div>
+                <h2 class="text-xl font-bold text-blue-900">جدول القوانين (Formula Sheet)</h2>
+            </div>
+            <div class="p-6">
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr><th>القانون</th><th>الصيغة</th><th>الاستخدام</th></tr></thead>
+                        <tbody>
+                            <tr><td class="en font-bold">Amdahl's Law</td><td class="en">$S = \frac{1}{(1-f) + (f/k)}$</td><td>التسريع الكلي عند تحسين جزء.</td></tr>
+                            <tr><td class="en font-bold">CPU Time</td><td class="en">$IC \times CPI \times CycleTime$</td><td>وقت تنفيذ البرنامج.</td></tr>
+                            <tr><td class="en font-bold">Disk Access</td><td class="en">$Seek + Rotation + Transfer$</td><td>سرعة القرص الصلب.</td></tr>
+                            <tr><td class="en font-bold">EAT (Cache)</td><td class="en">$H \times T_c + (1-H) \times T_m$</td><td>متوسط زمن الوصول للذاكرة.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-slate-900 text-white p-8 rounded-2xl text-center shadow-lg mt-8">
+            <h3 class="text-2xl font-bold text-blue-400 mb-4">🌟 نصيحة الختام</h3>
+            <p class="text-slate-300 leading-relaxed mb-4">
+                المادة تبدو ضخمة، لكن مفاتيحها قليلة: (الهرمية، السرعة مقابل التكلفة، التبسيط مقابل التعقيد).<br>
+                ركز على <strong>الفصل 6 (Memory)</strong> و <strong>الفصل 7 (I/O)</strong> فهما "منجم الدرجات".
+            </p>
+            <p class="text-xl font-bold text-white">انطلق يا بطل، العلامة الكاملة بانتظارك! 🚀💯</p>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const courseKey = 'arch_progress';
+            const pageName = 'final-review.html';
+            let visited = JSON.parse(localStorage.getItem(courseKey)) || [];
+            if (!visited.includes(pageName)) {
+                visited.push(pageName);
+                localStorage.setItem(courseKey, JSON.stringify(visited));
+            }
+        });
+    </script>
+
+</body>
+</html>
