@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS241 Interactive Quiz</title>
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-100">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useMemo } = React;
+
+        // --- ICONS (Inline SVGs for portability) ---
+        const Icons = {
+            BookOpen: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>,
+            CheckCircle: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>,
+            XCircle: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>,
+            Lightbulb: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-1 1.5-2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>,
+            RefreshCw: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>,
+            Trophy: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>,
+            ArrowRight: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>,
+            Brain: () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>
+        };
+
+        // --- DATA (Compact for file size) ---
+        const ALL_QUESTIONS = [
+            { id: 1, q: "Which component of the computer is responsible for performing arithmetic and logical operations?", options: ["Control Unit", "ALU (Arithmetic Logic Unit)", "Memory", "Input/Output"], a: "B", h: "Think of the 'calculator' part of the CPU.", d: "Easy", part: 1 },
+            { id: 2, q: "In the Von Neumann architecture, what is the key characteristic regarding instructions and data?", options: ["They are stored in separate memories.", "They are stored in the same memory.", "Instructions are processed in parallel with data.", "Data is processed before instructions."], a: "B", h: "This 'stored-program' concept is the defining feature distinguishing it from Harvard architecture.", d: "Medium", part: 1 },
+            { id: 3, q: "Which level of the computer hierarchy is directly above the Digital Logic Level?", options: ["Operating System Level", "Assembly Language Level", "Control Level", "High-Level Language Level"], a: "C", h: "Before you can run assembly, the hardware control signals must interpret the bits.", d: "Medium", part: 1 },
+            { id: 4, q: "Moore's Law states that the density of transistors on an integrated circuit doubles approximately every:", options: ["6 months", "18-24 months", "5 years", "10 years"], a: "B", h: "It's a famous observation about the rapid growth of computing power roughly every two years.", d: "Easy", part: 1 },
+            { id: 5, q: "What distinguishes Computer Organization from Computer Architecture?", options: ["Architecture is about hardware details; Organization is about software.", "Architecture is the programmer's view; Organization is the hardware implementation.", "They are exactly the same.", "Organization allows for new instructions; Architecture does not."], a: "B", h: "'Architecture' is what you see (attributes); 'Organization' is how it's built (transparent details).", d: "Medium", part: 1 },
+            { id: 6, q: "Convert the decimal number 12 to an 8-bit binary number.", options: ["00001010", "00001100", "00001110", "00001111"], a: "B", h: "12 = 8 + 4. Place 1s in the positions for 8 and 4.", d: "Easy", part: 1 },
+            { id: 7, q: "What is the Two's Complement representation of -5 using 4 bits?", options: ["1011", "1101", "1010", "1111"], a: "A", h: "Take +5 (0101), flip bits (1010), and add 1 (1011).", d: "Medium", part: 1 },
+            { id: 8, q: "Which floating-point standard is most commonly used in modern computers?", options: ["IEEE 754", "ASCII", "EBCDIC", "UNICODE"], a: "A", h: "It defines how single and double precision numbers are stored.", d: "Easy", part: 1 },
+            { id: 9, q: "In IEEE 754 Single Precision, how many bits are used for the exponent?", options: ["8 bits", "11 bits", "23 bits", "32 bits"], a: "A", h: "The split is 1 (sign) + 8 (exponent) + 23 (mantissa).", d: "Hard", part: 1 },
+            { id: 10, q: "What is the hexadecimal equivalent of the binary number 1101 0011?", options: ["C3", "D3", "D2", "E3"], a: "B", h: "Split into groups of four: 1101 (D) and 0011 (3).", d: "Medium", part: 1 },
+            { id: 11, q: "The ASCII code for 'A' is 65. What is the ASCII code for 'C'?", options: ["66", "67", "68", "69"], a: "B", h: "ASCII letters are sequential. A=65, B=66, C=...", d: "Easy", part: 1 },
+            { id: 12, q: "Which error detection method uses a calculated remainder from a polynomial division?", options: ["Parity Bit", "Checksum", "CRC (Cyclic Redundancy Check)", "Hamming Code"], a: "C", h: "Think of 'Cycles' and division remainders used in networks.", d: "Hard", part: 1 },
+            { id: 13, q: "Hamming codes are primarily used for:", options: ["Error detection only", "Error correction and detection", "Data encryption", "Data compression"], a: "B", h: "Hamming codes can point to exactly which bit is wrong, allowing you to fix (correct) it.", d: "Medium", part: 1 },
+            { id: 14, q: "How many distinct values can be represented by 1 byte?", options: ["128", "255", "256", "512"], a: "C", h: "2 to the power of 8 (2^8).", d: "Easy", part: 1 },
+            { id: 15, q: "The Boolean expression X + X' equals:", options: ["0", "1", "X", "X'"], a: "B", h: "Something plus its opposite always covers everything (True).", d: "Easy", part: 1 },
+            { id: 16, q: "Which gate outputs 1 only if both inputs are 1?", options: ["OR", "AND", "XOR", "NAND"], a: "B", h: "It requires condition A 'AND' condition B to be true.", d: "Easy", part: 1 },
+            { id: 17, q: "Which digital circuit is used to select one output from multiple inputs based on selection lines?", options: ["Decoder", "Multiplexer", "Adder", "Flip-flop"], a: "B", h: "Think of it as a 'selector' switch.", d: "Medium", part: 1 },
+            { id: 18, q: "A K-Map (Karnaugh Map) is used for:", options: ["Designing memory", "Simplifying Boolean expressions", "Calculating CPU speed", "Scheduling processes"], a: "B", h: "It groups 1s visually to find the simplest logic equation.", d: "Medium", part: 1 },
+            { id: 19, q: "(X + Y)(X + Z) simplifies to:", options: ["X + YZ", "XY + Z", "X(Y + Z)", "X + Y + Z"], a: "A", h: "This is the Distributive Law of OR over AND.", d: "Hard", part: 1 },
+            { id: 20, q: "Which circuit adds three bits (A, B, Cin)?", options: ["Half Adder", "Full Adder", "Ripple Counter", "Decoder"], a: "B", h: "A 'Half' adder handles two bits; a 'Full' adder handles two plus a carry.", d: "Medium", part: 1 },
+            { id: 21, q: "The basic building block of sequential logic (memory) is:", options: ["AND gate", "Multiplexer", "Flip-flop", "Decoder"], a: "C", h: "Combinational logic has no memory; Flip-flops store state (0 or 1).", d: "Easy", part: 1 },
+            { id: 22, q: "What implies that NAND and NOR gates are 'universal'?", options: ["They are cheaper to make.", "Any Boolean function can be implemented using only them.", "They use less power.", "They are faster than XOR."], a: "B", h: "You can build AND, OR, and NOT gates just by connecting NANDs properly.", d: "Hard", part: 1 },
+            { id: 23, q: "In MARIE, the accumulator (AC) is used to:", options: ["Store the address of the next instruction.", "Hold data for arithmetic/logic operations.", "Decode instructions.", "Store Input/Output status."], a: "B", h: "'Accumulate' means to gather results of calculations.", d: "Easy", part: 1 },
+            { id: 24, q: "Which register holds the address of the next instruction to be executed?", options: ["IR (Instruction Register)", "MAR (Memory Address Register)", "PC (Program Counter)", "MBR (Memory Buffer Register)"], a: "C", h: "It 'counts' through the program steps.", d: "Easy", part: 1 },
+            { id: 25, q: "What is the size of a MARIE instruction?", options: ["8 bits", "16 bits", "32 bits", "64 bits"], a: "B", h: "MARIE is a simple 16-bit architecture.", d: "Medium", part: 1 },
+            { id: 26, q: "The RTL expression MAR <- X means:", options: ["Copy the value of X into the MAR.", "Copy the value of MAR into X.", "Compare MAR and X.", "Add X to MAR."], a: "A", h: "The arrow points to the destination.", d: "Easy", part: 1 },
+            { id: 27, q: "During the 'Fetch' phase of the instruction cycle, the contents of PC are moved to:", options: ["AC", "IR", "MAR", "MBR"], a: "C", h: "To get the instruction, we first need to send its address to the Memory Address Register.", d: "Hard", part: 1 },
+            { id: 28, q: "The MARIE opcode for ADD is:", options: ["0001", "0010", "0011", "0100"], a: "C", h: "Opcode 1 is Load, 2 is Store, 3 is Add.", d: "Hard", part: 1 },
+            { id: 29, q: "Which bus allows data to travel in both directions?", options: ["Address Bus", "Control Bus", "Data Bus", "Instruction Bus"], a: "C", h: "We read (in) and write (out) data, so it must be bidirectional. Addresses only go one way (CPU to RAM).", d: "Medium", part: 1 },
+            { id: 30, q: "Load 100 in MARIE means:", options: ["Load the value 100 into AC.", "Load the contents of memory address 100 into AC.", "Load the AC value into address 100.", "Add 100 to AC."], a: "B", h: "In MARIE, the operand is usually a memory address, not an immediate value.", d: "Medium", part: 1 },
+            { id: 31, q: "The Instruction Register (IR) holds:", options: ["The address of the data.", "The current instruction being executed.", "The result of the ALU.", "The top of the stack."], a: "B", h: "Once fetched from memory, the instruction sits here to be decoded.", d: "Easy", part: 1 },
+            { id: 32, q: "In the connection CPU <-> Bus <-> Memory, which register connects directly to the data bus?", options: ["PC", "AC", "MBR (Memory Buffer Register)", "MAR"], a: "C", h: "The 'Buffer' buffers the data going in and out of the memory bus.", d: "Hard", part: 1 },
+            { id: 33, q: "Which instruction sequence performs A = B + C?", options: ["Load B, Add C, Store A", "Input B, Input C, Store A", "Load A, Add B, Store C", "Load B, Store C, Add A"], a: "A", h: "You load the first number, add the second to it, and store the result.", d: "Medium", part: 1 },
+            { id: 34, q: "What happens if an interrupt occurs?", options: ["The computer shuts down.", "The current execution is halted, state is saved, and an ISR is run.", "The current instruction is deleted.", "The CPU switches to Read-Only mode."], a: "B", h: "It's like a phone call; you pause what you're doing, handle the call, then resume.", d: "Medium", part: 1 },
+            { id: 35, q: "A 'Hardwired' control unit:", options: ["Uses microcode in memory.", "Is slower than microprogrammed control.", "Is made of digital logic gates and is very fast.", "Can be easily reprogrammed."], a: "C", h: "'Hardwired' means built physically into the circuitry, optimizing speed over flexibility.", d: "Hard", part: 1 },
+            { id: 36, q: "The Skipcond instruction in MARIE is used for:", options: ["Arithmetic", "Data movement", "Flow control / Branching", "I/O"], a: "C", h: "It 'skips' the next instruction based on a condition, creating if-then logic.", d: "Medium", part: 1 },
+            { id: 37, q: "Microoperations are:", options: ["Tiny computers.", "Low-level atomic operations performed by the hardware.", "Software programs.", "High-level variables."], a: "B", h: "The smallest steps a CPU takes (e.g., 'move bit', 'increment clock').", d: "Medium", part: 1 },
+            { id: 38, q: "If the PC holds 005, what is the address of the next instruction?", options: ["004", "005", "006", "Random"], a: "B", h: "The PC points to the next instruction.", d: "Easy", part: 1 },
+            { id: 39, q: "What corresponds to the 'Decode' step in the instruction cycle?", options: ["Fetching data from memory.", "Determining which operation to perform based on the Opcode.", "Writing results to memory.", "Calculating the effective address."], a: "B", h: "You have the bits, now you must figure out 'what do these bits mean?'.", d: "Easy", part: 1 },
+            { id: 40, q: "Which architecture typically has variable length instructions?", options: ["RISC", "CISC", "MARIE", "Load-Store"], a: "B", h: "Complex Instruction Set Computers (like x86) try to pack complex logic into varying sizes.", d: "Medium", part: 2 },
+            { id: 41, q: "In 'Big Endian' format, the most significant byte is stored at:", options: ["The lowest memory address.", "The highest memory address.", "The middle address.", "Random addresses."], a: "A", h: "'Big' comes first (at the start/low address).", d: "Medium", part: 2 },
+            { id: 42, q: "Which addressing mode puts the operand value directly in the instruction?", options: ["Direct", "Indirect", "Immediate", "Indexed"], a: "C", h: "You don't have to look anywhere else; the value is 'immediately' there.", d: "Easy", part: 2 },
+            { id: 43, q: "Load R1, [R2] is an example of which addressing mode?", options: ["Immediate", "Register Indirect", "Direct", "Stack"], a: "B", h: "R2 acts as a pointer (address) to the data, not the data itself.", d: "Medium", part: 2 },
+            { id: 44, q: "A stack-based architecture primarily uses which instructions for data movement?", options: ["Load / Store", "Push / Pop", "Move / Copy", "Read / Write"], a: "B", h: "Think of a stack of plates; you Push on top and Pop off.", d: "Easy", part: 2 },
+            { id: 45, q: "Reverse Polish Notation (RPN) is useful for:", options: ["Stack architectures.", "Accumulator architectures.", "Memory mapping.", "Disk scheduling."], a: "A", h: "Equations like 3 4 + naturally fit a stack (Push 3, Push 4, Add).", d: "Medium", part: 2 },
+            { id: 46, q: "Which ISA design philosophy emphasizes a large set of specialized instructions?", options: ["RISC", "CISC", "SIMD", "SISD"], a: "B", h: "'Complex' (CISC) vs 'Reduced' (RISC).", d: "Easy", part: 2 },
+            { id: 47, q: "What is 'Instruction Pipelining'?", options: ["Storing instructions on disk.", "Breaking instruction execution into stages to overlap them.", "Running instructions one at a time sequentially.", "Compressing instructions."], a: "B", h: "Like a factory assembly line, multiple instructions are processed at different stages simultaneously.", d: "Medium", part: 2 },
+            { id: 48, q: "A 'Pipeline Hazard' occurs when:", options: ["The pipeline is empty.", "The pipeline runs too fast.", "The next instruction cannot execute in the following clock cycle.", "The CPU overheats."], a: "C", h: "Hazards (Data, Control, Structural) cause stalls or 'bubbles' in the pipeline.", d: "Medium", part: 2 },
+            { id: 49, q: "Branch Prediction is used to reduce the penalty of:", options: ["Data Hazards", "Control Hazards", "Structural Hazards", "Memory Latency"], a: "B", h: "If the CPU guesses which way an if statement goes, it doesn't have to flush the pipeline.", d: "Hard", part: 2 },
+            { id: 50, q: "Which addressing mode is best for accessing array elements?", options: ["Immediate", "Indexed", "Direct", "Stack"], a: "B", h: "An index register (like i in loops) is added to a base address.", d: "Medium", part: 2 },
+            { id: 51, q: "What is the typical advantage of Fixed-Length instructions (RISC)?", options: ["They save memory.", "They are easier and faster to decode.", "They allow more complex operations.", "They use fewer registers."], a: "B", h: "The hardware knows exactly where every bit field starts without checking length first.", d: "Medium", part: 2 },
+            { id: 52, q: "The expanding opcode technique allows:", options: ["More operands for short opcodes.", "Variable length instructions in a fixed-width ISA.", "Trade-off between number of opcodes and addressable space.", "Faster clock speeds."], a: "C", h: "You use some address bits to create more opcode bits when you don't need all operands.", d: "Hard", part: 2 },
+            { id: 53, q: "Java Bytecode is an example of:", options: ["Hardware Machine Code", "An Intermediate Language for a Stack Machine (JVM).", "Assembly Language.", "High-Level Source Code."], a: "B", h: "Java compiles to bytecode, which the JVM (a software stack machine) executes.", d: "Hard", part: 2 },
+            { id: 54, q: "0-Operand instructions are typically found in:", options: ["Stack Architectures", "GPR Architectures", "Accumulator Architectures", "RISC Architectures"], a: "A", h: "ADD implicitly pops top two items; no operands need to be named.", d: "Medium", part: 2 },
+            { id: 55, q: "2-Operand instructions (e.g., ADD R1, R2) usually imply:", options: ["R1 = R1 + R2", "R1 = R2 + R2", "R2 = R1 + R1", "New Register = R1 + R2"], a: "A", h: "One operand serves as both a source and the destination.", d: "Medium", part: 2 },
+            { id: 56, q: "Data alignment (e.g., word-aligned) helps:", options: ["Save disk space.", "Improve memory access speed.", "Reduce instruction count.", "Increase cache size."], a: "B", h: "Reading aligned data takes one cycle; misaligned might take two.", d: "Hard", part: 2 },
+            { id: 57, q: "General Purpose Register (GPR) architectures are now:", options: ["Obsolete.", "The most common type (e.g., x86, ARM).", "Only used in embedded systems.", "Slower than Accumulator architectures."], a: "B", h: "Modern CPUs use registers for speed and flexibility over stack/accumulator designs.", d: "Easy", part: 2 },
+            { id: 58, q: "Which type of memory is volatile (loses data when power is off)?", options: ["ROM", "Flash", "RAM", "Magnetic Disk"], a: "C", h: "Random Access Memory is temporary workspace.", d: "Easy", part: 2 },
+            { id: 59, q: "Which memory is the fastest in the hierarchy?", options: ["Main Memory (DRAM)", "Cache (SRAM)", "CPU Registers", "Hard Disk"], a: "C", h: "Registers are right inside the CPU core.", d: "Easy", part: 2 },
+            { id: 60, q: "Why do we use Cache memory?", options: ["To increase storage capacity.", "To bridge the speed gap between CPU and Main Memory.", "To store the BIOS.", "To backup data permanently."], a: "B", h: "CPU is fast, RAM is slow. Cache sits in the middle.", d: "Easy", part: 2 },
+            { id: 61, q: "'Locality of Reference' refers to:", options: ["The physical location of the computer.", "The tendency of programs to access data near recently accessed data.", "The size of the memory address.", "The speed of the bus."], a: "B", h: "If you read array[0], you likely need array[1] soon (Spatial Locality).", d: "Medium", part: 2 },
+            { id: 62, q: "In Direct Mapped Cache, a memory block maps to:", options: ["Any cache line.", "Exactly one specific cache line.", "A set of cache lines.", "The hard disk."], a: "B", h: "It's 'Direct' - there is only one specific parking spot for each car.", d: "Medium", part: 2 },
+            { id: 63, q: "Which mapping scheme is the most flexible but expensive to build?", options: ["Direct Mapped", "Set Associative", "Fully Associative", "Virtual Mapping"], a: "C", h: "A memory block can go anywhere in the cache, requiring complex search logic.", d: "Hard", part: 2 },
+            { id: 64, q: "When the CPU writes to cache and immediately updates main memory, it is called:", options: ["Write-Back", "Write-Through", "Write-Allocate", "Dirty Write"], a: "B", h: "The data goes 'through' the cache to the RAM instantly.", d: "Medium", part: 2 },
+            { id: 65, q: "What is a 'Page Fault'?", options: ["An error in the program code.", "When the CPU tries to access a page not currently in physical RAM.", "When the printer fails.", "A cache miss."], a: "B", h: "The OS must fetch the missing 'page' from the disk into RAM.", d: "Medium", part: 2 },
+            { id: 66, q: "Virtual Memory allows a computer to:", options: ["Run without RAM.", "Run programs larger than the physical RAM size.", "Increase the CPU clock speed.", "Eliminate Cache."], a: "B", h: "It uses the Hard Disk as 'fake' (virtual) RAM.", d: "Medium", part: 2 },
+            { id: 67, q: "DRAM requires refreshing because:", options: ["It uses capacitors that leak charge.", "It uses flip-flops.", "It overheats.", "It is magnetic."], a: "A", h: "DRAM is like a leaky bucket; you must constantly refill (refresh) it.", d: "Hard", part: 2 },
+            { id: 68, q: "SRAM (Static RAM) is typically used for:", options: ["Main Memory", "Cache Memory", "USB Drives", "Hard Drives"], a: "B", h: "It's fast and doesn't need refreshing, but it's expensive and large.", d: "Medium", part: 2 },
+            { id: 69, q: "The 'Hit Rate' is:", options: ["The percentage of time data is found in the cache.", "The speed of the bus.", "The number of instructions per second.", "The refresh rate of DRAM."], a: "A", h: "The higher the hit rate, the faster the computer feels.", d: "Easy", part: 2 },
+            { id: 70, q: "In Set Associative Cache, the middle ground between Direct and Fully Associative, memory maps to:", options: ["A specific Set, and then any line within that Set.", "Any line in the cache.", "A specific Line only.", "A virtual address."], a: "A", h: "It's like a parking lot with assigned rows (Sets), but you can park in any spot in that row.", d: "Hard", part: 2 },
+            { id: 71, q: "What does the 'Dirty Bit' indicate in a Write-Back cache?", options: ["The block is corrupt.", "The block has been modified and needs to be saved to RAM.", "The block is empty.", "The block is read-only."], a: "B", h: "'Dirty' means the copy in cache is newer than the copy in RAM.", d: "Medium", part: 2 },
+            { id: 72, q: "EEPROM is a type of:", options: ["Volatile Memory", "ROM that can be erased electrically.", "Magnetic Memory.", "Cache."], a: "B", h: "Electrically Erasable Programmable ROM.", d: "Easy", part: 2 },
+            { id: 73, q: "The Tag field in a cache address is used to:", options: ["Select the set.", "Select the byte within the block.", "Identify if the block in cache is the one requested.", "Count the hits."], a: "C", h: "It's like the ID card checked against the memory resident.", d: "Medium", part: 2 },
+            { id: 74, q: "Fragmentation is a problem primarily in:", options: ["Paging", "Segmentation", "Cache", "Registers"], a: "B", h: "Variable sized segments leave holes (external fragmentation). Paging fixes this with fixed sizes.", d: "Hard", part: 2 },
+            { id: 75, q: "What is the main benefit of Interleaved Memory?", options: ["It stores more data.", "It allows simultaneous access to different memory banks, increasing bandwidth.", "It reduces power.", "It is cheaper."], a: "B", h: "Like opening multiple checkout lanes at a grocery store instead of one.", d: "Hard", part: 2 },
+            { id: 76, q: "Effective Access Time (EAT) takes into account:", options: ["Only Cache speed.", "Only RAM speed.", "Hit rate, Cache access time, and Miss penalty.", "CPU frequency."], a: "C", h: "It's the weighted average of how long it takes to get data.", d: "Hard", part: 2 },
+            { id: 77, q: "TLB (Translation Lookaside Buffer) is used to speed up:", options: ["Arithmetic operations.", "Virtual to Physical address translation.", "Disk I/O.", "Bus arbitration."], a: "B", h: "It's a special cache just for the Page Table.", d: "Medium", part: 2 },
+            { id: 78, q: "Amdahl's Law deals with:", options: ["The speed of light.", "The limit of speedup gained by parallelizing a portion of a task.", "The size of transistors.", "The cost of memory."], a: "B", h: "You can't speed up a car trip indefinitely just by making the engine faster if you still have to wait at traffic lights (the serial part).", d: "Hard", part: 2 },
+            { id: 79, q: "Which I/O method requires the CPU to constantly check the status of the device?", options: ["Interrupt-Driven I/O", "Programmed I/O (Polling)", "DMA", "Memory Mapped I/O"], a: "B", h: "'Are you ready? Are you ready?' - The CPU wastes time asking.", d: "Medium", part: 2 },
+            { id: 80, q: "DMA (Direct Memory Access) allows:", options: ["I/O devices to access memory without CPU intervention.", "The CPU to run faster.", "The memory to be larger.", "The OS to crash."], a: "A", h: "The CPU delegates the heavy lifting of copying data to the DMA controller.", d: "Medium", part: 2 },
+            { id: 81, q: "In Interrupt-Driven I/O, the device:", options: ["Is ignored.", "Sends a signal to the CPU when it is ready.", "Accesses memory directly.", "Slows down the bus."], a: "B", h: "The device 'interrupts' the CPU only when needed.", d: "Easy", part: 2 },
+            { id: 82, q: "RAID Level 0 provides:", options: ["Disk Mirroring (Redundancy).", "Striping (Performance) with no redundancy.", "Error correction.", "Tape backup."], a: "B", h: "0 redundancy. It just splits data across drives for speed.", d: "Medium", part: 2 },
+            { id: 83, q: "RAID Level 1 provides:", options: ["Striping.", "Mirroring (Redundancy).", "Parity.", "Cache."], a: "B", h: "You keep an exact copy (mirror) on a second drive.", d: "Medium", part: 2 },
+            { id: 84, q: "Seek Time on a hard disk is:", options: ["The time to read the data.", "The time for the sector to rotate under the head.", "The time for the arm to move to the correct cylinder (track).", "The transfer rate."], a: "C", h: "The physical movement of the arm is usually the slowest part.", d: "Medium", part: 2 },
+            { id: 85, q: "Rotational Latency refers to:", options: ["Moving the arm.", "Waiting for the sector to spin to the head.", "Sending data over the bus.", "Formatting the disk."], a: "B", h: "Waiting for the 'pizza slice' you want to come around.", d: "Medium", part: 2 },
+            { id: 86, q: "Which storage medium uses pits and lands?", options: ["Hard Disk", "Optical Disk (CD/DVD)", "Flash Memory", "Magnetic Tape"], a: "B", h: "A laser reads the reflections from the bumps (pits/lands).", d: "Easy", part: 2 },
+            { id: 87, q: "SSDs (Solid State Drives) differ from HDDs because:", options: ["They have no moving parts.", "They use magnets.", "They are slower.", "They are analog."], a: "A", h: "'Solid State' implies electronics, not mechanics.", d: "Easy", part: 2 },
+            { id: 88, q: "Memory Mapped I/O means:", options: ["I/O devices have separate instructions.", "I/O devices share the same address space as memory.", "Memory is used as a disk.", "I/O is disabled."], a: "B", h: "You talk to the printer by writing to address 0xF000, just like it was RAM.", d: "Medium", part: 2 },
+            { id: 89, q: "Which RAID level uses distributed parity?", options: ["RAID 0", "RAID 1", "RAID 5", "RAID 10"], a: "C", h: "RAID 5 spreads the error-checking bits across all drives.", d: "Hard", part: 2 },
+            { id: 90, q: "Access time for magnetic disk is the sum of:", options: ["Seek Time + Rotational Latency + Transfer Time.", "CPU speed + Bus Speed.", "Seek Time only.", "Rotational Latency only."], a: "A", h: "Move arm + Wait for spin + Read data.", d: "Medium", part: 2 },
+            { id: 91, q: "USB (Universal Serial Bus) transmits data:", options: ["Using parallel wires.", "Serially (one bit at a time).", "Via radio waves.", "Using fiber optics."], a: "B", h: "It's in the name 'Serial'.", d: "Easy", part: 2 },
+            { id: 92, q: "Constant Angular Velocity (CAV) is commonly used in:", options: ["CDs (Audio)", "Hard Disks", "Tapes", "Flash"], a: "B", h: "The disk spins at the same RPM regardless of where the head is.", d: "Hard", part: 2 },
+            { id: 93, q: "The primary job of the Operating System is to:", options: ["Run games.", "Manage hardware resources and provide an interface for users.", "Compile code.", "Design circuits."], a: "B", h: "It is the manager / middleman between you and the hardware.", d: "Easy", part: 2 },
+            { id: 94, q: "Multiprogramming allows:", options: ["One program to run at a time.", "Multiple programs to reside in memory and share CPU time.", "Multiple CPUs to run one program.", "Writing programs in multiple languages."], a: "B", h: "While one program waits for I/O, the CPU switches to another.", d: "Medium", part: 2 },
+            { id: 95, q: "Context Switching involves:", options: ["Moving the computer.", "Saving the state of the current process and loading the state of the next.", "Switching power cables.", "Changing the monitor resolution."], a: "B", h: "It's the overhead of the OS switching 'focus' between tasks.", d: "Medium", part: 2 },
+            { id: 96, q: "A linker's job is to:", options: ["Compile source code.", "Combine object files into a single executable.", "Load the program into memory.", "Debug the code."], a: "B", h: "It 'links' different code pieces together.", d: "Medium", part: 2 },
+            { id: 97, q: "Dynamic Linking (DLLs) happens:", options: ["At compile time.", "At load time or run time.", "Before the OS starts.", "Never."], a: "B", h: "The library is loaded only when the program actually runs.", d: "Medium", part: 2 },
+            { id: 98, q: "The Kernel is:", options: ["The outer shell of the OS.", "The core component of the OS that stays in memory.", "An application program.", "A hardware device."], a: "B", h: "It's the 'heart' of the operating system.", d: "Easy", part: 2 },
+            { id: 99, q: "Which scheduling algorithm is non-preemptive?", options: ["Round Robin", "FCFS (First-Come, First-Served)", "Shortest Remaining Time First", "Priority Scheduling (Preemptive)"], a: "B", h: "Once a job starts, it runs until it finishes. No interruptions.", d: "Medium", part: 2 },
+            { id: 100, q: "A 'Race Condition' occurs when:", options: ["Computers race to finish first.", "The outcome depends on the order of execution of concurrent threads.", "The CPU is too fast.", "The network is slow."], a: "B", h: "If two threads write to the same variable at the same time, the result is unpredictable.", d: "Hard", part: 2 },
+            { id: 101, q: "Virtual Machines (VMs) provide:", options: ["Faster hardware.", "Complete isolation between different OS environments on the same hardware.", "More physical RAM.", "Better graphics."], a: "B", h: "You can run Linux inside Windows safely.", d: "Medium", part: 2 },
+            { id: 102, q: "The BIOS is typically stored in:", options: ["RAM", "ROM / Flash Memory", "Hard Disk", "Cache"], a: "B", h: "It must be available immediately on power-up, before the disk is read.", d: "Easy", part: 2 },
+            { id: 103, q: "Flynn's Taxonomy classifies computers based on:", options: ["Size and Cost.", "Instruction and Data streams.", "Memory size.", "Brand."], a: "B", h: "SISD, SIMD, MISD, MIMD.", d: "Medium", part: 2 },
+            { id: 104, q: "SISD stands for:", options: ["Single Instruction, Single Data", "Simple Instruction, Simple Data", "Super Instruction, Super Data", "Serial Instruction, Serial Data"], a: "A", h: "The standard Von Neumann PC is SISD.", d: "Easy", part: 2 },
+            { id: 105, q: "GPUs (Graphics Processing Units) are largely examples of:", options: ["SISD", "SIMD", "MISD", "Neural Networks"], a: "B", h: "Single Instruction (draw pixel), Multiple Data (apply to millions of pixels).", d: "Medium", part: 2 },
+            { id: 106, q: "MIMD implies:", options: ["Multiple independent processors executing different instructions on different data.", "One processor doing many things.", "A vector processor.", "A single core CPU."], a: "A", h: "A modern multi-core supercomputer or server cluster.", d: "Medium", part: 2 },
+            { id: 107, q: "VLIW (Very Long Instruction Word) relies on:", options: ["Hardware to schedule instructions.", "The Compiler to pack independent operations into one instruction.", "The OS to manage threads.", "Random execution."], a: "B", h: "The intelligence is moved from the hardware (runtime) to the compiler (compile time).", d: "Hard", part: 2 },
+            { id: 108, q: "Vector Processors are designed to:", options: ["Process text efficiently.", "Operate on entire arrays (vectors) of data at once.", "Run databases.", "Be very small."], a: "B", h: "Instead of loop { a[i] + b[i] }, they do A + B in one go.", d: "Medium", part: 2 },
+            { id: 109, q: "Shared Memory Multiprocessors typically face the problem of:", options: ["Cache Coherence.", "Not enough power.", "Too much disk space.", "Slow network."], a: "A", h: "If CPU A changes X, CPU B must know that its copy of X is invalid.", d: "Hard", part: 2 },
+            { id: 110, q: "Neural Networks represent a shift towards:", options: ["Deterministic computing.", "Probabilistic and pattern-based computing.", "Serial processing.", "Manual calculation."], a: "B", h: "They mimic biological brains rather than rigid logic gates.", d: "Medium", part: 2 },
+            { id: 111, q: "Superpipelining differs from standard pipelining by:", options: ["Adding more pipes.", "Breaking stages into smaller substages to increase clock speed.", "Using wider pipes.", "Removing stages."], a: "B", h: "Deeper pipeline = Higher Frequency = potentially higher throughput.", d: "Hard", part: 2 },
+            { id: 112, q: "UMA (Uniform Memory Access) means:", options: ["All processors access memory at the same speed.", "Memory access time depends on location.", "Memory is read-only.", "Memory is uniform in color."], a: "A", h: "'Uniform' means equal access for everyone.", d: "Medium", part: 2 },
+            { id: 113, q: "Which mean is best for averaging rates (e.g., MFLOPS)?", options: ["Arithmetic Mean", "Geometric Mean", "Harmonic Mean", "Weighted Mean"], a: "C", h: "Use Harmonic mean for rates/speed; Geometric for normalized ratios; Arithmetic for times.", d: "Hard", part: 2 },
+            { id: 114, q: "The 'Geometric Mean' is useful when:", options: ["Averaging raw execution times.", "Comparing normalized results (ratios) across benchmarks.", "Adding up costs.", "Counting errors."], a: "B", h: "It gives equal weight to improvements in all benchmarks relative to a baseline.", d: "Hard", part: 2 },
+            { id: 115, q: "SPEC benchmarks are used to:", options: ["Test monitor colors.", "Evaluate the performance of computer systems realistically.", "Check internet speed.", "Measure power consumption only."], a: "B", h: "Standard Performance Evaluation Corporation - the industry standard.", d: "Easy", part: 2 },
+            { id: 116, q: "MIPS stands for:", options: ["Memory In Per Second", "Millions of Instructions Per Second", "Most Important Processing System", "Many Integers Per Second"], a: "B", h: "A common, though sometimes misleading, metric for raw speed.", d: "Easy", part: 2 },
+            { id: 117, q: "Which is a better measure of performance than Clock Speed?", options: ["Size of the case.", "Throughput / Execution Time.", "Heat generation.", "LED brightness."], a: "B", h: "A 2GHz CPU doing 2 instructions/cycle is faster than a 3GHz CPU doing 0.5 instructions/cycle.", d: "Easy", part: 2 },
+            { id: 118, q: "Speedup is calculated as:", options: ["Execution Time (Old) / Execution Time (New)", "New / Old", "Old - New", "Old + New"], a: "A", h: "If Old takes 10s and New takes 5s, Speedup is 10/5 = 2x.", d: "Medium", part: 2 },
+            { id: 119, q: "Improving the common case refers to:", options: ["Fixing rare bugs.", "Optimizing the operations that happen most frequently.", "Buying cheaper hardware.", "Ignoring errors."], a: "B", h: "Amdahl's Law corollary: Make the frequent events fast to get the best overall gain.", d: "Medium", part: 2 },
+            { id: 120, q: "Benchmarking suites usually include:", options: ["Just one program.", "A variety of real-world applications (integer, floating point).", "Only games.", "Only mathematical equations."], a: "B", h: "To get a fair score, you must test different types of workloads.", d: "Medium", part: 2 },
+            { id: 121, q: "TPC benchmarks focus on:", options: ["Scientific computing.", "Transaction Processing (Databases).", "Graphics.", "Home use."], a: "B", h: "TPC = Transaction Processing Council.", d: "Medium", part: 2 },
+            { id: 122, q: "CPU Time is equal to:", options: ["Instructions * CPI / Clock Rate", "Instructions * Clock Rate", "CPI / Instructions", "Wall Clock Time"], a: "A", h: "The Iron Law of Performance: (Inst Count * Cycles Per Inst) * Cycle Time.", d: "Hard", part: 2 },
+            { id: 123, q: "A lower CPI (Cycles Per Instruction) implies:", options: ["Slower performance.", "Better architectural efficiency.", "More instructions are needed.", "Slower clock."], a: "B", h: "Doing more work in fewer clock ticks is good.", d: "Medium", part: 2 },
+            { id: 124, q: "Why is Arithmetic Mean poor for normalized numbers?", options: ["It is too hard to calculate.", "It is biased by the reference machine's execution time.", "It is always 0.", "It ignores negative numbers."], a: "B", h: "Use Geometric Mean for normalized ratios to avoid this bias.", d: "Hard", part: 2 },
+            { id: 125, q: "Disk performance optimization includes:", options: ["Increasing fragmentation.", "Defragmentation and Scheduling Algorithms (e.g., SCAN).", "Reducing cache.", "Using slower disks."], a: "B", h: "Organizing data physically close together reduces arm movement (seek time).", d: "Easy", part: 2 },
+            { id: 126, q: "'User code optimization' usually offers:", options: ["The least performance gain.", "The greatest opportunity for performance improvement.", "No change.", "Hardware damage."], a: "B", h: "A better algorithm (e.g., O(n log n) vs O(n^2)) beats hardware upgrades.", d: "Medium", part: 2 },
+            { id: 127, q: "The 'Wall Clock Time' includes:", options: ["Only CPU processing time.", "CPU time + I/O waits + OS overhead.", "Only OS time.", "The time of day."], a: "B", h: "It's the total time you wait, including disk waiting and other programs running.", d: "Medium", part: 2 },
+            { id: 128, q: "System Performance Evaluation Cooperative (SPEC) uses what type of mean to summarize scores?", options: ["Arithmetic", "Harmonic", "Geometric", "Median"], a: "C", h: "Since SPEC produces ratios against a reference machine, Geometric Mean is required.", d: "Hard", part: 2 },
+            { id: 129, q: "Which factor does NOT directly affect CPU performance in the standard equation?", options: ["Instruction Count", "Cycles Per Instruction (CPI)", "Clock Cycle Time", "Disk Capacity"], a: "D", h: "Disk space stores data; it doesn't determine how fast the CPU calculates (though it affects overall system speed).", d: "Medium", part: 2 },
+            { id: 130, q: "Optimization via 'Loop Unrolling' aims to:", options: ["Make code shorter.", "Reduce loop control overhead (branching/counter updates).", "Make code easier to read.", "Slow down execution."], a: "B", h: "By repeating the loop body multiple times manually, you do fewer 'check if end of loop' comparisons.", d: "Hard", part: 2 }
+        ];
+
+        function CS241QuizApp() {
+            const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+            const [selectedOption, setSelectedOption] = useState(null);
+            const [showHint, setShowHint] = useState(false);
+            const [score, setScore] = useState(0);
+            const [quizFinished, setQuizFinished] = useState(false);
+            const [filter, setFilter] = useState('all'); 
+            const [mode, setMode] = useState('menu'); 
+            const [answerStatus, setAnswerStatus] = useState(null); 
+
+            // Filter questions based on selection
+            const filteredQuestions = useMemo(() => {
+                if (filter === 'part1') return ALL_QUESTIONS.filter(q => q.part === 1);
+                if (filter === 'part2') return ALL_QUESTIONS.filter(q => q.part === 2);
+                return ALL_QUESTIONS;
+            }, [filter]);
+
+            const currentQuestion = filteredQuestions[currentQuestionIndex];
+
+            const getCorrectIndex = (letter) => {
+                return letter.charCodeAt(0) - 65;
+            };
+
+            const handleStart = (selectedFilter) => {
+                setFilter(selectedFilter);
+                setMode('quiz');
+                setCurrentQuestionIndex(0);
+                setScore(0);
+                setQuizFinished(false);
+                resetQuestionState();
+            };
+
+            const resetQuestionState = () => {
+                setSelectedOption(null);
+                setShowHint(false);
+                setAnswerStatus(null);
+            };
+
+            const handleOptionClick = (index) => {
+                if (answerStatus !== null) return; 
+
+                setSelectedOption(index);
+                const correctIndex = getCorrectIndex(currentQuestion.a);
+                
+                if (index === correctIndex) {
+                    setAnswerStatus('correct');
+                    setScore(s => s + 1);
+                } else {
+                    setAnswerStatus('incorrect');
+                }
+            };
+
+            const handleNext = () => {
+                if (currentQuestionIndex < filteredQuestions.length - 1) {
+                    setCurrentQuestionIndex(prev => prev + 1);
+                    resetQuestionState();
+                } else {
+                    setQuizFinished(true);
+                }
+            };
+
+            const handleRestart = () => {
+                setMode('menu');
+            };
+
+            // --- RENDER COMPONENT ---
+            
+            // 1. MENU SCREEN
+            if (mode === 'menu') {
+                return (
+                    <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4 font-sans text-slate-800">
+                        <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full text-center border-t-4 border-indigo-600">
+                            <div className="flex justify-center mb-4 text-indigo-600">
+                                <Icons.BookOpen />
+                            </div>
+                            <h1 className="text-3xl font-bold mb-2">CS241 Exam Prep</h1>
+                            <p className="text-slate-500 mb-8">Computer Architecture & Organization</p>
+                            
+                            <div className="space-y-4">
+                                <button 
+                                    onClick={() => handleStart('all')}
+                                    className="w-full py-4 px-6 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold transition-all flex items-center justify-between group"
+                                >
+                                    <span>Full Exam (130 Qs)</span>
+                                    <Icons.ArrowRight />
+                                </button>
+                                
+                                <button 
+                                    onClick={() => handleStart('part1')}
+                                    className="w-full py-4 px-6 bg-white border-2 border-indigo-100 hover:border-indigo-600 text-indigo-700 rounded-xl font-semibold transition-all flex items-center justify-between group"
+                                >
+                                    <span>Part 1: Ch 1-4 (30%)</span>
+                                    <span className="text-sm bg-indigo-100 px-2 py-1 rounded">39 Qs</span>
+                                </button>
+                                
+                                <button 
+                                    onClick={() => handleStart('part2')}
+                                    className="w-full py-4 px-6 bg-white border-2 border-indigo-100 hover:border-indigo-600 text-indigo-700 rounded-xl font-semibold transition-all flex items-center justify-between group"
+                                >
+                                    <span>Part 2: Ch 5-11 (70%)</span>
+                                    <span className="text-sm bg-indigo-100 px-2 py-1 rounded">91 Qs</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+
+            // 2. RESULTS SCREEN
+            if (quizFinished) {
+                const percentage = Math.round((score / filteredQuestions.length) * 100);
+                let message = "Good effort!";
+                if (percentage >= 90) message = "Outstanding!";
+                else if (percentage >= 75) message = "Great job!";
+                else if (percentage < 50) message = "Keep studying!";
+
+                return (
+                    <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
+                        <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full text-center">
+                            <div className={`flex justify-center mb-6 ${percentage >= 70 ? 'text-yellow-500' : 'text-slate-400'}`}>
+                                <Icons.Trophy />
+                            </div>
+                            <h2 className="text-3xl font-bold text-slate-800 mb-2">{message}</h2>
+                            <div className="text-6xl font-black text-indigo-600 mb-2">{percentage}%</div>
+                            <p className="text-slate-500 mb-8">You scored {score} out of {filteredQuestions.length}</p>
+                            
+                            <button 
+                                onClick={handleRestart}
+                                className="w-full py-3 bg-slate-900 text-white rounded-xl font-semibold hover:bg-slate-800 transition-colors flex items-center justify-center gap-2"
+                            >
+                                <Icons.RefreshCw /> Back to Menu
+                            </button>
+                        </div>
+                    </div>
+                );
+            }
+
+            // 3. QUIZ SCREEN
+            const progress = ((currentQuestionIndex) / filteredQuestions.length) * 100;
+            const correctIndex = getCorrectIndex(currentQuestion.a);
+
+            return (
+                <div className="min-h-screen bg-slate-100 flex flex-col items-center py-8 px-4">
+                    {/* Header / Progress */}
+                    <div className="w-full max-w-2xl mb-6 flex items-center justify-between text-slate-600">
+                        <button onClick={handleRestart} className="text-sm font-semibold hover:text-indigo-600">Quit</button>
+                        <div className="flex flex-col items-center w-1/2">
+                            <div className="flex justify-between w-full text-xs font-bold uppercase tracking-wider mb-1">
+                                <span>Question {currentQuestionIndex + 1}/{filteredQuestions.length}</span>
+                                <span>{Math.round(progress)}%</span>
+                            </div>
+                            <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+                                <div 
+                                    className="h-full bg-indigo-600 transition-all duration-300" 
+                                    style={{ width: `${progress}%` }}
+                                ></div>
+                            </div>
+                        </div>
+                        <div className="text-sm font-semibold text-indigo-600">Score: {score}</div>
+                    </div>
+
+                    {/* Card */}
+                    <div className="bg-white w-full max-w-2xl rounded-2xl shadow-lg overflow-hidden flex flex-col">
+                        
+                        {/* Question Header */}
+                        <div className="p-6 md:p-8 bg-white border-b border-slate-100">
+                            <div className="flex justify-between items-start mb-4">
+                                <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ${
+                                    currentQuestion.d === 'Easy' ? 'bg-green-100 text-green-700' :
+                                    currentQuestion.d === 'Medium' ? 'bg-yellow-100 text-yellow-700' :
+                                    'bg-red-100 text-red-700'
+                                }`}>
+                                    {currentQuestion.d}
+                                </span>
+                                <span className="text-xs text-slate-400 font-mono">ID: {currentQuestion.id}</span>
+                            </div>
+                            <h2 className="text-xl md:text-2xl font-bold text-slate-800 leading-snug">
+                                {currentQuestion.q}
+                            </h2>
+                        </div>
+
+                        {/* Options */}
+                        <div className="p-6 md:p-8 bg-slate-50 space-y-3">
+                            {currentQuestion.options.map((opt, idx) => {
+                                let stateClass = "border-2 border-slate-200 hover:border-indigo-400 hover:bg-indigo-50";
+                                let icon = null;
+
+                                if (answerStatus !== null) {
+                                    if (idx === correctIndex) {
+                                        stateClass = "border-2 border-green-500 bg-green-50 text-green-900";
+                                        icon = <div className="text-green-600"><Icons.CheckCircle /></div>;
+                                    } else if (idx === selectedOption && idx !== correctIndex) {
+                                        stateClass = "border-2 border-red-500 bg-red-50 text-red-900";
+                                        icon = <div className="text-red-600"><Icons.XCircle /></div>;
+                                    } else {
+                                        stateClass = "border-2 border-slate-100 opacity-50";
+                                    }
+                                } else if (selectedOption === idx) {
+                                    stateClass = "border-2 border-indigo-600 bg-indigo-50";
+                                }
+
+                                return (
+                                    <button
+                                        key={idx}
+                                        onClick={() => handleOptionClick(idx)}
+                                        disabled={answerStatus !== null}
+                                        className={`w-full p-4 rounded-xl text-left font-medium transition-all flex items-center justify-between ${stateClass}`}
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                                                answerStatus !== null && idx === correctIndex ? 'bg-green-200 text-green-800' :
+                                                'bg-white text-slate-500 shadow-sm'
+                                            }`}>
+                                                {String.fromCharCode(65 + idx)}
+                                            </span>
+                                            <span>{opt}</span>
+                                        </div>
+                                        {icon}
+                                    </button>
+                                );
+                            })}
+                        </div>
+
+                        {/* Footer / Feedback */}
+                        <div className="p-6 border-t border-slate-100 bg-white min-h-[80px] flex flex-col md:flex-row items-center justify-between gap-4">
+                            
+                            <div className="flex-1 w-full">
+                                {answerStatus === 'incorrect' && !showHint && (
+                                    <button 
+                                        onClick={() => setShowHint(true)}
+                                        className="flex items-center gap-2 text-yellow-600 font-semibold hover:text-yellow-700 transition-colors"
+                                    >
+                                        <Icons.Lightbulb /> Need a hint?
+                                    </button>
+                                )}
+                                
+                                {showHint && (
+                                    <div className="flex gap-3 bg-yellow-50 p-3 rounded-lg text-yellow-800 text-sm animate-in fade-in slide-in-from-bottom-2">
+                                        <div className="shrink-0"><Icons.Brain /></div>
+                                        <p><strong>Hint:</strong> {currentQuestion.h}</p>
+                                    </div>
+                                )}
+                                
+                                {answerStatus === 'correct' && (
+                                    <div className="text-green-600 font-bold flex items-center gap-2 animate-in zoom-in">
+                                        <Icons.CheckCircle /> Correct!
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="w-full md:w-auto">
+                                {answerStatus !== null ? (
+                                    <button 
+                                        onClick={handleNext}
+                                        className="w-full md:w-auto px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-bold transition-all flex items-center justify-center gap-2 shadow-lg shadow-indigo-200"
+                                    >
+                                        {currentQuestionIndex === filteredQuestions.length - 1 ? 'Finish' : 'Next Question'}
+                                        <Icons.ArrowRight />
+                                    </button>
+                                ) : (
+                                    <div className="text-slate-400 text-sm italic hidden md:block">Select an option to continue</div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<CS241QuizApp />);
+    </script>
+</body>
+</html>
