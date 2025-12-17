@@ -161,7 +161,7 @@
                     <div>
                         <h4 class="text-yellow-400 font-bold mb-2 text-xl">Big-O ($O$)</h4>
                         <p class="text-xs text-gray-400 mb-2">Upper Bound (أسوأ حالة)</p>
-                        <div class="bg-slate-800 p-2 rounded text-sm font-mono ltr">
+                        <div class="bg-slate-800 p-2 rounded text-sm font-mono " dir="ltr">
                             $f(x) \le C \cdot g(x)$
                             <br>for $x > k$
                         </div>
@@ -169,7 +169,7 @@
                     <div>
                         <h4 class="text-green-400 font-bold mb-2 text-xl">Big-Omega ($\Omega$)</h4>
                         <p class="text-xs text-gray-400 mb-2">Lower Bound (أفضل حالة)</p>
-                        <div class="bg-slate-800 p-2 rounded text-sm font-mono ltr">
+                        <div class="bg-slate-800 p-2 rounded text-sm font-mono " dir="ltr">
                             $f(x) \ge C \cdot g(x)$
                             <br>for $x > k$
                         </div>
@@ -177,7 +177,7 @@
                     <div>
                         <h4 class="text-blue-400 font-bold mb-2 text-xl">Big-Theta ($\Theta$)</h4>
                         <p class="text-xs text-gray-400 mb-2">Tight Bound (بالضبط)</p>
-                        <div class="bg-slate-800 p-2 rounded text-sm font-mono ltr">
+                        <div class="bg-slate-800 p-2 rounded text-sm font-mono " dir="ltr">
                             $C_1 g(x) \le f(x) \le C_2 g(x)$
                         </div>
                     </div>
@@ -185,9 +185,27 @@
                 
                 <div class="mt-6 pt-4 border-t border-slate-700 text-center">
                     <p class="text-sm font-bold text-slate-300 mb-2">Hierarchy of Complexity</p>
-                    <div class="flex justify-center space-x-2 space-x-reverse font-mono text-xs md:text-sm text-amber-300">
-                        <span>$1$</span> < <span>$\log n$</span> < <span>$n$</span> < <span>$n \log n$</span> < <span>$n^2$</span> < <span>$2^n$</span> < <span>$n!$</span>
-                    </div>
+                    <div class="flex justify-center flex-wrap items-center font-mono text-xs md:text-sm text-amber-300" dir="ltr">
+					<span>$1$</span>
+					<span class="mx-2 text-slate-400">&lt;</span>
+					
+					<span>$\log n$</span>
+					<span class="mx-2 text-slate-400">&lt;</span>
+					
+					<span>$n$</span>
+					<span class="mx-2 text-slate-400">&lt;</span>
+					
+					<span>$n \log n$</span>
+					<span class="mx-2 text-slate-400">&lt;</span>
+					
+					<span>$n^2$</span>
+					<span class="mx-2 text-slate-400">&lt;</span>
+					
+					<span>$2^n$</span>
+					<span class="mx-2 text-slate-400">&lt;</span>
+					
+					<span>$n!$</span>
+				</div>
                 </div>
             </div>
         </section>
@@ -211,8 +229,8 @@
 
                     <div class="bg-orange-50 p-4 rounded-lg border border-orange-100">
                         <span class="bg-orange-200 text-orange-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">PROOF / إثبات</span>
-                        <p class="font-bold text-slate-800 mb-1">Showing $x^2 + 2x + 1$ is $O(x^2)$</p>
-                        <p class="text-sm text-slate-600 ltr text-left">
+                        <p class="font-bold text-slate-800 mb-1 text-left" dir="ltr">Showing $x^2 + 2x + 1$ is $O(x^2)$</p>
+                        <p class="text-sm text-slate-600 text-left" dir="ltr">
                             We need $C, k$ such that $x^2 + 2x + 1 \le C x^2$.
                             <br>Let $k=1$. Since $x \ge 1$:
                             <br>$x^2 + 2x + 1 \le x^2 + 2x^2 + x^2 = 4x^2$.
