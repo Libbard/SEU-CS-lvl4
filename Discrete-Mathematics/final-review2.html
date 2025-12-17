@@ -17,6 +17,7 @@
     <style>
         body { font-family: 'Cairo', sans-serif; background-color: #fff7ed; color: #431407; line-height: 1.7; }
         .en { font-family: 'Inter', sans-serif; direction: ltr; display: inline-block; }
+        .ltr-block { direction: ltr; text-align: left; }
         
         /* Amber Theme Gradients */
         .hero-gradient { background: linear-gradient(135deg, #d97706 0%, #ea580c 50%, #fb923c 100%); }
@@ -133,7 +134,7 @@
                 <h1 class="text-3xl md:text-6xl font-black mb-4 tracking-tight">خريطة النجاة والتميز 🗺️</h1>
                 <p class="text-amber-100 text-lg md:text-xl font-medium max-w-2xl mx-auto">
                     المرجع الأخير قبل دخول القاعة.
-                    <br>الزبدة المركزة، القوانين، وخفايا الاختبار لمادة <span class="en font-bold text-white">Discrete Math</span>.
+                    <br>الزبدة المركزة من الشابتر 1 إلى 13 في مكان واحد.
                 </p>
             </div>
             <div class="absolute top-0 left-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
@@ -143,44 +144,63 @@
         <div class="mb-12">
             <div class="flex items-center gap-3 mb-6">
                 <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg">1</div>
-                <h2 class="text-2xl font-black text-amber-900">الفهم العميق (كيف تعمل الأشياء؟)</h2>
+                <h2 class="text-2xl font-black text-amber-900">الفهم العميق (Concepts)</h2>
             </div>
             
-            <div class="grid md:grid-cols-2 gap-6">
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div class="concept-card hover-lift">
                     <div class="icon-box bg-amber-100 text-amber-600 text-2xl">🧠</div>
                     <h3 class="text-lg font-bold text-amber-900 mb-2">المنطق (Logic)</h3>
-                    <p class="text-sm text-amber-800">
-                        • افهم أن $p \to q$ لا تكون خاطئة إلا في حالة (T $\to$ F). الوعد الكاذب.
-                        <br>• نفي "الكل" ($\forall$) هو "يوجد واحد خالف" ($\exists$).
-                    </p>
+                    <div class="text-sm text-amber-800 space-y-2">
+                        <p>• العبارة $p \to q$ تكون <span class="font-bold text-red-600">خاطئة (F)</span> فقط إذا كانت البداية صحيحة (T) والنهاية خاطئة (F).</p>
+                        <p>• نفي "الكل" ($\forall$) هو "يوجد واحد خالف" ($\exists$).</p>
+                    </div>
                 </div>
 
                 <div class="concept-card hover-lift">
                     <div class="icon-box bg-orange-100 text-orange-600 text-2xl">📈</div>
                     <h3 class="text-lg font-bold text-amber-900 mb-2">الدوال (Functions)</h3>
-                    <p class="text-sm text-amber-800">
-                        • <span class="en font-bold">One-to-One:</span> ممنوع التكرار في النتائج (كل واحد له مقعده).
-                        <br>• <span class="en font-bold">Onto:</span> ممنوع بقاء كرسي فارغ في المستقبل (كل عناصر $B$ وصلها سهم).
-                    </p>
+                    <div class="text-sm text-amber-800 space-y-2">
+                        <p>• <span class="en font-bold">One-to-One:</span> لا يوجد تكرار في النتائج (كل $x$ لها $y$ مميزة).</p>
+                        <p>• <span class="en font-bold">Onto:</span> كل عناصر المجال المقابل وصلها سهم (لا يوجد عنصر وحيد).</p>
+                    </div>
                 </div>
 
                 <div class="concept-card hover-lift">
-                    <div class="icon-box bg-yellow-100 text-yellow-600 text-2xl">🔄</div>
-                    <h3 class="text-lg font-bold text-amber-900 mb-2">تماثل الرسوم (Isomorphism)</h3>
-                    <p class="text-sm text-amber-800">
-                        لعبة "مط" الرسمة. هل لو سحبت النقاط ستنطبق على الأخرى؟
-                        <br>يجب تساوي: عدد الرؤوس، عدد الحواف، ودرجات كل رأس.
-                    </p>
+                    <div class="icon-box bg-yellow-100 text-yellow-600 text-2xl">🔢</div>
+                    <h3 class="text-lg font-bold text-amber-900 mb-2">العد (Counting)</h3>
+                    <div class="text-sm text-amber-800 space-y-2">
+                        <p>• <span class="en font-bold">Permutation (P):</span> الترتيب مهم (كلمة سر).</p>
+                        <p>• <span class="en font-bold">Combination (C):</span> الترتيب غير مهم (سلطة فواكه).</p>
+                    </div>
                 </div>
 
                 <div class="concept-card hover-lift">
-                    <div class="icon-box bg-red-100 text-red-600 text-2xl">🌳</div>
-                    <h3 class="text-lg font-bold text-amber-900 mb-2">خوارزميات MST</h3>
-                    <p class="text-sm text-amber-800">
-                        • <span class="en font-bold">Prim:</span> شجرة تنمو (وصلة متصلة دائماً).
-                        <br>• <span class="en font-bold">Kruskal:</span> تجميع "أرخص القطع" من أي مكان (غابة تتحد).
-                    </p>
+                    <div class="icon-box bg-red-100 text-red-600 text-2xl">🔄</div>
+                    <h3 class="text-lg font-bold text-amber-900 mb-2">العلاقات (Relations)</h3>
+                    <div class="text-sm text-amber-800 space-y-2">
+                        <p>• <span class="en font-bold">Reflexive:</span> كل عنصر يرتبط بنفسه.</p>
+                        <p>• <span class="en font-bold">Symmetric:</span> الحب متبادل (رايح جاي).</p>
+                        <p>• <span class="en font-bold">Transitive:</span> صديق صديقي هو صديقي.</p>
+                    </div>
+                </div>
+
+                <div class="concept-card hover-lift">
+                    <div class="icon-box bg-green-100 text-green-600 text-2xl">🌳</div>
+                    <h3 class="text-lg font-bold text-amber-900 mb-2">الرسوم (Graphs)</h3>
+                    <div class="text-sm text-amber-800 space-y-2">
+                        <p>• <span class="en font-bold">Isomorphism:</span> هل تنطبق الرسمتان لو "مططناهم"؟ (تساوي الرؤوس والحواف والدرجات).</p>
+                        <p>• <span class="en font-bold">Traversals:</span> طريقة "الإحاطة بالشجرة" لاستخراج الترتيب.</p>
+                    </div>
+                </div>
+
+                <div class="concept-card hover-lift">
+                    <div class="icon-box bg-blue-100 text-blue-600 text-2xl">🤖</div>
+                    <h3 class="text-lg font-bold text-amber-900 mb-2">النمذجة (Modeling)</h3>
+                    <div class="text-sm text-amber-800 space-y-2">
+                        <p>• <span class="en font-bold">DFA:</span> آلة حازمة (طريق واحد لكل مدخل).</p>
+                        <p>• <span class="en font-bold">NFA:</span> آلة محتارة (عدة خيارات أو $\lambda$).</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -188,55 +208,7 @@
         <div class="mb-12">
             <div class="flex items-center gap-3 mb-6">
                 <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg">2</div>
-                <h2 class="text-2xl font-black text-amber-900">مقارنة أنواع الرسوم (هام جداً)</h2>
-            </div>
-            
-            <div class="bg-white rounded-2xl border border-amber-200 shadow-sm overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="modern-table min-w-[600px]">
-                        <thead>
-                            <tr>
-                                <th>النوع</th>
-                                <th>Loops؟</th>
-                                <th>Multiple Edges؟</th>
-                                <th>الاتجاه؟</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="font-bold">Simple Graph</td>
-                                <td class="text-red-600 font-bold">❌</td>
-                                <td class="text-red-600 font-bold">❌</td>
-                                <td class="text-slate-500">لا</td>
-                            </tr>
-                            <tr>
-                                <td class="font-bold">Multigraph</td>
-                                <td class="text-red-600 font-bold">❌</td>
-                                <td class="text-green-600 font-bold">✅</td>
-                                <td class="text-slate-500">لا</td>
-                            </tr>
-                            <tr>
-                                <td class="font-bold">Pseudograph</td>
-                                <td class="text-green-600 font-bold">✅</td>
-                                <td class="text-green-600 font-bold">✅</td>
-                                <td class="text-slate-500">لا</td>
-                            </tr>
-                            <tr class="bg-orange-50">
-                                <td class="font-bold">Simple Directed</td>
-                                <td class="text-red-600 font-bold">❌</td>
-                                <td class="text-red-600 font-bold">❌</td>
-                                <td class="text-amber-700 font-bold">نعم</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div class="mb-12">
-            <div class="flex items-center gap-3 mb-6">
-                <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg">3</div>
-                <h2 class="text-2xl font-black text-amber-900">قائمة الحفظ الصم (Memorization)</h2>
+                <h2 class="text-2xl font-black text-amber-900">قائمة الحفظ الصم (Formulas)</h2>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -252,22 +224,23 @@
                 </div>
 
                 <div class="formula-card card-shadow">
-                    <span class="formula-title">Trees Law</span>
+                    <span class="formula-title">Trees Laws</span>
                     <div class="text-xl py-4 en" dir="ltr">
                         $$e = n - 1$$
+                        $$n = m \times i + 1$$
                     </div>
                     <div class="text-sm text-slate-500 border-t pt-2 mt-2">
-                        عدد الحواف أقل من الرؤوس بواحد دائماً.
+                        الأول لأي شجرة. الثاني للـ Full m-ary ($n$: الكلي، $i$: الداخلية).
                     </div>
                 </div>
 
                 <div class="formula-card card-shadow">
-                    <span class="formula-title">Full m-ary Tree</span>
-                    <div class="text-lg py-4 en" dir="ltr">
-                        $$n = m \times i + 1$$
-                        $$L = (m-1)i + 1$$
+                    <span class="formula-title">Special Graphs</span>
+                    <div class="text-lg py-4 en space-y-2" dir="ltr">
+                        <div>$K_n \text{ Edges} = n(n-1)/2$</div>
+                        <div>$Q_n \text{ Vertices} = 2^n$</div>
+                        <div>$W_n \text{ Vertices} = n+1$</div>
                     </div>
-                    <p class="text-xs text-slate-400">حيث $L$ الأوراق، $i$ الداخلية، $m$ التفرع.</p>
                 </div>
 
                 <div class="formula-card card-shadow bg-slate-900 text-white border-slate-800">
@@ -276,8 +249,8 @@
                         $$r = e - v + 2$$
                     </div>
                     <div class="text-left text-xs text-slate-400 space-y-1 dir-ltr">
-                        شرط عدم الاستواء (Non-planar):
-                        <br>إذا كان $e > 3v - 6$.
+                        شرط عدم الاستواء (Non-Planar):
+                        <br>$e > 3v - 6$
                     </div>
                 </div>
 
@@ -286,43 +259,102 @@
 
         <div class="mb-12">
             <div class="flex items-center gap-3 mb-6">
+                <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg">3</div>
+                <h2 class="text-2xl font-black text-amber-900">الجداول المرجعية (Reference Tables)</h2>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-2xl border border-amber-200 shadow-sm overflow-hidden">
+                    <div class="p-4 bg-amber-50 border-b border-amber-200 font-bold text-amber-900">جدول الرموز</div>
+                    <div class="overflow-x-auto">
+                        <table class="modern-table">
+                            <thead><tr><th>الرمز</th><th>المعنى</th></tr></thead>
+                            <tbody>
+                                <tr><td class="en font-bold text-center">$\neg, \wedge, \vee$</td><td>Not, And, Or</td></tr>
+                                <tr><td class="en font-bold text-center">$\to, \leftrightarrow$</td><td>Implies, If & only if</td></tr>
+                                <tr><td class="en font-bold text-center">$\forall, \exists$</td><td>For all, Exists</td></tr>
+                                <tr><td class="en font-bold text-center">$\lceil x \rceil, \lfloor x \rfloor$</td><td>Ceiling, Floor</td></tr>
+                                <tr><td class="en font-bold text-center">$K_n, C_n, W_n$</td><td>Complete, Cycle, Wheel</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="bg-white rounded-2xl border border-amber-200 shadow-sm overflow-hidden">
+                        <div class="p-4 bg-amber-50 border-b border-amber-200 font-bold text-amber-900">أنواع الرسوم</div>
+                        <table class="modern-table text-sm">
+                            <thead><tr><th>النوع</th><th>Loops</th><th>Multi-Edges</th></tr></thead>
+                            <tbody>
+                                <tr><td>Simple</td><td class="text-red-600">❌</td><td class="text-red-600">❌</td></tr>
+                                <tr><td>Multigraph</td><td class="text-red-600">❌</td><td class="text-green-600">✅</td></tr>
+                                <tr><td>Pseudograph</td><td class="text-green-600">✅</td><td class="text-green-600">✅</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-amber-200 shadow-sm overflow-hidden">
+                        <div class="p-4 bg-amber-50 border-b border-amber-200 font-bold text-amber-900">خوارزميات الشجرة</div>
+                        <table class="modern-table text-sm">
+                            <thead><tr><th>Algorithm</th><th>Function</th></tr></thead>
+                            <tbody>
+                                <tr><td class="en font-bold">Preorder</td><td>Root First</td></tr>
+                                <tr><td class="en font-bold">Postorder</td><td>Root Last</td></tr>
+                                <tr><td class="en font-bold">Dijkstra</td><td>Shortest Path</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-12">
+            <div class="flex items-center gap-3 mb-6">
                 <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg">4</div>
-                <h2 class="text-2xl font-black text-amber-900">عقلية واضع الاختبار (التسريبات)</h2>
+                <h2 class="text-2xl font-black text-amber-900">استراتيجية "أستاذ المادة" (65 سؤالاً)</h2>
             </div>
 
             <div class="bg-white p-6 rounded-2xl border border-amber-200 shadow-sm">
                 
-                <div class="flex gap-4 mb-6">
-                    <div class="hidden md:flex w-12 h-12 bg-red-100 text-red-600 rounded-xl items-center justify-center text-2xl shrink-0">💣</div>
-                    <div>
-                        <h3 class="font-bold text-red-600 text-lg mb-2">أشهر الفخاخ (Traps)</h3>
-                        <ul class="space-y-2 text-sm text-slate-700">
-                            <li class="pl-4 border-r-2 border-red-200 pr-2">
-                                <strong>خدعة الـ Loop:</strong> عند حساب درجة الرأس، الـ Loop يحسب بـ <span class="font-bold text-red-600">2</span> وليس 1.
-                            </li>
-                            <li class="pl-4 border-r-2 border-red-200 pr-2">
-                                <strong>خدعة الـ Wheel ($W_n$):</strong> عدد رؤوس $W_5$ هو <span class="font-bold text-red-600">6</span> (5 محيط + 1 مركز). لا تستعجل وتختار 5.
-                            </li>
-                            <li class="pl-4 border-r-2 border-red-200 pr-2">
-                                <strong>خدعة الـ Bipartite:</strong> وجود "مثلث" صغير في الرسمة يعني مستحيل تكون Bipartite.
-                            </li>
+                <div class="grid md:grid-cols-2 gap-6 mb-6">
+                    <div class="bg-amber-50 p-4 rounded-xl border border-amber-100">
+                        <strong class="block text-amber-800 mb-2">توزيع الأسئلة:</strong>
+                        <ul class="list-disc list-inside text-sm text-slate-700 space-y-1">
+                            <li><strong>~20 سؤال (Mods 1-5):</strong> Logic, Sets, Functions.</li>
+                            <li><strong>~45 سؤال (Mods 6-13):</strong> Graphs, Trees, Relations.</li>
+                        </ul>
+                    </div>
+                    <div class="bg-red-50 p-4 rounded-xl border border-red-100">
+                        <strong class="block text-red-800 mb-2">أهم الخدع (Traps):</strong>
+                        <ul class="text-sm text-slate-700 space-y-1">
+                            <li>• <strong>Loop Degree:</strong> يحسب بـ <span class="font-bold text-red-600">2</span>.</li>
+                            <li>• <strong>Wheel ($W_5$):</strong> فيه <span class="font-bold text-red-600">6</span> رؤوس (المركز + 5).</li>
+                            <li>• <strong>Bipartite:</strong> أي مثلث = مستحيل.</li>
                         </ul>
                     </div>
                 </div>
 
-                <div class="flex gap-4 pt-6 border-t border-amber-100">
-                    <div class="hidden md:flex w-12 h-12 bg-green-100 text-green-600 rounded-xl items-center justify-center text-2xl shrink-0">🧠</div>
-                    <div>
-                        <h3 class="font-bold text-green-700 text-lg mb-2">حيل "الهاكر" للحل السريع (Cheats)</h3>
-                        <div class="grid md:grid-cols-2 gap-4 text-sm">
-                            <div class="bg-green-50 p-3 rounded border border-green-100">
-                                <strong>في المنطق (Logic):</strong>
-                                <br>لا تستخدم قوانين التبسيط. عوض! افترض $p=T, q=F$. شوف ناتج السؤال، وعوض بنفس القيم في الخيارات.
-                            </div>
-                            <div class="bg-green-50 p-3 rounded border border-green-100">
-                                <strong>في القوانين (Formulas):</strong>
-                                <br>نسيت القانون؟ جرب على أرقام صغيرة (1, 2, 3). المجموع 6. عوض بـ $n=3$ في الخيارات، اللي يعطيك 6 هو الصح.
-                            </div>
+                <div class="border-t border-amber-100 pt-6">
+                    <div class="flex gap-3 mb-3">
+                        <span class="text-2xl">😎</span>
+                        <h3 class="font-bold text-green-700 text-lg">حيل "الغش الشريف" (Cheat Codes)</h3>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-4 text-sm">
+                        <div class="bg-green-50 p-3 rounded border border-green-100">
+                            <strong>في المنطق & Boolean:</strong>
+                            <br>لا تبسط جبرياً. عوض بـ 0 و 1 في السؤال والخيارات. المطابق هو الصح.
+                        </div>
+                        <div class="bg-green-50 p-3 rounded border border-green-100">
+                            <strong>في المود (Mod):</strong>
+                            <br>$17 \pmod 5$؟ اقسم $17/5 = 3.4$. خذ الفاصلة $0.4 \times 5 = 2$. هذا الحل.
+                        </div>
+                        <div class="bg-green-50 p-3 rounded border border-green-100">
+                            <strong>في الأشجار:</strong>
+                            <br>نسيت القانون؟ ارسم شجرة صغيرة (3 نقاط) وجرب القانون عليها.
+                        </div>
+                        <div class="bg-green-50 p-3 rounded border border-green-100">
+                            <strong>في المعكوس:</strong>
+                            <br>خذ نقطة $(2,4)$ من السؤال، اقلبها $(4,2)$ وجربها في الخيارات.
                         </div>
                     </div>
                 </div>
@@ -333,53 +365,62 @@
         <div class="mb-12">
             <div class="flex items-center gap-3 mb-6">
                 <div class="w-10 h-10 bg-amber-600 rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg">5</div>
-                <h2 class="text-2xl font-black text-amber-900">الأسئلة المقالية الـ 5 المتوقعة</h2>
+                <h2 class="text-2xl font-black text-amber-900">أهم 5 أسئلة مقالية (Model Answers)</h2>
             </div>
 
             <div class="essay-box hover-lift">
                 <div class="essay-question">
                     <span class="bg-amber-100 text-amber-800 py-1 px-3 rounded text-sm">س1</span>
-                    تتبع خوارزمية Dijkstra (أقصر مسار)؟
+                    تتبع خوارزمية Dijkstra؟
                 </div>
                 <div class="essay-answer">
-                    ارسم جدولاً من 3 أعمدة (Step, Set S, Labels).
-                    <br>في كل خطوة أضف النقطة الأقل وزناً لـ S وحدث جيرانها.
-                    <br>في النهاية اكتب المسار بوضوح (مثلاً: $a \to c \to d \to z$) والوزن الكلي.
+                    ارسم جدول (Step, S, L). ابدأ بـ 0 والباقي $\infty$. اختر الأصغر، ضفه لـ S، حدث الجيران ($New < Old$). اكتب المسار النهائي.
                 </div>
             </div>
 
             <div class="essay-box hover-lift">
                 <div class="essay-question">
                     <span class="bg-amber-100 text-amber-800 py-1 px-3 rounded text-sm">س2</span>
-                    إثبات بالاستقراء الرياضي (Induction)؟
+                    إثبات بالاستقراء (Induction)؟
                 </div>
-                <div class="essay-answer">
-                    1. <strong>Basis Step:</strong> نثبت عند $n=1$.
-                    <br>2. <strong>Inductive Step:</strong> نفرض صحتها عند $k$. نثبت صحتها عند $k+1$ (اكتب المعادلة واجمع الطرفين).
-                    <br>3. <strong>الخاتمة:</strong> "بما أن الأساس والخطوة صحيحتان، فالعبارة صحيحة لكل $n$".
+                <div class="essay-answer ltr-block">
+                    1. <strong>Basis:</strong> Prove for $n=1$.<br>
+                    2. <strong>Assume:</strong> Assume true for $n=k$.<br>
+                    3. <strong>Prove:</strong> Prove for $n=k+1$.<br>
+                    "Since Basis and Step are true, the statement is true."
                 </div>
             </div>
 
             <div class="essay-box hover-lift">
                 <div class="essay-question">
                     <span class="bg-amber-100 text-amber-800 py-1 px-3 rounded text-sm">س3</span>
-                    عبور الشجرة (Tree Traversals)؟
+                    عبور الشجرة (Traversals)؟
                 </div>
                 <div class="essay-answer">
-                    • <strong>Pre:</strong> جذر، يسار، يمين.
-                    <br>• <strong>In:</strong> يسار، جذر، يمين.
-                    <br>• <strong>Post:</strong> يسار، يمين، جذر.
-                    <br>(استخدم طريقة الرسم للتأكد).
+                    • <strong>Pre:</strong> (يسار النقطة).
+                    <br>• <strong>In:</strong> (أسفل النقطة).
+                    <br>• <strong>Post:</strong> (يمين النقطة).
+                    <br>ارسم المسار حول الشجرة لتضمن الدرجة.
                 </div>
             </div>
 
             <div class="essay-box hover-lift">
                 <div class="essay-question">
                     <span class="bg-amber-100 text-amber-800 py-1 px-3 rounded text-sm">س4</span>
-                    تصميم آلة (DFA) تقبل نصوص محددة؟
+                    تصميم DFA؟
                 </div>
                 <div class="essay-answer">
-                    ابدأ بدائرة $S_0$. سهم للانتقال للحالة التالية. الحالة النهائية تكون دائرة مزدوجة. تأكد أن كل دائرة يخرج منها سهمين (0 و 1).
+                    ارسم دوائر الحالات. تأكد أن كل دائرة يخرج منها سهم لكل مدخل (0,1). حدد الحالة النهائية بدائرة مزدوجة.
+                </div>
+            </div>
+
+            <div class="essay-box hover-lift">
+                <div class="essay-question">
+                    <span class="bg-amber-100 text-amber-800 py-1 px-3 rounded text-sm">س5</span>
+                    شجرة الامتداد (MST)؟
+                </div>
+                <div class="essay-answer">
+                    استخدم <strong>Kruskal</strong> (رتب الأضلاع من الأرخص للأغلى وارسم بدون دوائر). اذكر الوزن النهائي.
                 </div>
             </div>
 
@@ -387,13 +428,13 @@
 
         <div class="bg-slate-900 text-white rounded-3xl p-8 text-center shadow-2xl relative overflow-hidden">
             <div class="relative z-10">
-                <h3 class="text-2xl font-bold mb-4">🌟 نصيحة الختام</h3>
+                <h3 class="text-2xl font-bold mb-4">🌟 رسالة الختام</h3>
                 <p class="text-slate-300 max-w-2xl mx-auto mb-6">
-                    الوقت عدوك الأول. الأسئلة السهلة (Logic, Sets) حلها في ثوانٍ.
-                    <br>ركز على الـ MCQs بالحذف، والمقالي بالخطوات (الرسم عليه 80% من الدرجة).
+                    الرياضيات المتقطعة ليست حفظاً، هي "لغز".
+                    <br>ركز على <strong>Mods 6-13</strong> فهي تمثل 70% من الاختبار.
                 </p>
                 <div class="inline-block bg-amber-600 px-6 py-2 rounded-full font-bold shadow-lg shadow-amber-900/50">
-                    🚀 توكل على الله، أنت جاهز 100%!
+                    🚀 توكل على الله، أنت جاهز!
                 </div>
             </div>
             <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-amber-600/10 blur-3xl"></div>
