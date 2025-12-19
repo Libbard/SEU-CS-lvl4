@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survival Map - Data Structures CS-240</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$']] }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; background-color: #f8fafc; }
+        .emerald-gradient { background: linear-gradient(135deg, #059669 0%, #064e3b 100%); }
+        
+        /* تكتيك الجداول الناجح الذي اعتمدناه */
+        .complexity-table { width: 100%; border-collapse: collapse; background: white; }
+        .complexity-table th { 
+            background-color: #1e293b; 
+            color: white; 
+            padding: 12px; 
+            border: 1px solid #d1fae5; 
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        .complexity-table td { 
+            border: 1px solid #d1fae5; 
+            padding: 10px; 
+            text-align: center; 
+            font-family: 'Fira Code', monospace; 
+            direction: ltr; 
+            font-size: 0.85rem;
+            color: #064e3b;
+        }
+        .complexity-table tr:hover { background-color: #f0fdf4; }
+        .arabic-cell { font-family: 'Cairo', sans-serif !important; direction: rtl !important; text-align: right !important; }
+
+        .concept-box { border-right: 4px solid #10b981; background: white; padding: 1.5rem; border-radius: 0 12px 12px 0; height: 100%; }
+        .hack-card { background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 12px; padding: 1.2rem; height: 100%; }
+        .trap-card { background: #fff1f2; border: 1px solid #fecdd3; border-radius: 12px; padding: 1.2rem; height: 100%; }
+        
+        .formula-card { background: white; border: 1px solid #d1fae5; border-radius: 12px; padding: 1.5rem; text-align: center; position: relative; }
+        .formula-title { position: absolute; top: -12px; right: 20px; background: #059669; color: white; padding: 2px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
+    </style>
+</head>
+<body class="text-slate-800 pb-20">
+
+    <nav class="bg-slate-900 shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex justify-between items-center">
+            <div class="flex items-center">
+                <span class="text-2xl font-black text-emerald-400 ml-2">DataMaster</span>
+                <span class="text-sm bg-emerald-900 text-emerald-200 py-1 px-2 rounded-full">خريطة النجاة (Modules 1-13)</span>
+            </div>
+            <a href="index.html" class="text-slate-300 hover:text-white px-3 py-2 rounded-md font-bold transition flex items-center gap-1">
+                <span>🏠</span> العودة للفهرس
+            </a>
+        </div>
+    </nav>
+
+    <header class="emerald-gradient text-white py-16 text-center shadow-lg">
+        <h1 class="text-5xl font-black mb-4 drop-shadow-md italic">خريطة النجاة والتميز 🗺️</h1>
+        <p class="text-xl font-medium opacity-90 max-w-2xl mx-auto px-4 leading-relaxed">زبدة المنهج بناءً على مسح دماغي شامل</p>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-10 space-y-16">
+
+        <section>
+            <div class="flex items-center mb-8">
+                <span class="text-4xl ml-3">🧠</span>
+                <h2 class="text-3xl font-black text-slate-800">أولاً: ماذا يجب أن "تفهم"؟ (الفهم العميق)</h2>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="concept-box shadow-sm">
+                    <h3 class="font-black text-emerald-700 mb-2">🔗 Logic of Pointers</h3>
+                    <p class="text-sm leading-relaxed text-slate-600">تخيلها كسلاسل حديدية تربط الصناديق. فهمك لكيفية <b>قطع السلسلة وربطها بمكان آخر</b> هو جوهر الإضافة والحذف في القوائم والأشجار.</p>
+                </div>
+                <div class="concept-box shadow-sm">
+                    <h3 class="font-black text-emerald-700 mb-2">🪆 Recursion</h3>
+                    <p class="text-sm leading-relaxed text-slate-600">دمية "ماتريوشكا". الدالة تفتح دالة أصغر حتى تصل للـ $Base Case$ ثم تعود لتغلق الدمى وتجمع النتائج ($Return$).</p>
+                </div>
+                <div class="concept-box shadow-sm">
+                    <h3 class="font-black text-emerald-700 mb-2">⚖️ Tree Rotations</h3>
+                    <p class="text-sm leading-relaxed text-slate-600">في AVL، تخيل الشجرة كميزان مختل. التدوير هو عملية "ميكانيكية"؛ نرفع عقدة وننزل أخرى لاستعادة الاتزان.</p>
+                </div>
+                <div class="concept-box shadow-sm">
+                    <h3 class="font-black text-emerald-700 mb-2">🎖️ Divide and Conquer</h3>
+                    <p class="text-sm leading-relaxed text-slate-600">استراتيجية الجنرالات. لا تحارب الجيش كاملاً (Array)، قسمه لكتائب صغيرة، اهزم كل كتيبة، ثم اجمعهم للنصر النهائي.</p>
+                </div>
+                <div class="concept-box shadow-sm bg-emerald-50/50">
+                    <h3 class="font-black text-emerald-700 mb-2">📦 LIFO vs FIFO</h3>
+                    <p class="text-sm leading-relaxed text-slate-600"><b>Stack:</b> مثل مخزن رصاص المسدس (آخر رصاصة تدخل هي أول رصاصة تخرج). <br> <b>Queue:</b> مثل طابور "البيك" (أول واحد يصل هو أول واحد يطلب).</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-8">
+                <span class="text-4xl ml-3">💾</span>
+                <h2 class="text-3xl font-black text-slate-800">ثانياً: ماذا يجب أن "تحفظ"؟ (الحفظ الصم)</h2>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="formula-card">
+                    <span class="formula-title">خصائص الأشجار</span>
+                    <p class="text-sm text-right text-slate-600"><b>BST:</b> اليسار أصغر، اليمين أكبر. <br> <b>Heap:</b> الأب دائماً أكبر (Max) أو أصغر (Min) من أبنائه.</p>
+                </div>
+                <div class="formula-card">
+                    <span class="formula-title">المصطلحات الرياضية</span>
+                    <p class="text-sm text-right text-slate-600"><b>Leaf:</b> عقدة بدون أبناء. | <b>Root:</b> العقدة الأولى. <br> <b>Height:</b> من الورقة للأعلى. | <b>Depth:</b> من الجذر للأسفل.</p>
+                </div>
+                <div class="formula-card bg-slate-900 text-emerald-400 border-none">
+                    <span class="formula-title bg-emerald-500 text-white">معادلات الـ Index (Heap)</span>
+                    <div class="text-sm py-2 en" dir="ltr">
+                        Left: $2i$ &#x21E0; Parent: $\lfloor i/2 \rfloor$ &#x21E2; Right: $2i+1$
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-8">
+                <span class="text-4xl ml-3">📟</span>
+                <h2 class="text-3xl font-black text-slate-800">ثالثاً: فك شفرات الرموز والاختصارات</h2>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-md border border-emerald-100 overflow-x-auto">
+                <table class="complexity-table">
+                    <thead>
+                        <tr>
+                            <th>الرمز / الاختصار</th>
+                            <th>المعنى (Meaning)</th>
+                            <th class="arabic-cell">الاستخدام</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>N</td><td>Size of Input</td><td class="arabic-cell">حجم البيانات (عدد العناصر في المصفوفة).</td></tr>
+                        <tr><td>O(f(n))</td><td>Big-O (Upper Bound)</td><td class="arabic-cell">أسوأ سيناريو للوقت (سقف الأداء).</td></tr>
+                        <tr><td>$\Omega(f(n))$</td><td>Big-Omega (Lower Bound)</td><td class="arabic-cell">أفضل سيناريو للوقت (أرضية الأداء).</td></tr>
+                        <tr><td>$\Theta(f(n))$</td><td>Big-Theta (Tight Bound)</td><td class="arabic-cell">متوسط الأداء (تطابق السقف والأرضية).</td></tr>
+                        <tr><td>BST</td><td>Binary Search Tree</td><td class="arabic-cell">شجرة بحث مرتبة لتسريع البحث.</td></tr>
+                        <tr><td>AVL</td><td>Balanced Tree</td><td class="arabic-cell">شجرة توازن ذاتي تضمن ارتفاع $O(\log N)$.</td></tr>
+                        <tr><td>MST</td><td>Min Spanning Tree</td><td class="arabic-cell">أقل تكلفة لربط كل النقاط.</td></tr>
+                        <tr><td>DAG</td><td>Directed Acyclic Graph</td><td class="arabic-cell">رسم موجه بدون دورات (للطوبولوجي).</td></tr>
+                        <tr><td>LIFO/FIFO</td><td>Stack/Queue Logic</td><td class="arabic-cell">طريقة دخول وخروج البيانات.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-8">
+                <span class="text-4xl ml-3">🎓</span>
+                <h2 class="text-3xl font-black text-slate-800">رابعاً: وضع "البروفيسور" (Exam Simulation)</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-10">
+                <div class="bg-white p-6 rounded-xl border-2 border-emerald-100 shadow-sm">
+                    <h3 class="font-black text-emerald-800 mb-4 border-b pb-2 italic uppercase tracking-wider text-left">🅰️ Hot Topics (Modules 1-5)</h3>
+                    <ul class="text-sm space-y-3 text-slate-600">
+                        <li>• <b>Big-O Calculation:</b> حلقات متداخلة (غالباً $O(N^2)$).</li>
+                        <li>• <b>Stack Ops:</b> ماذا يتبقى في المكدس؟ أو تحويل Infix لـ Postfix.</li>
+                        <li>• <b>Linked List:</b> سطر كود مفقود لربط عقدة (`.next`).</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-xl border-2 border-emerald-100 shadow-sm">
+                    <h3 class="font-black text-emerald-800 mb-4 border-b pb-2 italic uppercase tracking-wider text-left">Modules 6-13 (70%)</h3>
+                    <ul class="text-sm space-y-3 text-slate-600">
+                        <li>• <b>AVL Balance:</b> تحديد نوع الدوران بعد الإدخال.</li>
+                        <li>• <b>Hashing:</b> أين سيقع الرقم باستخدام Linear Probing؟</li>
+                        <li>• <b>Sorting Tracing:</b> شكل المصفوفة بعد دورتين (2 passes).</li>
+                        <li>• <b>Graphs/Heaps:</b> مسار Dijkstra، وماذا يصبح الجذر بعد deleteMin؟</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="trap-card shadow-sm">
+                    <h3 class="font-black text-red-800 mb-4 flex items-center gap-2">⚠️ الفخاخ المنصوبة (Traps)</h3>
+                    <ul class="text-sm space-y-4 text-red-950 font-medium">
+                        <li class="bg-white/50 p-2 rounded"><b>فخ الـ Index:</b> في Circular Queue الزيادة هي $(rear+1) \% size$.</li>
+                        <li class="bg-white/50 p-2 rounded"><b>فخ الـ Heap:</b> اليمين ليس بالضرورة أكبر من اليسار، فقط الأب هو المتحكم.</li>
+                        <li class="bg-white/50 p-2 rounded"><b>فخ البداية:</b> عمق الجذر ($Root$) هو 0 والارتفاع لعقدة وحيدة هو 0.</li>
+                        <li class="bg-white/50 p-2 rounded"><b>فخ الاستقرار:</b> <span class="en">Merge Sort</span> مستقر، أما <span class="en">Quick/Heap</span> فلا.</li>
+                    </ul>
+                </div>
+                <div class="hack-card shadow-sm">
+                    <h3 class="font-black text-emerald-900 mb-4 flex items-center gap-2">🕵️‍♂️ حيل الـ MCQs (Hacks)</h3>
+                    <ul class="text-sm space-y-4 text-emerald-950 font-medium">
+                        <li class="bg-white/50 p-2 rounded"><b>حيلة القسمة:</b> حلقة تتضاعف ($*2$) أو تتقسم ($/2$) تعني أن الجواب فيه $\log N$.</li>
+                        <li class="bg-white/50 p-2 rounded"><b>حيلة الترتيب:</b> <span class="en italic">Pre-order</span> يبدأ بالجذر، <span class="en italic">Post-order</span> ينتهي بالجذر.</li>
+                        <li class="bg-white/50 p-2 rounded"><b>حيلة Postfix:</b> الضرب والقسمة أقوى؛ BC* ستكون قطعة واحدة ملتصقة.</li>
+                        <li class="bg-white/50 p-2 rounded"><b>حيلة الـ AVL:</b> خلل خط مستقيم = دوران واحد. خلل متعرج = دوران مزدوج.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-8">
+                <span class="text-4xl ml-3">📝</span>
+                <h2 class="text-3xl font-black text-slate-800">خامساً: الأسئلة المقالية المتوقعة</h2>
+            </div>
+            <div class="space-y-6">
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                    <h4 class="font-bold text-emerald-800 mb-3 underline">س1: تتبع Dijkstra للأقصر مسار؟</h4>
+                    <p class="text-sm text-slate-600 mb-4">السر في الجدول. ارسم جدولاً بأعمدة: $(Vertex, Known, Distance, Path)$. وحدث المسافات في كل خطوة.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                    <h4 class="font-bold text-emerald-800 mb-3 underline">س2: Hashing (Linear Probing) للأرقام 12, 22, 42؟</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed italic" >12 $\to$ خانة 2 (تم). | 22 $\to$ خانة 2 (مشغول) $\to$ جرب 3 (تم). | 42 $\to$ خانة 2 (مشغول) $\to$ 3 (مشغول) $\to$ جرب 4 (تم).</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                    <h4 class="font-bold text-emerald-800 mb-3 underline">س3: كود حساب عدد العقد (Recursion)؟</h4>
+                    <pre class="bg-slate-900 text-emerald-400 p-4 rounded-lg text-xs leading-relaxed overflow-x-auto shadow-inner" dir="ltr">
+int countNodes(Node root) {
+    if (root == null) return 0;
+    return 1 + countNodes(root.left) + countNodes(root.right);
+}</pre>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="flex items-center mb-8">
+                <span class="text-4xl ml-3">⚡</span>
+                <h2 class="text-3xl font-black text-slate-800">سادساً: الجدول المقدس (The Ultimate Table)</h2>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-md border border-emerald-100 overflow-x-auto">
+                <table class="complexity-table">
+                    <thead>
+                        <tr>
+                            <th>Data Structure / Algo</th>
+                            <th>Average Case</th>
+                            <th>Worst Case</th>
+                            <th class="arabic-cell">ملاحظة ذهبية</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Search in Array</td><td>O(N)</td><td>O(N)</td><td class="arabic-cell text-slate-400 italic">إذا كانت غير مرتبة</td></tr>
+                        <tr><td>Binary Search</td><td>O(log N)</td><td>O(log N)</td><td class="arabic-cell font-bold">بشرط المصفوفة مرتبة</td></tr>
+                        <tr><td>Search in BST</td><td>O(log N)</td><td>O(N)</td><td class="arabic-cell">تسوء إذا مالت الشجرة (Skewed)</td></tr>
+                        <tr><td>Search in AVL</td><td>O(log N)</td><td>O(log N)</td><td class="arabic-cell">لأنها متوازنة دائماً</td></tr>
+                        <tr><td>Merge Sort</td><td>O(N log N)</td><td>O(N log N)</td><td class="arabic-cell">مضمون، مستقر وسريع</td></tr>
+                        <tr><td>Quick Sort</td><td>O(N log N)</td><td>O(N^2)</td><td class="arabic-cell">الأسوأ عند اختيار Pivot سيء</td></tr>
+                        <tr><td>Insertion Sort</td><td>O(N^2)</td><td>O(N^2)</td><td class="arabic-cell">تصل لـ $O(N)$ لو كانت مرتبة</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <div class="text-center pt-10">
+            <a href="index.html" class="inline-flex items-center justify-center bg-emerald-700 text-white px-10 py-5 rounded-2xl font-black shadow-2xl hover:bg-emerald-800 transition transform hover:scale-105 border-4 border-emerald-100">
+                🚀 العودة للفهرس الرئيسي والمتابعة
+            </a>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-10 text-center border-t border-emerald-800 uppercase tracking-widest text-xs">
+        <p>© 2024 DataMaster Study System. Master the Final. Master the A+.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const courseKey = 'data_struct_progress';
+            const pageName = window.location.pathname.split('/').pop();
+            let visited = JSON.parse(localStorage.getItem(courseKey)) || [];
+            if (!visited.includes(pageName)) {
+                visited.push(pageName);
+                localStorage.setItem(courseKey, JSON.stringify(visited));
+            }
+        });
+    </script>
+
+</body>
+</html>

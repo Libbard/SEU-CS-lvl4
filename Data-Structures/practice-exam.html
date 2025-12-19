@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practice Exam - Data Structures</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; background-color: #f0fdf4; } /* أخضر فاتح جداً */
+        .emerald-gradient { background: linear-gradient(135deg, #059669 0%, #064e3b 100%); }
+        
+        .question-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid #d1fae5;
+            transition: all 0.3s;
+        }
+        
+        .question-card.correct-card { border-right: 6px solid #22c55e; background-color: #f0fdf4; }
+        .question-card.wrong-card { border-right: 6px solid #ef4444; background-color: #fef2f2; }
+
+        .option-btn {
+            display: block;
+            width: 100%;
+            text-align: right;
+            padding: 12px 15px;
+            margin: 8px 0;
+            background-color: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+            color: #064e3b;
+        }
+        .option-btn:hover:not(.disabled) { background-color: #d1fae5; border-color: #10b981; }
+        
+        .option-btn.correct { background-color: #dcfce7 !important; border-color: #22c55e !important; color: #166534; font-weight: bold; }
+        .option-btn.wrong { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b; }
+        .option-btn.disabled { pointer-events: none; opacity: 0.8; }
+
+        .cheat-box {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #ecfdf5;
+            border: 1px solid #10b981;
+            border-radius: 8px;
+            color: #065f46;
+            font-size: 0.9rem;
+            animation: fadeIn 0.5s;
+        }
+
+        .essay-answer {
+            display: none;
+            margin-top: 15px;
+            padding: 20px;
+            background-color: #f0fdf4;
+            border-right: 4px solid #10b981;
+            border-radius: 8px;
+            color: #064e3b;
+            line-height: 1.8;
+        }
+
+        .score-badge {
+            background-color: #10b981;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-family: monospace;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            border: 2px solid #065f46;
+            transition: transform 0.2s;
+        }
+        
+        .grading-btns {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed #10b981;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .grade-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .grade-btn:active { transform: scale(0.95); }
+        
+        .grade-yes { background: #dcfce7; color: #166534; border: 1px solid #166534; }
+        .grade-no { background: #fee2e2; color: #991b1b; border: 1px solid #991b1b; }
+
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white; }
+            .question-card { break-inside: avoid; border: 1px solid #ccc; box-shadow: none; }
+            .cheat-box, .essay-answer { display: block !important; border: 1px dashed #999; }
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 pb-20">
+
+    <nav class="bg-slate-900 shadow-md sticky top-0 z-50 border-b border-emerald-600 no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-2xl font-black text-emerald-400 ml-2">DataMaster</a>
+                    <span class="text-xs bg-emerald-900 text-emerald-100 py-1 px-2 rounded-full font-bold border border-emerald-700">Exam Mode</span>
+                </div>
+                
+                <div class="flex items-center gap-2 md:gap-3">
+                    <a href="index.html" class="flex items-center gap-1 bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg text-sm font-bold transition">
+                        <span>🏠</span> <span class="hidden md:inline">الرئيسية</span>
+                    </a>
+                    
+                    <div id="score-board" class="score-badge">
+                        <span>🏆</span> <span id="current-score">0</span> / 40
+                    </div>
+
+                    <div id="timer" class="bg-emerald-600 text-white px-3 py-1.5 rounded-lg font-mono font-bold text-sm md:text-base">120:00</div>
+                    
+                    <button onclick="window.print()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-lg text-sm font-bold" title="طباعة">🖨️</button>
+                    <button onclick="resetExam()" class="bg-red-100 hover:bg-red-200 text-red-700 px-3 py-1.5 rounded-lg text-sm font-bold" title="إعادة">🔄</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="emerald-gradient text-white py-12 text-center shadow-lg mb-8 no-print">
+        <h1 class="text-3xl md:text-5xl font-black mb-2 drop-shadow-md">CS-240 Final Practice Exam</h1>
+        <p class="text-emerald-100 text-lg font-medium px-4">60 سؤال MCQ شامل (0.5 درجة) + 5 أسئلة مقالية (2 درجة)</p>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4">
+        
+        <div class="flex justify-end mb-6 no-print">
+            <button onclick="revealAll()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-full font-bold shadow-lg transition transform hover:scale-105 flex items-center gap-2">
+                <span>👁️</span> كشف جميع الإجابات
+            </button>
+        </div>
+
+        <div id="quiz-container" class="space-y-6"></div>
+
+    </main>
+
+    <script>
+        // ==========================================
+        // 1. DATA BANK (Data Structures)
+        // ==========================================
+        const mcqData = [
+            // --- MODULES 1-5 (30%) ---
+            { section: "القسم الأول: مراجعة ما قبل الميدتيرم (Modules 1-5)", q: "ما هو أسوأ تعقيد زمني (Worst Case) للبحث في مصفوفة مرتبة باستخدام Binary Search؟", options: ["$O(N)$", "$O(N^2)$", "$O(\\log N)$", "$O(1)$"], a: 2, cheat: "كلمة 'Search' + 'Sorted' = دائماً الجواب فيه Log." },
+            { q: "أي دالة نموها أسرع (تأخذ وقتاً أطول)؟", options: ["$N \\log N$", "$N$", "$N^2$", "$\\log N$"], a: 2, cheat: "الترتيب: constant < log < Linear < Quadratic." },
+            { q: "لديك حلقتان متداخلتان (for i to N { for j to N }), ما هو الـ Big-O؟", options: ["$O(N)$", "$O(N^2)$", "$O(\\log N)$", "$O(N^3)$"], a: 1, cheat: "حلقتين متداخلتين = N * N." },
+            { q: "في Stack: Push(5), Push(8), Pop(), Push(3). ما العنصر في القمة (Top)؟", options: ["5", "8", "3", "فارغ"], a: 2, cheat: "آخر واحد دخل هو 3 (LIFO)." },
+            { q: "أي هيكل بيانات يعمل بمبدأ FIFO (First In First Out)؟", options: ["Stack", "Queue", "Tree", "Graph"], a: 1, cheat: "طابور البنك = Queue." },
+            { q: "للوصول للعنصر الخامس في Linked List، التعقيد هو:", options: ["$O(1)$", "$O(N)$", "$O(\\log N)$", "$O(N^2)$"], a: 1, cheat: "لازم تمر على كل العقد السابقة واحدة تلو الأخرى." },
+            { q: "لتحويل التعبير A + B إلى Postfix يصبح:", options: ["+AB", "AB+", "BA+", "A+B"], a: 1, cheat: "Postfix تعني الإشارة في النهاية." },
+            { q: "في Circular Queue، الموقع التالي للـ Rear يحسب بـ:", options: ["rear + 1", "rear - 1", "(rear + 1) % size", "(rear - 1) % size"], a: 2, cheat: "Circular = باقي القسمة %." },
+            { q: "الدالة التي تستدعي نفسها تسمى:", options: ["Loop", "Recursion", "Iteration", "Queue"], a: 1, cheat: "Self-calling = Recursion." },
+            { q: "ماذا يسمى الخطأ عند محاولة Pop من Stack فارغ؟", options: ["Overflow", "Underflow", "Success", "Null"], a: 1, cheat: "فارغ = تحت القاع = Under." },
+            { q: "إضافة عنصر في بداية Linked List يأخذ وقتاً تعقيده:", options: ["$O(1)$", "$O(N)$", "$O(\\log N)$", "$O(N^2)$"], a: 0, cheat: "مجرد تغيير مؤشر الـ Head." },
+            { q: "الـ Binary Search يتطلب أن تكون المصفوفة:", options: ["فارغة", "عشوائية", "مرتبة (Sorted)", "كبيرة"], a: 2, cheat: "لازم تكون مرتبة لتقسيم المجال." },
+            { q: "تبسيط $O(N^2 + N)$ هو:", options: ["$O(N)$", "$O(N^2)$", "$O(2N)$", "$O(N^3)$"], a: 1, cheat: "نأخذ الطرف الأقوى دائماً." },
+            { q: "الوصول لعنصر في Array باستخدام الـ Index يأخذ:", options: ["$O(1)$", "$O(N)$", "$O(\\log N)$", "$O(N^2)$"], a: 0, cheat: "الوصول المباشر هو ميزة المصفوفة." },
+            { q: "الـ Queue يستخدم عمليتين أساسيتين هما:", options: ["Push/Pop", "Enqueue/Dequeue", "Add/Remove", "Insert/Delete"], a: 1, cheat: "المصطلحات الرسمية للطابور." },
+            { q: "الـ Stack يستخدم عمليتين أساسيتين هما:", options: ["Push/Pop", "Enqueue/Dequeue", "Add/Remove", "Insert/Delete"], a: 0, cheat: "المصطلحات الرسمية للمكدس." },
+            { q: "تحويل (A+B)*C للـ Postfix هو:", options: ["AB+C*", "ABC+*", "+AB*C", "AB*C+"], a: 0, cheat: "القوس له الأولوية." },
+            { q: "العقدة الأخيرة في Linked List تؤشر دائماً إلى:", options: ["Head", "Root", "Null", "عقدة عشوائية"], a: 2, cheat: "Null تعني نهاية السلسلة." },
+
+            // --- MODULES 6-13 (70%) ---
+            { section: "القسم الثاني: المنهج المتقدم (Modules 6-13)", q: "في BST، العقدة التي قيمتها أصغر من الجذر تقع دائماً في:", options: ["اليمين", "اليسار", "الجذر", "كل مكان"], a: 1, cheat: "اليسار للصغير." },
+            { q: "الفرق الجوهري بين AVL Tree و BST العادية هو:", options: ["AVL لا تقبل التكرار", "AVL أسرع في الحذف", "AVL متوازنة ذاتياً", "AVL تستخدم ذاكرة أقل"], a: 2, cheat: "AVL = Balance." },
+            { q: "في Binary Heap، الابن الأيسر للعقدة $i$ يقع في الموقع:", options: ["$2i+1$", "$2i$", "$i/2$", "$i^2$"], a: 1, cheat: "اليسار = الضعف بالضبط." },
+            { q: "أقصى عدد دورات (Rotations) لإعادة توازن AVL بعد إدخال واحد هو:", options: ["$N$", "$\\log N$", "1 أو 2", "0"], a: 2, cheat: "AVL فعالة جداً في الإصلاح." },
+            { q: "حذف أصغر عنصر (DeleteMin) في Min-Heap يأخذ وقتاً تعقيده:", options: ["$O(1)$", "$O(\\log N)$", "$O(N)$", "$O(N^2)$"], a: 1, cheat: "أي تعديل في Tree/Heap متوازن هو Log N." },
+            { q: "الترتيب Root $\\to$ Left $\\to$ Right يسمى:", options: ["In-order", "Post-order", "Pre-order", "Level"], a: 2, cheat: "Pre = الجذر أولاً." },
+            { q: "In-order لـ BST يعطي دائماً أرقاماً:", options: ["عشوائية", "مرتبة تصاعدياً", "تنازلية", "مكررة"], a: 1, cheat: "أهم خاصية في BST." },
+            { q: "تعقيد Merge Sort في أسوأ حالة:", options: ["$O(N^2)$", "$O(N \\log N)$", "$O(N)$", "$O(1)$"], a: 1, cheat: "أداء ثابت ومحترم." },
+            { q: "أي خوارزمية ترتيب تعتبر Stable (مستقرة)؟", options: ["Quick Sort", "Heap Sort", "Merge Sort", "Selection Sort"], a: 2, cheat: "Merge تحفظ ترتيب المتساويين." },
+            { q: "Linear Probing في الـ Hashing يعني عند التصادم:", options: ["نستخدم سلسلة", "نبحث عن الخانة التالية", "نحذف فوراً", "نكبر الجدول"], a: 1, cheat: "امشي خطوة بخطوة." },
+            { q: "أسوأ حالة لـ Quick Sort تصل لتعقيد:", options: ["$O(N \\log N)$", "$O(N^2)$", "$O(N)$", "$O(1)$"], a: 1, cheat: "تحدث مع البيانات المرتبة والـ Pivot السيء." },
+            { q: "حل التصادم بـ Separate Chaining يستخدم:", options: ["مصفوفة", "Linked List", "Stack", "Queue"], a: 1, cheat: "سلسلة مترابطة في كل خانة." },
+            { q: "أي خوارزمية تعتمد استراتيجية Divide and Conquer؟", options: ["Insertion Sort", "Merge Sort", "Selection Sort", "Bubble Sort"], a: 1, cheat: "فرق تسد = Merge." },
+            { q: "خوارزمية Dijkstra تستخدم لإيجاد:", options: ["MST", "Shortest Path", "Cycles", "Topological Sort"], a: 1, cheat: "Dijkstra = GPS." },
+            { q: "Topological Sort يعمل فقط على:", options: ["أي Graph", "DAG (لا دورات)", "Trees only", "Cyclic"], a: 1, cheat: "لازم ما يكون فيه 'دائرة' في الاعتماديات." },
+            { q: "البحث في العرض (BFS) يستخدم هيكل بيانات:", options: ["Stack", "Queue", "Tree", "Array"], a: 1, cheat: "Queue للانتشار الواسع." },
+            { q: "عدد الحواف في MST لـ V عقدة هو:", options: ["V", "V-1", "V^2", "V log V"], a: 1, cheat: "دائماً أقل بواحد." },
+            { q: "خوارزمية Greedy تعني اختيار:", options: ["كل الاحتمالات", "الأفضل محلياً فوراً", "تقسيم المشكلة", "تراجع"], a: 1, cheat: "طماع للفائدة الحالية." },
+            { q: "سلسلة Fibonacci تحل بفعالية باستخدام:", options: ["Greedy", "Dynamic Programming", "Sorting", "Hashing"], a: 1, cheat: "DP للتذكر ومنع التكرار." },
+            { q: "Huffman Coding تطبيق لـ:", options: ["Greedy", "DP", "Brute Force", "Backtracking"], a: 0, cheat: "يختار الأقل دائماً." },
+            { q: "الفرق بين DP و Divide & Conquer هو:", options: ["لا فرق", "DP للمشاكل المتداخلة", "DP أسرع دائماً", "Divide يستخدم جداول"], a: 1, cheat: "متداخلة (Overlapping) = DP." },
+            { q: "Backtracking يستخدم عادة لحل:", options: ["البحث الثنائي", "الألغاز والمتاهات", "الترتيب", "أقصر مسار"], a: 1, cheat: "امشي وإذا سد الطريق ارجع." },
+            { q: "ارتفاع الشجرة الفارغة هو:", options: ["0", "-1", "1", "Infinity"], a: 1, cheat: "قاعدة ثابتة." },
+            { q: "في Min-Heap الجذر هو دائماً:", options: ["أكبر عنصر", "أصغر عنصر", "عنصر عشوائي", "صفر"], a: 1, cheat: "هذا هو مبدأ الـ Min-Heap." },
+            { q: "لحذف عقدة لها ابنان في BST نستبدلها بـ:", options: ["الجذر", "أصغر قيمة في اليمين", "أكبر في اليسار", "الورقة"], a: 1, cheat: "الـ Successor." },
+            { q: "خوارزمية Prim تُستخدم لإيجاد:", options: ["Shortest Path", "MST", "Sorting", "Hashing"], a: 1, cheat: "Prim/Kruskal = MST." },
+            { q: "استراتيجية خوارزمية Kruskal هي:", options: ["Greedy", "DP", "Divide", "Brute Force"], a: 0, cheat: "تختار أرخص حافة متاحة." },
+            { q: "Shell Sort هو تحسين لخوارزمية:", options: ["Bubble", "Insertion", "Selection", "Quick"], a: 1, cheat: "يقلل حركات الـ Insertion البعيدة." },
+            { q: "DFS يستخدم هيكل بيانات:", options: ["Queue", "Stack", "Tree", "Array"], a: 1, cheat: "Stack للغوص في العمق." },
+            { q: "الأوراق (Leaves) في الشجرة هي عقد:", options: ["ليس لها أبناء", "هي الجذر", "لها ابنان", "دائماً صفر"], a: 0, cheat: "نهاية الشجرة." },
+            { q: "أسرع طريقة لترتيب مصفوفة شبه مرتبة هي:", options: ["Quick Sort", "Insertion Sort", "Merge Sort", "Bubble Sort"], a: 1, cheat: "تصل لـ O(N)." },
+            { q: "التعقيد O(1) يسمى:", options: ["Linear", "Constant", "Logarithmic", "Quadratic"], a: 1, cheat: "وقت ثابت." },
+            { q: "الهدف المثالي للـ Hashing هو الوصول لتعقيد:", options: ["O(N)", "O(1)", "O(log N)", "O(N^2)"], a: 1, cheat: "وصول فوري." },
+            { q: "مشكلة حقيبة الظهر (Knapsack) الصعبة تحل بـ:", options: ["Greedy", "DP", "Linear Search", "Binary Search"], a: 1, cheat: "تحتاج جداول احتمالات." },
+            { q: "التدوير المزدوج في AVL يتكون من:", options: ["دوران واحد", "دورانين بسيطين", "3 دورات", "لا شيء"], a: 1, cheat: "Double = 2 Simple." },
+            { q: "الـ Height هو المسافة من العقدة إلى:", options: ["الجذر", "أبعد ورقة (Leaf)", "أقرب ورقة", "Null"], a: 1, cheat: "أطول مسار للأسفل." },
+            { q: "هل المكدس مناسب لحل التعابير الرياضية؟", options: ["نعم", "لا", "أحياناً", "للضرب فقط"], a: 0, cheat: "يستخدم لتحويل Postfix." },
+            { q: "الـ Graph المترابط يعني يمكن الوصول:", options: ["لأقرب جار", "من أي عقدة لأخرى", "للجذر فقط", "لا وصول"], a: 1, cheat: "شبكة واحدة متصلة." },
+            { q: "هل Quick Sort يحتاج ذاكرة إضافية للـ Stack؟", options: ["نعم", "لا", "فقط في المصفوفات الصغيرة", "أحياناً"], a: 0, cheat: "للعمليات التكرارية." },
+            { q: "الـ Load Factor في Hash Table يؤثر على:", options: ["الذاكرة فقط", "زيادة التصادم", "تقليل التصادم", "لا يؤثر"], a: 1, cheat: "زحمة الجدول تزيد التصادم." },
+            { q: "Coin Change تحل غالباً بـ:", options: ["Greedy", "Sorting", "Hashing", "BFS"], a: 0, cheat: "نختار العملة الأكبر حالياً." },
+            { q: "المسافة في Weighted Graph هي:", options: ["عدد العقد", "مجموع الأوزان", "أكبر وزن", "أقل حواف"], a: 1, cheat: "مجموع تكلفة الطريق." }
+        ];
+
+        const essayData = [
+            { q: "س1: اشرح خطوات بناء AVL Tree للأرقام [10, 20, 5, 8, 30]؟", a: "1. إدخال 10 (جذر). <br> 2. إدخال 20 (يمين). <br> 3. إدخال 5 (يسار). <br> 4. إدخال 8 (يمين الـ 5) $\to$ موازنة. <br> 5. إدخال 30 (يمين الـ 20). راقب فرق الارتفاع BF واعمل Rotation لو تجاوز الـ 1." },
+            { q: "س2: قارن بين Merge Sort و Quick Sort في جدول؟", a: "Merge: O(N log N) ثابت، Stable، يحتاج ذاكرة إضافية O(N). Quick: O(N log N) متوسط، Unstable، لا يحتاج ذاكرة إضافية كبيرة." },
+            { q: "س3: كيف تجد MST باستخدام خوارزمية Prim؟", a: "ابدأ من عقدة عشوائية، في كل خطوة اختر الحافة الأرخص التي تصل عقدة مضافة بعقدة غير مضافة، كرر حتى يتم توصيل جميع العقد دون تكوين دوائر." },
+            { q: "س4: ما هو الـ Linear Probing وكيف يعالج التصادم؟", a: "عند حدوث تصادم (الخانة مشغولة)، تبحث الخوارزمية عن الخانة التالية (Index + 1) بشكل خطي حتى تجد أول خانة فارغة لتضع فيها العنصر." },
+            { q: "س5: ما الفرق الجوهري بين Greedy و Dynamic Programming؟", a: "Greedy: يأخذ أفضل قرار متاح حالياً ولا يتراجع أبداً. DP: يحل المشاكل المتداخلة ويخزن نتائجها (Memoization) لاستخدامها لاحقاً لضمان الحل الأمثل." }
+        ];
+
+        // ==========================================
+        // 2. ENGINE WITH GRADING LOGIC
+        // ==========================================
+        let timeLeft = localStorage.getItem('ds_exam_time') ? parseInt(localStorage.getItem('ds_exam_time')) : 120 * 60;
+        let timerInterval;
+        
+        let currentScore = 0;
+        let attemptedMCQs = new Set();
+        let gradedEssays = new Set();
+
+        function initExam() {
+            const container = document.getElementById('quiz-container');
+            
+            mcqData.forEach((item, index) => {
+                if(item.section) {
+                    const secHeader = document.createElement('h2');
+                    secHeader.className = "text-xl font-bold text-emerald-800 mt-8 mb-4 border-b-2 border-emerald-200 pb-2";
+                    secHeader.innerText = item.section;
+                    container.appendChild(secHeader);
+                }
+
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = `q-${index}`;
+                
+                let opts = '';
+                item.options.forEach((opt, i) => {
+                    opts += `<button class="option-btn" id="btn-${index}-${i}" onclick="check(${index}, ${i})">${opt}</button>`;
+                });
+
+                card.innerHTML = `
+                    <h3 class="font-bold text-lg mb-4 text-emerald-950">س${index+1}: ${item.q}</h3>
+                    <div class="space-y-2">${opts}</div>
+                    <div class="cheat-box" id="cheat-${index}">
+                        <strong>💡 تلميح:</strong> ${item.cheat}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            const essayHeader = document.createElement('h2');
+            essayHeader.className = "text-2xl font-black text-emerald-800 mt-12 mb-6 border-b-4 border-emerald-200 pb-2";
+            essayHeader.innerText = "الأسئلة المقالية (Essay Questions)";
+            container.appendChild(essayHeader);
+
+            essayData.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card border-l-4 border-l-emerald-500';
+                card.id = `essay-card-${index}`;
+                card.innerHTML = `
+                    <div class="flex justify-between">
+                        <h3 class="font-bold text-lg mb-4 text-emerald-950">${item.q}</h3>
+                        <span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-1 rounded h-fit font-bold">2 درجات</span>
+                    </div>
+                    <textarea class="w-full p-3 border border-emerald-200 rounded-lg mb-4 font-sans focus:ring-2 focus:ring-emerald-500 outline-none" rows="3" placeholder="اكتب إجابتك هنا..."></textarea>
+                    <button onclick="toggleEssay(${index})" class="text-sm bg-emerald-100 text-emerald-700 px-3 py-1 rounded hover:bg-emerald-200 font-bold transition">عرض الإجابة والتقييم</button>
+                    
+                    <div class="essay-answer" id="essay-${index}">
+                        <div class="mb-4">${item.a}</div>
+                        
+                        <div class="bg-white p-3 rounded border border-slate-200 text-center">
+                            <p class="text-sm font-bold text-slate-600 mb-2">هل إجابتك مطابقة للنموذج؟ (كن صادقاً 😉)</p>
+                            <div class="grading-btns" id="grading-area-${index}">
+                                <button onclick="rateEssay(${index}, true)" class="grade-btn grade-yes">✅ نعم، صحيحة (+2)</button>
+                                <button onclick="rateEssay(${index}, false)" class="grade-btn grade-no">❌ لا، خاطئة (0)</button>
+                            </div>
+                            <div id="grade-result-${index}" class="hidden font-bold mt-2"></div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            startTimer();
+            if(window.MathJax) window.MathJax.typesetPromise();
+        }
+
+        function check(qIdx, optIdx) {
+            if (attemptedMCQs.has(qIdx)) return; 
+            attemptedMCQs.add(qIdx);
+
+            const card = document.getElementById(`q-${qIdx}`);
+            const btns = card.querySelectorAll('.option-btn');
+            const correctIdx = mcqData[qIdx].a;
+
+            btns.forEach(b => b.classList.add('disabled'));
+
+            if (optIdx === correctIdx) {
+                document.getElementById(`btn-${qIdx}-${optIdx}`).classList.add('correct');
+                card.classList.add('correct-card');
+                currentScore += 0.5;
+                updateScoreUI();
+            } else {
+                document.getElementById(`btn-${qIdx}-${optIdx}`).classList.add('wrong');
+                document.getElementById(`btn-${qIdx}-${correctIdx}`).classList.add('correct');
+                card.classList.add('wrong-card');
+            }
+            document.getElementById(`cheat-${qIdx}`).style.display = 'block';
+        }
+
+        function rateEssay(idx, isCorrect) {
+            if (gradedEssays.has(idx)) return;
+            gradedEssays.add(idx);
+            const resultDiv = document.getElementById(`grade-result-${idx}`);
+            const btnArea = document.getElementById(`grading-area-${idx}`);
+            const card = document.getElementById(`essay-card-${idx}`);
+            btnArea.style.display = 'none'; 
+            resultDiv.classList.remove('hidden');
+            if (isCorrect) {
+                currentScore += 2;
+                updateScoreUI();
+                resultDiv.innerHTML = `<span class="text-green-600">تم احتساب الدرجة (+2) 🎉</span>`;
+                card.classList.add('correct-card');
+            } else {
+                resultDiv.innerHTML = `<span class="text-red-600">حظاً أوفر (0)</span>`;
+                card.classList.add('wrong-card');
+            }
+        }
+
+        function updateScoreUI() {
+            const scoreEl = document.getElementById('current-score');
+            scoreEl.innerText = currentScore;
+            scoreEl.parentElement.classList.add('scale-110');
+            setTimeout(() => scoreEl.parentElement.classList.remove('scale-110'), 200);
+        }
+
+        function toggleEssay(idx) {
+            const el = document.getElementById(`essay-${idx}`);
+            el.style.display = el.style.display === 'block' ? 'none' : 'block';
+            if(window.MathJax) window.MathJax.typesetPromise();
+        }
+
+        function revealAll() {
+            if(!confirm("تحذير: كشف الإجابات سيلغي احتساب درجات الأسئلة المتبقية!")) return;
+            mcqData.forEach((item, i) => {
+                if(!attemptedMCQs.has(i)) {
+                    const correctBtn = document.getElementById(`btn-${i}-${item.a}`);
+                    if(correctBtn) correctBtn.classList.add('correct');
+                    document.getElementById(`cheat-${i}`).style.display = 'block';
+                    attemptedMCQs.add(i); 
+                }
+            });
+             essayData.forEach((item, i) => {
+                document.getElementById(`essay-${i}`).style.display = 'block';
+            });
+        }
+
+        function startTimer() {
+            const el = document.getElementById('timer');
+            timerInterval = setInterval(() => {
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    el.innerText = "انتهى الوقت!";
+                    return;
+                }
+                timeLeft--;
+                localStorage.setItem('ds_exam_time', timeLeft);
+                const m = Math.floor(timeLeft / 60);
+                const s = timeLeft % 60;
+                el.innerText = `${m}:${s < 10 ? '0'+s : s}`;
+            }, 1000);
+        }
+
+        function resetExam() {
+            if(confirm("سيتم تصفير الدرجات وإعادة الاختبار. متأكد؟")) {
+                localStorage.removeItem('ds_exam_time');
+                location.reload();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initExam();
+            // تتبع التقدم
+            const courseKey = 'data_struct_progress';
+            const pageName = window.location.pathname.split('/').pop();
+            let visited = JSON.parse(localStorage.getItem(courseKey)) || [];
+            if (!visited.includes(pageName)) {
+                visited.push(pageName);
+                localStorage.setItem(courseKey, JSON.stringify(visited));
+            }
+        });
+    </script>
+</body>
+</html>
