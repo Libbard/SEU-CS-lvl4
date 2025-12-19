@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Structures Atlas - DataMaster</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f0fdf4; color: #0f172a; scroll-behavior: smooth; }
+        .code-font { font-family: 'Fira Code', monospace; }
+        .emerald-gradient { background: linear-gradient(135deg, #064e3b 0%, #059669 100%); }
+        
+        /* Atlas Card */
+        .atlas-card {
+            background: white;
+            border: 1px solid #d1fae5;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        .atlas-card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.15); border-color: #10b981; }
+        
+        .card-header {
+            background: #ecfdf5;
+            padding: 1.5rem;
+            border-bottom: 1px solid #d1fae5;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .card-icon {
+            font-size: 2rem;
+            background: white;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            border: 1px solid #d1fae5;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        /* Fixed Table Style (Winning Tactic) */
+        .complexity-table { width: 100%; border-collapse: collapse; margin-top: 1rem; background: white; }
+        .complexity-table th { 
+            background-color: #064e3b; 
+            color: white; 
+            padding: 12px; 
+            border: 1px solid #047857; 
+            text-align: center; 
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+        .complexity-table td { 
+            padding: 12px; 
+            border: 1px solid #d1fae5; 
+            text-align: center; 
+            color: #064e3b; 
+            font-family: 'Fira Code', monospace; 
+            font-size: 0.85rem;
+        }
+        .complexity-table tr:hover { background-color: #f0fdf4; }
+        
+        /* Side Nav */
+        .side-nav-link {
+            display: block; padding: 10px 15px; margin-bottom: 5px; border-radius: 8px;
+            color: #065f46; font-weight: 600; transition: all 0.2s; font-size: 0.9rem; border-left: 3px solid transparent;
+        }
+        .side-nav-link:hover { background: #d1fae5; color: #047857; border-left-color: #10b981; }
+        
+        /* Badges */
+        .cmd-badge { 
+            background: #f1f5f9; color: #334155; padding: 4px 12px; rounded-md; 
+            font-size: 0.85rem; font-family: 'Fira Code', monospace; 
+            border: 1px solid #cbd5e1; display: inline-block; margin: 4px; 
+            font-weight: 600;
+        }
+        .prop-badge {
+            background: #ecfdf5; color: #047857; padding: 4px 12px; rounded-full;
+            font-size: 0.8rem; font-weight: bold; border: 1px solid #6ee7b7;
+            display: inline-block; margin: 4px;
+        }
+    </style>
+</head>
+<body class="pb-20">
+
+    <nav class="bg-slate-900 text-white shadow-xl sticky top-0 z-50 border-b border-emerald-600">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <span class="text-2xl">🌍</span>
+                <div>
+                    <h1 class="text-xl font-black text-emerald-400 leading-none">DataMaster</h1>
+                    <span class="text-[10px] text-emerald-200 font-bold uppercase tracking-widest">The Great Atlas</span>
+                </div>
+            </div>
+            <a href="index.html" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg font-bold text-sm transition flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Back to Index
+            </a>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 py-10 flex flex-col lg:flex-row gap-8">
+        
+        <aside class="lg:w-1/4 hidden lg:block">
+            <div class="sticky top-24 bg-white p-6 rounded-2xl shadow-lg border border-emerald-100">
+                <h3 class="font-black text-emerald-800 mb-4 border-b border-emerald-100 pb-2 uppercase tracking-wider text-sm">Table of Contents</h3>
+                <nav>
+                    <a href="#section-1" class="side-nav-link">1. List ADT</a>
+                    <a href="#section-2" class="side-nav-link">2. Stack</a>
+                    <a href="#section-3" class="side-nav-link">3. Queue</a>
+                    <a href="#section-4" class="side-nav-link">4. Binary Search Tree</a>
+                    <a href="#section-5" class="side-nav-link">5. Balanced Trees</a>
+                    <a href="#section-6" class="side-nav-link">6. Hash Table</a>
+                    <a href="#section-7" class="side-nav-link">7. Binary Heap</a>
+                    <a href="#section-8" class="side-nav-link">8. Disjoint Sets</a>
+                    <a href="#section-9" class="side-nav-link">9. Graph</a>
+                    <a href="#section-10" class="side-nav-link">10. Specialized</a>
+                </nav>
+            </div>
+        </aside>
+
+        <main class="lg:w-3/4">
+            
+            <header class="emerald-gradient text-white p-10 rounded-3xl shadow-lg mb-10 text-center relative overflow-hidden">
+                <div class="relative z-10">
+                    <h1 class="text-4xl font-black mb-3 tracking-tight">Data Structures Atlas</h1>
+                    <p class="text-emerald-100 text-lg opacity-90">Comprehensive Reference: Properties, Operations & Complexity.</p>
+                </div>
+                <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+            </header>
+
+            <div id="section-1" class="atlas-card">
+                <div class="card-header">
+                    <div class="card-icon">📝</div>
+                    <div>
+                        <h2 class="text-xl font-black text-emerald-900">1. The List ADT</h2>
+                        <p class="text-xs text-slate-500 font-mono">Ordered series: $A_0, A_1, \dots, A_{N-1}$</p>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="mb-6">
+                        <h4 class="font-bold text-emerald-800 mb-2 border-b border-emerald-100 pb-1">Properties</h4>
+                        <ul class="list-disc list-inside text-sm text-slate-700 space-y-2">
+                            <li><strong>ArrayList:</strong> Growable array. Best for frequent access ($O(1)$). Expensive insert/remove ($O(N)$).</li>
+                            <li><strong>LinkedList:</strong> Doubly linked nodes. Efficient insert/remove ($O(1)$) if position is known.</li>
+                            <li><strong>Circular Linked List:</strong> Last node points back to the first node.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <h4 class="font-bold text-emerald-800 mb-2 border-b border-emerald-100 pb-1">Commands</h4>
+                        <div>
+                            <span class="cmd-badge">get(index)</span>
+                            <span class="cmd-badge">set(index, val)</span>
+                            <span class="cmd-badge">add(index, val)</span>
+                            <span class="cmd-badge">remove(index)</span>
+                            <span class="cmd-badge">clear()</span>
+                            <span class="cmd-badge">contains(val)</span>
+                        </div>
+                    </div>
+
+                    <h4 class="font-bold text-emerald-800 mb-2 border-b border-emerald-100 pb-1">Algorithmic Complexity</h4>
+                    <div class="overflow-x-auto">
+                        <table class="complexity-table">
+                            <thead>
+                                <tr>
+                                    <th>Operation</th>
+                                    <th>ArrayList (Worst)</th>
+                                    <th>LinkedList (Worst)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td class="font-bold text-slate-700">get / set</td><td>$O(1)$</td><td>$O(N)$</td></tr>
+                                <tr><td class="font-bold text-slate-700">add (front)</td><td>$O(N)$</td><td>$O(1)$</td></tr>
+                                <tr><td class="font-bold text-slate-700">add (end)</td><td>$O(1)$ (Avg)</td><td>$O(1)$</td></tr>
+                                <tr><td class="font-bold text-slate-700">remove (front)</td><td>$O(N)$</td><td>$O(1)$</td></tr>
+                                <tr><td class="font-bold text-slate-700">contains</td><td>$O(N)$</td><td>$O(N)$</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="section-2" class="atlas-card">
+                <div class="card-header">
+                    <div class="card-icon">🥞</div>
+                    <div>
+                        <h2 class="text-xl font-black text-emerald-900">2. Stack</h2>
+                        <p class="text-xs text-slate-500 font-bold uppercase tracking-widest">LIFO: Last In, First Out</p>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-bold text-emerald-800 mb-2">Properties & Applications</h4>
+                            <p class="text-sm text-slate-600 mb-3">Restricted list where insertion/deletion occur only at the <b>top</b>.</p>
+                            <div>
+                                <span class="prop-badge">Expression Eval (Postfix)</span>
+                                <span class="prop-badge">Balancing Symbols</span>
+                                <span class="prop-badge">Recursion Management</span>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-emerald-800 mb-2">Operations</h4>
+                            <ul class="text-sm text-slate-700 space-y-2">
+                                <li><span class="cmd-badge">Push</span> Insert at top ($O(1)$).</li>
+                                <li><span class="cmd-badge">Pop</span> Delete from top ($O(1)$).</li>
+                                <li><span class="cmd-badge">Top/Peek</span> Examine top ($O(1)$).</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="section-3" class="atlas-card">
+                <div class="card-header">
+                    <div class="card-icon">🚶</div>
+                    <div>
+                        <h2 class="text-xl font-black text-emerald-900">3. Queue</h2>
+                        <p class="text-xs text-slate-500 font-bold uppercase tracking-widest">FIFO: First In, First Out</p>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h4 class="font-bold text-emerald-800 mb-2">Overview</h4>
+                    <p class="text-sm text-slate-700 mb-4">Insertion at <b>Rear</b>, Deletion at <b>Front</b>. Usually implemented with a <b>Circular Array</b>.</p>
+                    
+                    <table class="complexity-table">
+                        <thead>
+                            <tr>
+                                <th>Operation</th>
+                                <th>Description</th>
+                                <th>Complexity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="font-bold text-slate-700">Enqueue</td>
+                                <td>Insert at Rear</td>
+                                <td>$O(1)$</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-slate-700">Dequeue</td>
+                                <td>Delete from Front</td>
+                                <td>$O(1)$</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="section-4" class="atlas-card">
+                <div class="card-header">
+                    <div class="card-icon">🌳</div>
+                    <div>
+                        <h2 class="text-xl font-black text-emerald-900">4. Binary Search Tree (BST)</h2>
+                        <p class="text-xs text-slate-500 font-mono">Left < Node < Right</p>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="mb-4">
+                        <span class="prop-badge">Inorder Traversal = Sorted</span>
+                        <span class="prop-badge">Avg Depth: $O(\log N)$</span>
+                        <span class="prop-badge">Worst Depth: $O(N)$</span>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <span class="cmd-badge">contains(x)</span>
+                        <span class="cmd-badge">findMin/Max</span>
+                        <span class="cmd-badge">insert(x)</span>
+                        <span class="cmd-badge">remove(x)</span>
+                    </div>
+
+                    <table class="complexity-table">
+                        <thead>
+                            <tr>
+                                <th>Operation</th>
+                                <th>Average Case</th>
+                                <th>Worst Case</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="font-bold text-slate-700">Search / Insert / Remove</td>
+                                <td>$O(\log N)$</td>
+                                <td class="text-red-600 font-bold">$O(N)$</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p class="text-xs text-slate-500 mt-2 italic">* Worst case happens when input is sorted (tree becomes a linked list).</p>
+                </div>
+            </div>
+
+            <div id="section-5" class="atlas-card">
+                <div class="card-header">
+                    <div class="card-icon">⚖️</div>
+                    <div>
+                        <h2 class="text-xl font-black text-emerald-900">5. Balanced Search Trees</h2>
+                        <p class="text-xs text-slate-500">Guaranteed $O(\log N)$ performance</p>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="grid md:grid-cols-2 gap-4 mb-4">
+                        <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                            <h5 class="font-bold text-emerald-700">AVL Tree</h5>
+                            <p class="text-xs text-slate-600">Strict balance (diff $\le 1$). Uses rotations.</p>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                            <h5 class="font-bold text-emerald-700">Splay Tree</h5>
+                            <p class="text-xs text-slate-600">Self-adjusting. Accessed nodes move to root.</p>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                            <h5 class="font-bold text-emerald-700">Red-Black Tree</h5>
+                            <p class="text-xs text-slate-600">Color rules ensuring height $\le 2\log(N+1)$.</p>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                            <h5 class="font-bold text-emerald-700">Treap</h5>
+                            <p class="text-xs text-slate-600">BST + Heap (Random priorities).</p>
+                        </div>
+                    </div>
+
+                    <table class="complexity-table">
+                        <thead>
+                            <tr>
+                                <th>Tree Type</th>
+                                <th>Metric</th>
+                                <th>Performance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>AVL Tree</td><td>Worst Case</td><td>$O(\log N)$</td></tr>
+                            <tr><td>Splay Tree</td><td>Amortized</td><td>$O(\log N)$</td></tr>
+                            <tr><td>Red-Black Tree</td><td>Worst Case</td><td>$O(\log N)$</td></tr>
+                            <tr><td>Treap</td><td>Expected</td><td>$O(\log N)$</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="section-6" class="atlas-card">
+                <div class="card-header">
+                    <div class="card-icon">🔑</div>
+                    <div>
+                        <h2 class="text-xl font-black text-emerald-900">6. Hash Table</h2>
+                        <p class="text-xs text-slate-500">Map keys to indices for constant access</p>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h4 class="font-bold text-emerald-800 mb-2">Collision Resolution</h4>
+                    <ul class="list-disc list-inside text-sm text-slate-700 mb-4 space-y-1">
+                        <li><strong>Separate Chaining:</strong> Linked lists at each index.</li>
+                        <li><strong>Open Addressing:</strong> Search next empty (Linear/Quadratic Probing).</li>
+                        <li><strong>Cuckoo/Hopscotch:</strong> Specialized for $O(1)$ worst-case.</li>
+                    </ul>
+
+                    <table class="complexity-table">
+                        <thead>
+                            <tr>
+                                <th>Operation</th>
+                                <th>Average Case</th>
+                                <th>Worst Case</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="font-bold text-slate-700">Insert / Delete / Search</td>
+                                <td class="text-emerald-600 font-bold">$O(1)$</td>
+                                <td class="text-red-600">$O(N)$</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="section-7" class="atlas-card">
+                <div class="card-header">
+                    <div class="card-icon">🏗️</div>
+                    <div>
+                        <h2 class="text-xl font-black text-emerald-900">7. Binary Heap</h2>
+                        <p class="text-xs text-slate-500">Priority Queue Implementation</p>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h4 class="font-bold text-emerald-800 mb-1">Heap-Order Property</h4>
+                            <p class="text-sm text-slate-600">Parent is smaller than children (Min-Heap).</p>
+                        </div>
+                        <div class="text-right text-xs font-mono bg-slate-100 p-2 rounded">
+                            Left: 2i <br> Right: 2i+1
+                        </div>
+                    </div>
+
+                    <table class="complexity-table">
+                        <thead>
+                            <tr>
+                                <th>Operation</th>
+                                <th>Average</th>
+                                <th>Worst</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="font-bold text-slate-700">insert</td><td>$O(1)$</td><td>$O(\log N)$</td></tr>
+                            <tr><td class="font-bold text-slate-700">deleteMin</td><td>$O(\log N)$</td><td>$O(\log N)$</td></tr>
+                            <tr><td class="font-bold text-slate-700">buildHeap</td><td>$O(N)$</td><td>$O(N)$</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="section-8" class="atlas-card">
+                <div class="card-header">
+                    <div class="card-icon">🔗</div>
+                    <div>
+                        <h2 class="text-xl font-black text-emerald-900">8. Disjoint Sets</h2>
+                        <p class="text-xs text-slate-500">Union-Find Data Structure</p>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <p class="text-sm text-slate-700 mb-3">Maintains a collection of disjoint sets. Uses <b>Union-by-Rank</b> and <b>Path Compression</b>.</p>
+                    <div class="mb-4">
+                        <span class="cmd-badge">find(x)</span>
+                        <span class="cmd-badge">union(root1, root2)</span>
+                    </div>
+                    <div class="bg-slate-800 text-emerald-400 p-3 rounded-lg text-center font-mono text-sm border border-slate-700">
+                        Complexity: $O(M \alpha(M, N))$ <br>
+                        <span class="text-xs text-slate-400 font-sans">($\alpha$ is effectively constant, nearly linear time)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="section-9" class="atlas-card">
+                <div class="card-header">
+                    <div class="card-icon">🕸️</div>
+                    <div>
+                        <h2 class="text-xl font-black text-emerald-900">9. Graph Algorithms</h2>
+                        <p class="text-xs text-slate-500">$G = (V, E)$</p>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="mb-4 text-sm text-slate-700">
+                        <b>Representations:</b> Adjacency Matrix (Dense) or Adjacency List (Sparse).
+                    </div>
+                    
+                    <table class="complexity-table">
+                        <thead>
+                            <tr>
+                                <th>Algorithm</th>
+                                <th>Purpose</th>
+                                <th>Complexity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="font-bold text-slate-700">Topological Sort</td>
+                                <td>Ordering in DAG</td>
+                                <td>$O(|E| + |V|)$</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-slate-700">BFS</td>
+                                <td>Shortest Path (Unweighted)</td>
+                                <td>$O(|E| + |V|)$</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-slate-700">Dijkstra</td>
+                                <td>Shortest Path (Weighted)</td>
+                                <td>$O(|E| \log |V|)$</td>
+                            </tr>
+                            <tr>
+                                <td class="font-bold text-slate-700">Prim / Kruskal</td>
+                                <td>Minimum Spanning Tree</td>
+                                <td>$O(|E| \log |V|)$</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="section-10" class="atlas-card border-2 border-emerald-500">
+                <div class="card-header bg-emerald-50">
+                    <div class="card-icon">🚀</div>
+                    <div>
+                        <h2 class="text-xl font-black text-emerald-900">10. Specialized & Analogy</h2>
+                        <p class="text-xs text-emerald-700">Advanced Structures & Understanding</p>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h4 class="font-bold text-emerald-800 mb-2">Specialized Structures</h4>
+                    <ul class="text-sm text-slate-700 mb-6 space-y-1">
+                        <li><b>Suffix Array/Tree:</b> Pattern searching. $O(N)$ construction.</li>
+                        <li><b>k-d Tree:</b> Multi-dimensional search.</li>
+                        <li><b>Skip List:</b> Randomized $O(\log N)$ search/insert.</li>
+                        <li><b>Pairing Heap:</b> Practical alternative to Fibonacci heaps.</li>
+                    </ul>
+
+                    <div class="bg-slate-900 text-white p-6 rounded-2xl relative overflow-hidden">
+                        <div class="relative z-10">
+                            <h4 class="font-bold text-emerald-400 mb-2 text-lg">💡 The Tool Shed Analogy</h4>
+                            <ul class="text-sm space-y-3 opacity-90 leading-relaxed">
+                                <li>📦 <b>Array:</b> A shelf with fixed spots. Easy to grab, hard to reorganize.</li>
+                                <li>🔗 <b>Linked List:</b> A chain of tools. Easy to add a link, but must follow the chain to find a tool.</li>
+                                <li>🗂️ <b>Tree:</b> A filing system. Narrow down your search at every folder.</li>
+                                <li>✨ <b>Hash Table:</b> A magic box. Call out a tool's name, and it appears instantly!</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+</body>
+</html>
