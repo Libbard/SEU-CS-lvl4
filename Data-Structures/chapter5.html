@@ -77,9 +77,9 @@
                         <div class="bg-emerald-50 p-3 rounded border border-emerald-100 text-sm">
                             <strong>العمليات الأساسية ($O(1)$):</strong>
                             <ul class="list-disc list-inside mt-2 space-y-1 text-slate-700">
-                                <li><code>enqueue(x)</code>: إضافة عنصر في النهاية .</li>
-                                <li><code>dequeue()</code>: إزالة وإرجاع العنصر من البداية .</li>
-                                <li><code>getFront()</code>: رؤية من عليه الدور دون حذفه.</li>
+                                <li><code dir="ltr">enqueue(x)</code>: إضافة عنصر في النهاية .</li>
+                                <li><code dir="ltr">dequeue()</code>: إزالة وإرجاع العنصر من البداية .</li>
+                                <li><code dir="ltr">getFront()</code>: رؤية من عليه الدور دون حذفه.</li>
                             </ul>
                         </div>
                     </div>
@@ -109,7 +109,7 @@
                 <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 card-hover">
                     <h3 class="font-bold text-red-700 mb-2">مشكلة المصفوفة العادية</h3>
                     <p class="text-sm text-slate-600 mb-3">
-                        عند حذف عنصر من البداية، تبقى خانة فارغة. إذا استمرينا في الإضافة والحذف، سيصل الـ <code>Rear</code> لنهاية المصفوفة بينما توجد مساحة فارغة في البداية!
+                        عند حذف عنصر من البداية، تبقى خانة فارغة. إذا استمرينا في الإضافة والحذف، سيصل الـ <code dir="ltr">Rear</code> لنهاية المصفوفة بينما توجد مساحة فارغة في البداية!
                     </p>
                     <div class="bg-slate-100 p-2 text-center text-xs font-mono rounded ltr" dir="ltr">
                         [ _ , _ , Data , Data , Data ] (End!)
@@ -174,7 +174,7 @@
                         <p class="font-bold text-slate-800 mb-1">Circular Array: Empty or Full؟</p>
                         <p class="text-sm text-slate-600">
                             في المصفوفة الدائرية، حالة "الامتلاء" وحالة "الفراغ" قد تبدو متشابهة (المؤشرات في نفس المكان).
-                            <br><strong>الحل:</strong> نحتفظ بمتغير منفصل اسمه <code>currentSize</code> لتتبع عدد العناصر بدقة.
+                            <br><strong>الحل:</strong> نحتفظ بمتغير منفصل اسمه <code dir="ltr">currentSize</code> لتتبع عدد العناصر بدقة.
                         </p>
                     </div>
 
@@ -182,8 +182,8 @@
                         <span class="bg-yellow-200 text-yellow-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">CALCULATION / حساب</span>
                         <p class="font-bold text-slate-800 mb-1">Back Index Calculation</p>
                         <p class="text-sm text-slate-600">
-                            إذا كان طول المصفوفة 10، والـ <code>front</code> عند 8، والحجم الحالي 4. أين يقع الـ <code>back</code> (آخر عنصر)؟
-                            <br>القانون: <code>(front + currentSize - 1) % length</code>
+                            إذا كان طول المصفوفة 10، والـ <code dir="ltr">front</code> عند 8، والحجم الحالي 4. أين يقع الـ <code dir="ltr">back</code> (آخر عنصر)؟
+                            <br>القانون: <code dir="ltr">(front + currentSize - 1) % length</code>
                             <br>الحساب: $(8 + 4 - 1) \% 10 = 11 \% 10 = 1$.
                         </p>
                     </div>

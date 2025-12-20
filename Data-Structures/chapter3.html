@@ -105,7 +105,7 @@
                     <div class="bg-emerald-50 p-4 rounded-lg border border-emerald-100">
                         <h3 class="font-bold text-emerald-800 mb-2">Java Collections API</h3>
                         <p class="text-sm text-slate-700">
-                            في جافا، <code>List</code> هي الـ Interface (ADT)، بينما <code>ArrayList</code> و <code>LinkedList</code> هي الـ Implementation (التطبيق الفعلي).
+                            في جافا، <code dir="ltr">List</code> هي الـ Interface (ADT)، بينما <code dir="ltr">ArrayList</code> و <code dir="ltr">LinkedList</code> هي الـ Implementation (التطبيق الفعلي).
                         </p>
                     </div>
                 </div>
@@ -209,11 +209,11 @@
                 <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
                     <h3 class="font-bold text-emerald-700 mb-2">لماذا نستخدم Iterator؟</h3>
                     <p class="text-sm text-slate-600 mb-3">
-                        عند استخدام حلقة <code>for</code> مع LinkedList والوصول بـ <code>get(i)</code>، يصبح التعقيد $O(N^2)$ (كارثة!).
+                        عند استخدام حلقة <code dir="ltr">for</code> مع LinkedList والوصول بـ <code dir="ltr">get(i)</code>، يصبح التعقيد $O(N^2)$ (كارثة!).
                         <br>الـ <strong>Iterator</strong> يحتفظ بموقع العنصر الحالي، مما يجعل المرور على القائمة $O(N)$ فقط.
                     </p>
                 </div>
-                <div class="code-block" dir="ltr"><code>
+                <div class="code-block" dir="ltr"><code dir="ltr">
 <span class="type">Iterator</span><span class="op">&lt;</span><span class="type">Integer</span><span class="op">&gt;</span> <span class="id">itr</span> = <span class="id">list</span>.<span class="fn">iterator</span>();
 
 <span class="kw">while</span> (<span class="id">itr</span>.<span class="fn">hasNext</span>()) {
@@ -235,8 +235,8 @@
                         <span class="bg-red-200 text-red-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">EXCEPTION / خطأ شهير</span>
                         <p class="font-bold text-slate-800 mb-1">ConcurrentModificationException</p>
                         <p class="text-sm text-slate-600">
-                            إذا قمت بحذف عنصر من القائمة (<code>list.remove</code>) أثناء استخدام حلقة (<code>for-each</code>)، سيحدث هذا الخطأ.
-                            <br><strong>الحل:</strong> استخدم <code>iterator.remove()</code>.
+                            إذا قمت بحذف عنصر من القائمة (<code dir="ltr">list.remove</code>) أثناء استخدام حلقة (<code dir="ltr">for-each</code>)، سيحدث هذا الخطأ.
+                            <br><strong>الحل:</strong> استخدم <code dir="ltr">iterator.remove()</code>.
                         </p>
                     </div>
 
