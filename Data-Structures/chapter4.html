@@ -28,7 +28,8 @@
         .stack-container { display: flex; flex-direction: column-reverse; width: 80px; margin: 0 auto; border: 3px solid #374151; border-top: none; background: #f3f4f6; min-height: 120px; }
         .stack-element { background: #10b981; color: white; text-align: center; padding: 5px; margin: 2px; border-radius: 4px; font-weight: bold; animation: slideDown 0.3s ease-out; }
         @keyframes slideDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    </style>
+    
+	</style>
 </head>
 <body class="bg-slate-50 text-slate-800">
 
@@ -77,9 +78,9 @@
                         <div class="bg-emerald-50 p-3 rounded border border-emerald-100 text-sm">
                             <strong>العمليات الأساسية ($O(1)$):</strong>
                             <ul class="list-disc list-inside mt-2 space-y-1 text-slate-700">
-                                <li><code>push(x)</code>: إضافة عنصر للقمة.</li>
-                                <li><code>pop()</code>: إزالة العنصر من القمة.</li>
-                                <li><code>peek()</code> / <code>top()</code>: رؤية القمة دون إزالة.</li>
+                                <li><code dir="ltr">push(x)</code>: إضافة عنصر للقمة.</li>
+                                <li><code dir="ltr">pop()</code>: إزالة العنصر من القمة.</li>
+                                <li><code dir="ltr">peek()</code> / <code dir="ltr">top()</code>: رؤية القمة دون إزالة.</li>
                             </ul>
                         </div>
                     </div>
@@ -150,7 +151,9 @@
                 <div class="bg-white p-4 rounded-lg shadow-sm border-r-4 border-blue-500">
                     <h4 class="font-bold text-slate-700">2. Postfix Expression Evaluation</h4>
                     <p class="text-sm text-slate-600">
-                        لحساب <code>6 5 2 3 + 8 * + 3 + *</code>.
+                        لحساب: <code dir="ltr" class="inline-block" style="unicode-bidi:isolate;">
+    6 5 2 3 + 8 * + 3 + *
+  </code>
                         <br>الأرقام: Push. العمليات (+، *): Pop رقمين، احسب، ثم Push النتيجة.
                         <br>هذا أسهل للكمبيوتر من التدوين العادي (Infix) لأنه لا يحتاج أقواس أو أولويات.
                     </p>
