@@ -111,7 +111,7 @@
                     <p class="text-sm text-slate-600 mb-3">
                         عند حذف عنصر من البداية، تبقى خانة فارغة. إذا استمرينا في الإضافة والحذف، سيصل الـ <code>Rear</code> لنهاية المصفوفة بينما توجد مساحة فارغة في البداية!
                     </p>
-                    <div class="bg-slate-100 p-2 text-center text-xs font-mono rounded">
+                    <div class="bg-slate-100 p-2 text-center text-xs font-mono rounded ltr" dir="ltr">
                         [ _ , _ , Data , Data , Data ] (End!)
                     </div>
                 </div>
@@ -121,7 +121,7 @@
                     <p class="text-sm text-slate-600 mb-3">
                         عندما يصل المؤشر للنهاية، نجعله يلتف (Wrap Around) ويعود للبداية باستخدام باقي القسمة (Modulo).
                     </p>
-                    <div class="bg-slate-900 text-white p-3 rounded text-xs font-mono ltr">
+                    <div class="bg-slate-900 text-white p-3 rounded text-xs font-mono ltr" dir="ltr">
                         back = (back + 1) % array.length;<br>
                         array[back] = x;<br>
                         currentSize++;
@@ -171,7 +171,7 @@
                 <div class="grid md:grid-cols-2 gap-6">
                     <div class="bg-red-50 p-4 rounded-lg border border-red-100">
                         <span class="bg-red-200 text-red-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">TRAP / فخ</span>
-                        <p class="font-bold text-slate-800 mb-1">Circular Array: Empty or Full?</p>
+                        <p class="font-bold text-slate-800 mb-1">Circular Array: Empty or Full؟</p>
                         <p class="text-sm text-slate-600">
                             في المصفوفة الدائرية، حالة "الامتلاء" وحالة "الفراغ" قد تبدو متشابهة (المؤشرات في نفس المكان).
                             <br><strong>الحل:</strong> نحتفظ بمتغير منفصل اسمه <code>currentSize</code> لتتبع عدد العناصر بدقة.
